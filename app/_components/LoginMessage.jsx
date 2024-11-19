@@ -1,7 +1,6 @@
 'use client';
 
-import Link from 'next/link';
-import LoginBtn from './LoginBtn';
+import LoginButton from './LoginButton';
 
 function LoginMessage() {
    return (
@@ -15,7 +14,7 @@ function LoginMessage() {
          </p>
 
          <div className='flex justify-start items-center'>
-            <LoginBtn />
+            <LoginButton />
          </div>
       </div>
    );
