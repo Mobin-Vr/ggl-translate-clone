@@ -6,7 +6,7 @@ export const metadata = {
 
 function layout({ children }) {
    return (
-      <div className='relative pt-8'>
+      <div className='relative py-8'>
          <BackBtn />
          <div className='mt-8'>{children}</div>
       </div>
