@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import CustomToast from '../_components/Notification';
+import CustomToast from '../../_components/Notification';
 
 const useSpeechRecognition = () => {
    const [isRecording, setIsRecording] = useState(false);

@@ -1,10 +1,13 @@
 'use client';
 import { useState, useEffect, useRef } from 'react';
 import ProfileModal from './ProfileModal';
+import { UserButton, useUser } from '@clerk/nextjs';
 
 function Profile({ session }) {
    const [isModalOpen, setModalOpen] = useState(false);
    const modalRef = useRef(null);
+
+   const { user } = useUser();
 
    function toggleModal() {
       setModalOpen(!isModalOpen);
@@ -23,23 +26,26 @@ function Profile({ session }) {
       };
    }, []);
 
+   const userButtonAppearance = {
+      elements: {
+         userButtonAvatarBox: 'w-[2.625rem] h-[2.625rem]',
+      },
+   };
+
    return (
       <div className='relative' ref={modalRef}>
-         <div className='h-10 w-10 rounded-full hover:bg-gray-200 flex items-center justify-center'>
-            <img
-               className='h-8 w-8 rounded-full cursor-pointer'
-               src={session.user?.image}
-               alt={session.user?.name}
-               referrerPolicy='no-referrer'
-               onClick={toggleModal}
+         <div
+            onClick={toggleModal}
+            className='h-10 w-10 rounded-full hover:bg-gray-200 flex items-center justify-center'
+         >
+            <UserButton
+               appearance={userButtonAppearance}
+               userProfileMode={false}
             />
          </div>
 
          {isModalOpen && (
-            <ProfileModal
-               session={session}
-               onClose={() => setModalOpen(false)}
-            />
+            <ProfileModal user={user} onClose={() => setModalOpen(false)} />
          )}
       </div>
    );

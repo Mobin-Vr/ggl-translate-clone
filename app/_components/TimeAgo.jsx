@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/app/_utils/utils';
+import { cn } from '@/app/_lib/utils';
 
 import {
    differenceInDays,

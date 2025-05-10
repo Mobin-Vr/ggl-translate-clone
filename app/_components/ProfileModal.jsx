@@ -1,28 +1,33 @@
 'use client';
 import { IoMdSettings } from 'react-icons/io';
 import { PiSignOutBold } from 'react-icons/pi';
-import SignOutButton from './SignOutButton';
+import { SignOutButton, UserButton } from '@clerk/nextjs';
 import SettingButton from './SettingButton';
 
-export default function ProfileModal({ session, onClose }) {
+export default function ProfileModal({ user, onClose }) {
+   const userButtonAppearance = {
+      elements: {
+         userButtonAvatarBox: 'w-[2.625rem] h-[2.625rem]',
+      },
+   };
+
    return (
       <div className='absolute top-14 right-0 rounded-3xl w-[22rem] z-50 border border-gray-200 shadow-md bg-blue-50'>
          <div className='p-4'>
             <div className='flex flex-col items-center gap-3'>
-               <img
-                  src={session.user?.image}
-                  alt={session.user?.name}
-                  className='w-20 h-20 rounded-full'
+               <UserButton
+                  appearance={userButtonAppearance}
+                  userProfileMode={false}
                />
 
                <div className='flex flex-col justify-center items-center'>
                   <p className='text-xl text-gray-900 mx-auto mb-2'>
-                     Hi, {session.user?.name}!
+                     Hi, {user?.fullName}!
                   </p>
 
                   <div className='border rounded-full px-4 py-2'>
                      <p className='text-sm font-medium text-gray-600'>
-                        {session.user?.email}
+                        {user?.primaryEmailAddress?.emailAddress}
                      </p>
                   </div>
                </div>
@@ -30,7 +35,7 @@ export default function ProfileModal({ session, onClose }) {
          </div>
 
          <div className='flex p-4 space-x-1 h-20'>
-            <SettingButton />
+            {/* <SettingButton /> */}
             <SignOutButton />
          </div>
 

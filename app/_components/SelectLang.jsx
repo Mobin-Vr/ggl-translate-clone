@@ -81,9 +81,9 @@ function SelectLang({
 
                <SelectGroup>
                   <SelectLabel>Languages:</SelectLabel>
-                  {languages.map(({ id, name }) => (
-                     <SelectItem key={id} value={name}>
-                        {name}
+                  {languages.map(({ id, name, code }) => (
+                     <SelectItem key={id} value={code}>
+                        {code}
                      </SelectItem>
                   ))}
                </SelectGroup>

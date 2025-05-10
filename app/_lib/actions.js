@@ -1,14 +1,18 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { parseFormDataLang } from '../_utils/utils';
-import { getHistory } from './data-services';
-import { detectLanguage, translateText } from './googleAI';
+import {
+   createUser,
+   getHistory,
+   getUserByEmail,
+   translateText,
+} from './data-services';
+import { parseFormDataLang } from './utils';
+
 import { supabase } from './supabase';
-import { signIn, signOut } from './auth';
 
 export async function translate(prevState, formData) {
-   // CHANGE Do Authentican alter
+   // CHANGE Do Authentican later
 
    const rawFormData = {
       inputText: formData.get('inputText'),
@@ -27,12 +31,22 @@ export async function translate(prevState, formData) {
 
    try {
       // Call the translation functions
-      const [detectedInputLanguage, translatedText] = await Promise.all([
-         inputLanguage.name === 'Auto-Detection'
-            ? detectLanguage(inputText)
-            : Promise.resolve(inputLanguage),
-         translateText(inputText, outputLanguage.name),
-      ]);
+
+      console.log('lang >>>', inputLanguage);
+
+      const translatedText = await translateText(
+         inputText,
+         inputLanguage,
+         outputLanguage
+      );
+
+      //       const [detectedInputLanguage, translatedText] = await Promise.all([
+      //          inputLanguage.name === 'Auto-Detection'
+      //             ? detectLanguage(inputText)
+      //             : Promise.resolve(inputLanguage),
+      //
+      //          aiTranslator(inputText, outputLanguage.name),
+      //       ]);
 
       // Create a new record to store translation history in the database
       const newHistory = {
@@ -48,12 +62,12 @@ export async function translate(prevState, formData) {
       };
 
       // Insert the new record into the history table in Supabase
-      const { error } = await supabase.from('history').insert([newHistory]);
-
-      if (error) {
-         console.error('Error inserting history:', error.message);
-         throw new Error('History record could not be created');
-      }
+      //       const { error } = await supabase.from('history').insert([newHistory]);
+      //
+      //       if (error) {
+      //          console.error('Error inserting history:', error.message);
+      //          throw new Error('History record could not be created');
+      //       }
 
       revalidatePath('/');
 
@@ -90,10 +104,16 @@ export async function deleteTranslation(TranslationId) {
    revalidatePath('/');
 }
 
-export async function signInAction() {
-   await signIn('google', { redirectTo: '/' });
+//////////////////////////////////
+///////// User Actions //////////
+//////////////////////////////////
+
+// Creates a new user in the database
+export async function createUserAction(newUser) {
+   return await createUser(newUser);
 }
 
-export async function signOutAction() {
-   await signOut({ redirectTo: '/' });
+// Retrieves a user by their email address
+export async function getUserByEmailAction(userEmail) {
+   return await getUserByEmail(userEmail);
 }

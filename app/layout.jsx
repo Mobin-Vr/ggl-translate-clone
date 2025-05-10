@@ -2,6 +2,9 @@ import { Roboto, Vazirmatn } from 'next/font/google';
 import { Toaster } from 'react-hot-toast';
 import Header from '@/app/_components/Header';
 import '@/app/_styles/globals.css';
+import { ClerkProvider, SignedIn } from '@clerk/nextjs';
+import localFont from 'next/font/local';
+import UserSignupHandler from './_components/UserSignupHandler';
 
 const roboto = Roboto({
    weight: ['400', '700'],
@@ -10,9 +13,9 @@ const roboto = Roboto({
    display: 'swap',
 });
 
-const vazirmatn = Vazirmatn({
-   weight: ['400', '700'],
-   subsets: ['arabic'],
+const iranSansRegular = localFont({
+   src: '../public/fonts/IRANSansWeb.ttf',
+   weight: '400',
    style: 'normal',
    display: 'swap',
 });
@@ -27,12 +30,20 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
    return (
-      <html lang='en'>
-         <body className={`${roboto.className} ${vazirmatn.className}`}>
-            <Toaster />
-            <Header />
-            <div className='mx-auto max-w-6xl'>{children}</div>
-         </body>
-      </html>
+      <ClerkProvider dynamic>
+         <html lang='en'>
+            <body
+               className={`${roboto.className} ${iranSansRegular.className} $`}
+            >
+               <SignedIn>
+                  <UserSignupHandler />
+               </SignedIn>
+
+               <main className='mx-auto max-w-6xl'>{children}</main>
+
+               <Toaster />
+            </body>
+         </html>
+      </ClerkProvider>
    );
 }

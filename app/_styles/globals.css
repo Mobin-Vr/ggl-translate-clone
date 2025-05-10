@@ -6,6 +6,45 @@ body {
    font-family: Arial, Helvetica, sans-serif;
 }
 
+.cl-cardBox {
+   height: 100%;
+   width: 100%;
+}
+
+.cl-footer {
+   display: none;
+}
+
+.cl-profileSection {
+   flex-grow: 1;
+}
+
+.cl-userProfile-root {
+   max-width: 40rem;
+   height: 95%;
+   width: 95%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+}
+
+.cl-navbar {
+   display: none;
+}
+
+.cl-navbarMobileMenuRow {
+   height: 50px;
+}
+
+.cl-navbarMobileMenuButton {
+   display: none;
+}
+
+.cl-userButtonTrigger {
+   border: 2px solid white;
+   pointer-events: none;
+}
+
 @layer utilities {
    .text-balance {
       text-wrap: balance;

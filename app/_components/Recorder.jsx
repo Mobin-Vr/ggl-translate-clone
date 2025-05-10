@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { PiMicrophone } from 'react-icons/pi';
 import { PiSquareFill } from 'react-icons/pi';
 
-import useSpeechRecog from '../_hooks/useSpeechRecog';
+import useSpeechRecog from '../_lib/_hooks/useSpeechRecog';
 
 export default function Recorder({ onAudioTranscriped, onDisableSpeaker }) {
    // Use the custom hook for speech recognition

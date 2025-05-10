@@ -1,12 +1,10 @@
 import { getHistory } from '@/app/_lib/data-services';
 
-import TranslationList from './TranslationList';
 import NoPastTranslations from './NoPastTranslations';
-import { auth } from '../_lib/auth';
+import TranslationList from './TranslationList';
 
-async function TranslationHistory() {
-   const session = await auth();
-   const history = await getHistory(session.user.userId);
+async function TranslationHistory({ user }) {
+   const history = await getHistory(user.id);
 
    return (
       <div className=''>

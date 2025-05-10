@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useFormState } from 'react-dom';
 
 import { translate } from '@/app/_lib/actions';
-import { playAudio } from '@/app/_utils/utils';
+import { playAudio } from '@/app/_lib/utils';
 import Recorder from './Recorder';
 import SelectLang from './SelectLang';
 import Speaker from './Speaker';
@@ -97,8 +97,8 @@ function TranslationForm({ languages: initialLanguages }) {
                {/* Input Section */}
                <div className='flex-1 space-y-2 relative'>
                   <SelectLang
-                     languages={languages}
                      name='inputLanguage'
+                     languages={languages}
                      value={inputLanguage}
                      onSelect={setInputLanguage}
                      onLanguagesUpdate={setLanguages}
