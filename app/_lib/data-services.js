@@ -4,7 +4,6 @@ import { openai } from './deepseek';
 export async function getLanguages() {
    const { data, error } = await supabase.from('languages').select('*');
 
-   // For testing
    //  await new Promise((res) => setTimeout(res, 5000));
 
    if (error) {
@@ -22,7 +21,6 @@ export async function getHistory(userId) {
       .eq('userId', userId)
       .order('created_at', { ascending: false });
 
-   //  //  For testing
    //  await new Promise((res) => setTimeout(res, 5000));
 
    if (error) {
@@ -69,35 +67,38 @@ export async function getUserByEmail(userEmail) {
    return data;
 }
 
-/////////////////////////////////
-/////////////////////////////////
-
+// Translator function (deepseek ai)
 export async function aiTranslator(text, targetLang) {
-   const response = await openai.path('/chat/completions').post({
-      body: {
+   console.log(`>>> Translate this text to "${targetLang}":\n\n${text}`);
+
+   try {
+      const response = await openai.chat.completions.create({
          messages: [
-            // {
-            //    role: 'system',
-            //    content:
-            //       'You are a professional translator. you have to just translate without adding any extra words or explanations',
-            // },
+            {
+               role: 'system',
+               content: `You are a professional and precise translator. Translate the given input into the specified target language only. Do not add explanations or repeat the source text.`,
+            },
             {
                role: 'user',
-               content: `Translate to: [${text} / the text is: ${targetLang}]`,
+               content: `Translate this text to "${targetLang}":\n\n${text}`,
             },
          ],
-         model: 'DeepSeek-R1',
-         max_tokens: 2048,
-      },
-   });
+         model: 'deepseek-chat',
+         temperature: 1.3,
+         max_tokens: 1000,
+      });
 
-   if (isUnexpected(response)) throw response.body.error;
+      const translation = response.choices[0]?.message?.content?.trim();
 
-   console.log(response.body.choices[0].message.content);
+      if (!translation) {
+         throw new Error('No translation returned from the AI model.');
+      }
 
-   return response.body.choices[0].message.content;
+      console.log(translation);
+
+      return translation;
+   } catch (err) {
+      console.error('Translation failed:', err.message || err);
+      throw new Error('Translation failed. Please try again later.');
+   }
 }
-
-aiTranslator().catch((err) => {
-   console.error('The sample encountered an error:', err);
-});

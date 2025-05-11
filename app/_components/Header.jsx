@@ -5,11 +5,11 @@ import Profile from './Profile';
 import { headers } from 'next/headers';
 
 async function Header() {
-   // دریافت هدر تنظیم‌شده در Middleware
-   const headersList = headers();
+   // Get the custom header set in the middleware
+   const headersList = await headers();
    const currentPath = headersList.get('x-current-path');
 
-   // بررسی مسیر جاری
+   // Check if the current path is "/history"
    const isHistoryPage = currentPath === '/history';
 
    return (
