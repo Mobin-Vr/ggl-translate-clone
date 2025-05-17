@@ -1,8 +1,8 @@
-import { clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs) {
-   return twMerge(clsx(inputs));
+  return twMerge(clsx(inputs));
 }
 
 /**
@@ -15,53 +15,53 @@ export function cn(...inputs) {
  * @returns {Object|string} - Returns the parsed JSON object if valid, or the original string.
  */
 export function parseFormDataLang(language) {
-   if (typeof language === 'string' && language.trim().startsWith('{')) {
-      try {
-         const result = JSON.parse(language);
-         const { name, direction } = result;
-         return { name, direction };
-      } catch (error) {
-         return language;
-      }
-   }
+  if (typeof language === "string" && language.trim().startsWith("{")) {
+    try {
+      const result = JSON.parse(language);
+      const { name, direction } = result;
+      return { name, direction };
+    } catch (error) {
+      return language;
+    }
+  }
 
-   return language;
+  return language;
 }
 
 export async function playAudio(output) {
-   const synth = window.speechSynthesis;
+  const synth = window.speechSynthesis;
 
-   if (!output || !synth) return;
+  if (!output || !synth) return;
 
-   const wordsToSay = new SpeechSynthesisUtterance(output);
-   synth.speak(wordsToSay);
+  const wordsToSay = new SpeechSynthesisUtterance(output);
+  synth.speak(wordsToSay);
 }
 
 export function rtfToText(rtf) {
-   const rtfRegex = /\\([a-z]+)(-?\d+)? ?|[{}]|\\'([0-9a-fA-F]{2})|([^\\{}]+)/g;
-   let match;
-   let output = [];
-   let stack = [];
+  const rtfRegex = /\\([a-z]+)(-?\d+)? ?|[{}]|\\'([0-9a-fA-F]{2})|([^\\{}]+)/g;
+  let match;
+  let output = [];
+  let stack = [];
 
-   while ((match = rtfRegex.exec(rtf)) !== null) {
-      if (match[0] === '{') {
-         stack.push(output.length);
-      } else if (match[0] === '}') {
-         output.splice(stack.pop(), 0);
-      } else if (match[0][0] === '\\') {
-         if (match[1] === 'par' || match[1] === 'line') {
-            output.push('\n');
-         } else if (match[1] === 'tab') {
-            output.push('\t');
-         } else if (match[1] === 'uc') {
-            // Unicode character count to skip
-            rtfRegex.lastIndex += Number(match[2]);
-         } else if (match[1] === "'") {
-            output.push(String.fromCharCode(parseInt(match[3], 16)));
-         }
-      } else {
-         output.push(match[0]);
+  while ((match = rtfRegex.exec(rtf)) !== null) {
+    if (match[0] === "{") {
+      stack.push(output.length);
+    } else if (match[0] === "}") {
+      output.splice(stack.pop(), 0);
+    } else if (match[0][0] === "\\") {
+      if (match[1] === "par" || match[1] === "line") {
+        output.push("\n");
+      } else if (match[1] === "tab") {
+        output.push("\t");
+      } else if (match[1] === "uc") {
+        // Unicode character count to skip
+        rtfRegex.lastIndex += Number(match[2]);
+      } else if (match[1] === "'") {
+        output.push(String.fromCharCode(parseInt(match[3], 16)));
       }
-   }
-   return output.join('');
+    } else {
+      output.push(match[0]);
+    }
+  }
+  return output.join("");
 }

@@ -1,21 +1,22 @@
-import { getHistory } from '@/app/_lib/data-services';
+import { auth } from "@clerk/nextjs/server";
+import { getHistoryAction } from "../_lib/actions";
+import NoPastTranslations from "./NoPastTranslations";
+import TranslationList from "./TranslationList";
 
-import NoPastTranslations from './NoPastTranslations';
-import TranslationList from './TranslationList';
+async function TranslationHistory() {
+  const { userId } = await auth();
+  const history = await getHistoryAction(userId);
 
-async function TranslationHistory({ user }) {
-   const history = await getHistory(user.id);
-
-   return (
-      <div className=''>
-         <h1 className='text-3xl my-5 text-gray-600'>History</h1>
-         {history.length === 0 ? (
-            <NoPastTranslations />
-         ) : (
-            <TranslationList history={history} />
-         )}
-      </div>
-   );
+  return (
+    <div className="">
+      <h1 className="my-5 text-3xl text-gray-600">History</h1>
+      {history.length === 0 ? (
+        <NoPastTranslations />
+      ) : (
+        <TranslationList history={history} />
+      )}
+    </div>
+  );
 }
 
 export default TranslationHistory;

@@ -1,97 +1,54 @@
+"use client";
+
 import {
-   Select,
-   SelectContent,
-   SelectGroup,
-   SelectItem,
-   SelectLabel,
-   SelectTrigger,
-   SelectValue,
-} from '@/app/_components/select';
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/_components/ui/select";
+import { useEffect, useState } from "react";
+import Tooltip from "./ui/Tooltip";
 
-import { useEffect, useState } from 'react';
+function SelectLang({ languages, onSelect, value, className }) {
+  console.log("value", value);
+  const [selected, setSelected] = useState(value);
 
-const autoData = { name: 'Auto-Detection', code: 'auto', direction: null };
+  function handleSelectChange(langName) {
+    setSelected(langName);
+    onSelect(langName);
+  }
 
-function findLanguageData(languages, value) {
-   return languages.find((lang) => lang.name === value) || null;
-}
+  useEffect(() => {
+    if (value) setSelected(value);
+  }, [value]);
 
-function theLangWithDetected(languages) {
-   return languages.find((lang) => lang.name.endsWith('Detected'));
-}
+  return (
+    <Tooltip title="Select target language">
+      <div className={`w-fit ${className}`}>
+        <Select onValueChange={handleSelectChange} value={selected}>
+          <SelectTrigger className="no-shadow w-fit gap-1 border-none text-sm font-semibold text-blue-600">
+            <SelectValue placeholder="Select a language">
+              {selected}
+            </SelectValue>
+          </SelectTrigger>
 
-function SelectLang({
-   languages,
-   name,
-   onSelect,
-   onLanguagesUpdate,
-   onToggleDetectedLang,
-   value,
-}) {
-   const [selected, setSelected] = useState(
-      value === 'Auto-Detection' ? autoData : findLanguageData(languages, value)
-   );
-
-   useEffect(() => {
-      if (value === 'Auto-Detection') setSelected(autoData);
-      else {
-         const langData = findLanguageData(languages, value);
-         setSelected(langData);
-      }
-   }, [value, languages]);
-
-   function handleSelectChange(selectedValue) {
-      const langData =
-         selectedValue === 'Auto-Detection'
-            ? autoData
-            : findLanguageData(languages, selectedValue);
-
-      setSelected(langData);
-      onSelect(langData?.name);
-
-      const detectedLang = theLangWithDetected(languages);
-      if (detectedLang) {
-         onLanguagesUpdate((prev) =>
-            prev.filter((lang) => lang.id !== detectedLang.id)
-         );
-
-         onToggleDetectedLang(true);
-      }
-   }
-
-   return (
-      <>
-         <Select
-            onValueChange={handleSelectChange}
-            value={selected?.name || ''}
-         >
-            <SelectTrigger className='w-fit border-none font-bold text-blue-500 flex items-center gap-2 no-shadow'>
-               <SelectValue placeholder='Select a language' />
-            </SelectTrigger>
-
-            <SelectContent>
-               {name === 'inputLanguage' && (
-                  <SelectGroup>
-                     <SelectLabel>Want us to figure it out?</SelectLabel>
-                     <SelectItem key='auto' value='Auto-Detection'>
-                        Auto-Detection
-                     </SelectItem>
-                  </SelectGroup>
-               )}
-
-               <SelectGroup>
-                  <SelectLabel>Languages:</SelectLabel>
-                  {languages.map(({ id, name, code }) => (
-                     <SelectItem key={id} value={name}>
-                        {name}
-                     </SelectItem>
-                  ))}
-               </SelectGroup>
-            </SelectContent>
-         </Select>
-         <input type='hidden' name={name} value={JSON.stringify(selected)} />
-      </>
-   );
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Languages</SelectLabel>
+              {languages.map(({ id, name }) => (
+                <SelectItem key={id} value={name}>
+                  {name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+    </Tooltip>
+  );
 }
 
 export default SelectLang;

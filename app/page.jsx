@@ -1,25 +1,22 @@
-import TranslationForm from '@/app/_components/TranslationForm';
-import { getLanguages } from '@/app/_lib/data-services';
-import HistoryIconLink from './_components/HistoryIconLink';
-import Header from './_components/Header';
+import TranslationForm from "@/app/_components/TranslationForm";
+import Header from "./_components/Header";
+import HistoryIconLink from "./_components/HistoryIconLink";
+import { getLanguagesAction } from "./_lib/actions";
 
 async function TranslatePage() {
-   //  CHANGE redirect to login page
-   //  if (!userId) throw new Error('user not logged in');
+  const supportedLanguages = await getLanguagesAction();
 
-   const languages = await getLanguages();
+  return (
+    <>
+      <Header />
+      <div className="mb-20 px-10 xl:px-0">
+        <TranslationForm languages={supportedLanguages} />
 
-   return (
-      <>
-         <Header />
-         <div className='px-10 xl:px-0 mb-20'>
-            <TranslationForm languages={languages} />
-
-            {/* History Button */}
-            <HistoryIconLink />
-         </div>
-      </>
-   );
+        {/* History Button */}
+        <HistoryIconLink />
+      </div>
+    </>
+  );
 }
 
 export default TranslatePage;

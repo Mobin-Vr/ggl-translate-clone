@@ -1,37 +1,37 @@
-'use client';
+"use client";
 
-import { deleteTranslation } from '@/app/_lib/actions';
-import { useOptimistic } from 'react';
-import HistoryCard from './HistoryCard';
+import { useState, startTransition } from "react";
+import { deleteTranslationAction } from "../_lib/actions";
+import HistoryCard from "./HistoryCard";
+import { showCustomToast } from "./ui/Notification";
 
 function TranslationList({ history }) {
-   const [optimisticTranslation, optimisticDelete] = useOptimistic(
-      history,
-      (curTranslation, translationId) => {
-         return curTranslation.filter(
-            (translate) => translate.id !== translationId
-         );
-      }
-   );
+  const [translations, setTranslations] = useState(history);
 
-   async function handleDelete(translationId) {
-      optimisticDelete(translationId);
-      await deleteTranslation(translationId);
-   }
+  async function handleDelete(translationId) {
+    setTranslations((prev) =>
+      prev.filter((item) => item.translation_id !== translationId),
+    );
 
-   return (
-      <>
-         <ul className='divide-y border rounded-md'>
-            {optimisticTranslation.map((translation) => (
-               <HistoryCard
-                  key={translation.id}
-                  translation={translation}
-                  onDelete={handleDelete}
-               />
-            ))}
-         </ul>
-      </>
-   );
+    try {
+      await deleteTranslationAction(translationId);
+    } catch (error) {
+      showCustomToast("❌ Failed to delete the translation. Please try again.");
+      setTranslations(history);
+    }
+  }
+
+  return (
+    <ul className="divide-y rounded-md border">
+      {translations.map((translation) => (
+        <HistoryCard
+          key={translation.translation_id}
+          translation={translation}
+          onDelete={() => handleDelete(translation.translation_id)}
+        />
+      ))}
+    </ul>
+  );
 }
 
 export default TranslationList;

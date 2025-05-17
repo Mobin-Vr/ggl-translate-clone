@@ -28,7 +28,7 @@ function Profile({ session }) {
 
    const userButtonAppearance = {
       elements: {
-         userButtonAvatarBox: 'w-[2.625rem] h-[2.625rem]',
+         userButtonAvatarBox: 'w-10.5 h-10.5',
       },
    };
 

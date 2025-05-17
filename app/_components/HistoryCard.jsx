@@ -1,48 +1,43 @@
-import { HiOutlineArrowLongRight } from 'react-icons/hi2';
-import DeleteTranslationBtn from './DeleteTranslationBtn';
-import TimeAgo from './TimeAgo';
-import TextExpander from './TextExpander';
+import { HiOutlineArrowLongRight } from "react-icons/hi2";
+import DeleteTranslationBtn from "./DeleteTranslationBtn";
+import TimeAgo from "./TimeAgo";
+import TextExpander from "./TextExpander";
 
 function HistoryCard({ translation, onDelete }) {
-   const {
-      id: translationId,
-      inputLanguage,
-      outputLanguage,
-      inputText,
-      outputText,
-      created_at: createdAt,
-   } = translation;
+  const {
+    translation_id: translationId,
+    input_language: inputLanguage,
+    output_language: outputLanguage,
+    input_text: inputText,
+    output_text: outputText,
+    created_at: createdAt,
+  } = translation;
 
-   return (
-      <li className='flex justify-between items-center text-sm p-4 hover:bg-gray-50 relative'>
-         <div>
-            <p className='flex items-center gap-2 text-sm mb-4 text-gray-500'>
-               {inputLanguage}
-               <span className='text-lg'>
-                  <HiOutlineArrowLongRight />
-               </span>
-               {outputLanguage}
-            </p>
+  return (
+    <li className="relative flex items-center justify-between p-4 text-sm hover:bg-gray-50">
+      <div>
+        <p className="mb-4 flex items-center gap-2 text-sm text-gray-500">
+          {inputLanguage}
+          <span className="text-lg">
+            <HiOutlineArrowLongRight />
+          </span>
+          {outputLanguage}
+        </p>
 
-            <div className='space-y-2 pr-5'>
-               <TextExpander>{inputText}</TextExpander>
-               <TextExpander className='text-gray-400'>
-                  {outputText}
-               </TextExpander>
-            </div>
-         </div>
+        <div className="space-y-2 pr-5">
+          <TextExpander>{inputText}</TextExpander>
+          <TextExpander className="text-gray-400">{outputText}</TextExpander>
+        </div>
+      </div>
 
-         <TimeAgo
-            className='absolute top-3 right-3 text-gray-300 text-sm'
-            date={createdAt}
-         />
+      <TimeAgo
+        className="absolute top-3 right-3 text-sm text-gray-300"
+        date={createdAt}
+      />
 
-         <DeleteTranslationBtn
-            translationId={translationId}
-            onDelete={onDelete}
-         />
-      </li>
-   );
+      <DeleteTranslationBtn onDelete={onDelete} />
+    </li>
+  );
 }
 
 export default HistoryCard;
