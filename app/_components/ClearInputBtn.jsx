@@ -4,8 +4,8 @@ import { PiXCircleDuotone } from "react-icons/pi";
 import { MdClear } from "react-icons/md";
 
 export default function ClearInputBtn({
-  setInputLanguage,
-  setOutputLanguage,
+  setInputLang,
+  setOutputLang,
   setInputText,
   setOutputText,
   inputText,
@@ -13,8 +13,8 @@ export default function ClearInputBtn({
   if (!inputText.trim()) return;
 
   function handleClear() {
-    setInputLanguage("");
-    setOutputLanguage("Select a language");
+    setInputLang("");
+    setOutputLang("Select a language");
     setInputText("");
     setOutputText("Translation");
   }

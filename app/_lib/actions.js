@@ -33,10 +33,8 @@ export async function getUserByEmailAction(userEmail) {
 }
 
 // Translates the input text to the specified output language and detects the input language if needed
-export async function translate({ inputText, inputLanguage, outputLanguage }) {
-  console.log("server", inputText, " - ", outputLanguage);
-
-  if (!inputText || !outputLanguage) {
+export async function translate({ inputText, inputLang, outputLang }) {
+  if (!inputText || !outputLang) {
     throw new Error("Please provide both the text and the target language.");
   }
 
@@ -47,18 +45,18 @@ export async function translate({ inputText, inputLanguage, outputLanguage }) {
       languageDetector(inputText),
 
       // 2. Translate the text
-      translator(inputText, outputLanguage),
+      translator(inputText, outputLang),
     ]);
 
-    // TODO: Add logic for language detection if inputLanguage is "Auto-Detection"
+    // TODO: Add logic for language detection if inputLang is "Auto-Detection"
 
     const historyRecord = {
       inputText,
       outputText: translatedText,
       userId: 1, // TODO: Replace with actual user ID
-      inputLanguage: inputLanguage.name,
-      outputLanguage: outputLanguage.name,
-      outputLanguageDir: outputLanguage.direction ?? null,
+      inputLang: inputLang.name,
+      outputLang: outputLang.name,
+      outputLanguageDir: outputLang.direction ?? null,
     };
 
     // TODO: Store the history in Supabase
@@ -101,13 +99,13 @@ export async function deleteTranslationAction(translationId) {
 //   const rawFormData = {
 //     inputText: formData.get("inputText"),
 //     outputText: formData.get("outputText"),
-//     inputLanguage: parseFormDataLang(formData.get("inputLanguage")),
-//     outputLanguage: parseFormDataLang(formData.get("outputLanguage")),
+//     inputLang: parseFormDataLang(formData.get("inputLang")),
+//     outputLang: parseFormDataLang(formData.get("outputLang")),
 //   };
 //
-//   const { inputText, outputText, inputLanguage, outputLanguage } = rawFormData;
+//   const { inputText, outputText, inputLang, outputLang} = rawFormData;
 //
-//   if (!inputText || !outputLanguage) {
+//   if (!inputText || !outputLang) {
 //     throw new Error(
 //       "Please provide both the text, input language, and the target language.",
 //     );
@@ -115,14 +113,14 @@ export async function deleteTranslationAction(translationId) {
 //
 //   try {
 //     // Call the translator functions
-//     const translatedText = await aiTranslator(inputText, outputLanguage.name);
+//     const translatedText = await aiTranslator(inputText, outputLang.name);
 //
 //     //       const [detectedLanguage, translatedText] = await Promise.all([
-//     //          inputLanguage.name === 'Auto-Detection'
+//     //          inputLang.name === 'Auto-Detection'
 //     //             ? detectLanguage(inputText)
-//     //             : Promise.resolve(inputLanguage),
+//     //             : Promise.resolve(inputLang),
 //     //
-//     //          aiTranslator(inputText, outputLanguage.name),
+//     //          aiTranslator(inputText, outputLang.name),
 //     //       ]);
 //
 //     // Create a new record to store translation history in the database
@@ -130,13 +128,13 @@ export async function deleteTranslationAction(translationId) {
 //       inputText: inputText,
 //       outputText: translatedText,
 //       userId: 1, // CHANGE as needed
-//       outputLanguage: outputLanguage.name,
-//       outputLanguageDir: outputLanguage.direction || null,
-//       inputLanguage: inputLanguage.name,
-//       //  inputLanguage:
-//       //     inputLanguage.name === 'Auto-Detection'
+//       outputLang: outputLang.name,
+//       outputLanguageDir: outputLang.direction || null,
+//       inputLang: inputLang.name,
+//       //  inputLang:
+//       //     inputLang.name === 'Auto-Detection'
 //       //        ? detectedLanguage
-//       //        : inputLanguage.name,
+//       //        : inputLang.name,
 //     };
 //
 //     // Insert the new record into the history table in Supabase
@@ -151,7 +149,7 @@ export async function deleteTranslationAction(translationId) {
 //     return {
 //       ...prevState,
 //       outputText: translatedText,
-//       inputLanguage: newHistory.inputLanguage,
+//       inputLang: newHistory.inputLang,
 //     };
 //   } catch (error) {
 //     console.error("Full error details:", error.message, error.stack);

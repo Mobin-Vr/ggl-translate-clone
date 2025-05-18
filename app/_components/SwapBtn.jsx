@@ -7,19 +7,19 @@ import { useEffect } from "react";
 export default function SwapBtn({
   inputText,
   outputText,
-  inputLanguage,
-  outputLanguage,
+  inputLang,
+  outputLang,
   setInputText,
   setOutputText,
-  setInputLanguage,
-  setOutputLanguage,
+  setInputLang,
+  setOutputLang,
   setIsSwaping,
   latestInText,
   latestOutLang,
 }) {
   function handleSwap() {
-    const curInLang = inputLanguage;
-    const curOutLang = outputLanguage;
+    const curInLang = inputLang;
+    const curOutLang = outputLang;
     const curInText = inputText;
     const curOutText = outputText;
 
@@ -36,8 +36,8 @@ export default function SwapBtn({
     latestOutLang.current = newOutLang;
 
     // Reset the states
-    setOutputLanguage(newOutLang);
-    setInputLanguage(newInLang);
+    setOutputLang(newOutLang);
+    setInputLang(newInLang);
     setInputText(newInText);
     setOutputText(newOutText);
   }

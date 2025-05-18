@@ -6,8 +6,8 @@ import TextExpander from "./TextExpander";
 function HistoryCard({ translation, onDelete }) {
   const {
     translation_id: translationId,
-    input_language: inputLanguage,
-    output_language: outputLanguage,
+    input_language: inputLang,
+    output_language: outputLang,
     input_text: inputText,
     output_text: outputText,
     created_at: createdAt,
@@ -17,11 +17,11 @@ function HistoryCard({ translation, onDelete }) {
     <li className="relative flex items-center justify-between p-4 text-sm hover:bg-gray-50">
       <div>
         <p className="mb-4 flex items-center gap-2 text-sm text-gray-500">
-          {inputLanguage}
+          {inputLang}
           <span className="text-lg">
             <HiOutlineArrowLongRight />
           </span>
-          {outputLanguage}
+          {outputLang}
         </p>
 
         <div className="space-y-2 pr-5">

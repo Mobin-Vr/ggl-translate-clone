@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { playAudio } from "@/app/_lib/utils";
 import Recorder from "./Recorder";
@@ -8,119 +8,54 @@ import SelectLang from "./SelectLang";
 import Speaker from "./Speaker";
 
 import autosize from "autosize";
-import { enqueueTranslation } from "../_lib/translation/queu";
+import { TRANSLATION_FORM_INITIAL_STATE } from "../_lib/configs";
+import { useTranslationHandler } from "../_lib/hooks/useTranslationHandler";
 import ClearInputBtn from "./ClearInputBtn";
 import CopyToClipboard from "./CopyToClipboard";
 import DetectedLang from "./DetectedLang";
 import SwapBtn from "./SwapBtn";
 import { TextareaBox } from "./TextareaBox";
 import TranslateFeatures from "./ui/TranslateFeatures";
-import { useDebounce } from "use-debounce";
 
-const initialState = {
-  inputLanguage: "",
-  outputLanguage: "",
-  inputText: "",
-  outputText: "Translation",
-};
+const initialState = TRANSLATION_FORM_INITIAL_STATE;
 
 function TranslationForm({ languages: initialLanguages }) {
-  const submitBtnRef = useRef(null);
+  const inputElementRef = useRef(null);
+  const outputElementRef = useRef(null);
 
-  const [isPending, setIsPending] = useState(false);
+  const latestInText = useRef("");
+  const latestOutLang = useRef("");
+
   const [isSwaping, setIsSwaping] = useState(false);
   const [languages, setLanguages] = useState(initialLanguages);
   const [inputText, setInputText] = useState(initialState.inputText);
   const [outputText, setOutputText] = useState(initialState.outputText);
-  const [inputLanguage, setInputLanguage] = useState(
-    initialState.inputLanguage,
+  const [inputLang, setInputLang] = useState(initialState.inputLang);
+  const [outputLang, setOutputLang] = useState(initialState.outputLang);
+
+  // track recording status and prevent audio playback during recording
+  const [isMicRecording, setIsMicRecording] = useState(false);
+
+  const { isPending } = useTranslationHandler(
+    inputText,
+    outputLang,
+    inputLang,
+    setOutputText,
+    setInputLang,
+    isSwaping,
+    setIsSwaping,
+    latestInText,
+    latestOutLang,
   );
-  const [outputLanguage, setOutputLanguage] = useState(
-    initialState.outputLanguage,
-  );
-  const [isMicRecording, setIsMicRecording] = useState(false); // State to track recording status and prevent audio playback during recording
 
-  // Debounce only inputText
-  const [debouncedInputText] = useDebounce(inputText, 500);
+  useLayoutEffect(() => {
+    if (inputElementRef.current) autosize(inputElementRef.current);
+    if (outputElementRef.current) autosize(outputElementRef.current);
+  }, []);
 
-  const inputElementRef = useRef(null);
-  const outputElementRef = useRef(null);
-
-  // Store lastest values
-  const latestInText = useRef("");
-  const latestOutLang = useRef("");
-
-  autosize(inputElementRef.current);
-  autosize(outputElementRef.current);
-
-  async function handleTranslate(trimmedText) {
-    const translationPayload = {
-      inputText: trimmedText,
-      inputLanguage,
-      outputLanguage,
-    };
-
-    // This flag is used to track the latest input text so that only the most recent translation result is shown. Prevents displaying outdated results when input changes quickly.
-    latestInText.current = trimmedText;
-    latestOutLang.current = outputLanguage;
-
-    setIsPending(true);
-
-    // Add translation request to the queue and return the final result (only the latest input in the queue will be processed within X ms debounce interval)
-    const result = await enqueueTranslation(translationPayload);
-    const { translatedText, detectedLanguage } = result;
-
-    // If the input text has changed while waiting for the translation, do not update the output text and set isPending to false
-    if (latestInText.current === trimmedText) {
-      setOutputText(translatedText);
-      setInputLanguage(detectedLanguage);
-      setIsPending(false);
-    }
-  }
-
-  // Auto-translate on typing
-  useEffect(() => {
-    console.log("in text", inputText, " - ", latestInText.current);
-    console.log("out lang", outputLanguage, " - ", latestOutLang.current);
-
-    const trimmed = debouncedInputText.trim();
-    const hasInput = trimmed !== "";
-    const hasLang =
-      outputLanguage &&
-      outputLanguage !== "" &&
-      outputLanguage !== "Select a language";
-
-    const inputChanged = trimmed !== latestInText.current;
-    const langChanged = outputLanguage !== latestOutLang.current;
-
-    // If is just swapping dont do translation, just set in as false
-    if (isSwaping) {
-      setIsSwaping(false);
-      return;
-    }
-
-    if (!inputChanged && !langChanged) return;
-
-    // If there is no input text, reset the output text and pending state
-    if (!trimmed) {
-      latestInText.current = "";
-      setIsPending(false);
-      setOutputText("Translation");
-
-      return;
-    }
-
-    if (!hasLang || !hasInput) return;
-
-    setOutputText("Translation");
-    setInputLanguage("");
-
-    handleTranslate(trimmed);
-  }, [debouncedInputText, outputLanguage]);
-
-  const handleAudioUpload = (transcribedText) => {
+  function handleAudioUpload(transcribedText) {
     setInputText(transcribedText);
-  };
+  }
 
   return (
     <div>
@@ -130,10 +65,7 @@ function TranslationForm({ languages: initialLanguages }) {
       <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-2">
         {/* Input Section */}
         <div className="relative flex-1 space-y-2">
-          <DetectedLang
-            detectedLanguage={inputLanguage}
-            className="mb-4 px-4"
-          />
+          <DetectedLang detectedLanguage={inputLang} className="mb-4 px-4" />
 
           <TextareaBox
             isOutput={false}
@@ -154,8 +86,8 @@ function TranslationForm({ languages: initialLanguages }) {
             />
 
             <ClearInputBtn
-              setInputLanguage={setInputLanguage}
-              setOutputLanguage={setOutputLanguage}
+              setInputLang={setInputLang}
+              setOutputLang={setOutputLang}
               setInputText={setInputText}
               setOutputText={setOutputText}
               inputText={inputText}
@@ -170,12 +102,12 @@ function TranslationForm({ languages: initialLanguages }) {
         <SwapBtn
           inputText={inputText}
           outputText={outputText}
-          inputLanguage={inputLanguage}
-          outputLanguage={outputLanguage}
+          inputLang={inputLang}
+          outputLang={outputLang}
           setInputText={setInputText}
           setOutputText={setOutputText}
-          setInputLanguage={setInputLanguage}
-          setOutputLanguage={setOutputLanguage}
+          setInputLang={setInputLang}
+          setOutputLang={setOutputLang}
           setIsSwaping={setIsSwaping}
           latestInText={latestInText}
           latestOutLang={latestOutLang}
@@ -185,9 +117,8 @@ function TranslationForm({ languages: initialLanguages }) {
         <div className="relative flex-1 space-y-2">
           <SelectLang
             languages={languages}
-            name="outputLanguage"
-            value={outputLanguage}
-            onSelect={setOutputLanguage}
+            value={outputLang}
+            onSelect={setOutputLang}
             className="mb-4 px-4"
           />
 
