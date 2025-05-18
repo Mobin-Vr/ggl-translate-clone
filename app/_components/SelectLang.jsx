@@ -13,7 +13,6 @@ import { useEffect, useState } from "react";
 import Tooltip from "./ui/Tooltip";
 
 function SelectLang({ languages, onSelect, value, className }) {
-  console.log("value", value);
   const [selected, setSelected] = useState(value);
 
   function handleSelectChange(langName) {

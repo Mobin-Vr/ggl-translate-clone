@@ -34,6 +34,8 @@ export async function getUserByEmailAction(userEmail) {
 
 // Translates the input text to the specified output language and detects the input language if needed
 export async function translate({ inputText, inputLanguage, outputLanguage }) {
+  console.log("server", inputText, " - ", outputLanguage);
+
   if (!inputText || !outputLanguage) {
     throw new Error("Please provide both the text and the target language.");
   }
@@ -62,6 +64,8 @@ export async function translate({ inputText, inputLanguage, outputLanguage }) {
     // TODO: Store the history in Supabase
     // const { error } = await supabase.from("history").insert([historyRecord]);
     // if (error) throw new Error("Failed to store translation history");
+
+    console.log("jjj", translatedText);
 
     return { translatedText, detectedLanguage };
   } catch (err) {

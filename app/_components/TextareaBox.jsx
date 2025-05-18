@@ -19,8 +19,10 @@ export function TextareaBox({
       }`}
     >
       <textarea
-        className={`resize-none border-none p-4 outline-none md:px-5 md:py-4 ${
-          isOutput ? "bg-textaria-dis placeholder:text-text-color" : ""
+        className={`resize-none border-none p-4 pr-16 outline-none md:px-5 md:py-4 ${
+          isOutput
+            ? "bg-textaria-dis placeholder:text-text-color"
+            : "pr-12 md:pr-12"
         }`}
         dir="auto"
         name={name}
