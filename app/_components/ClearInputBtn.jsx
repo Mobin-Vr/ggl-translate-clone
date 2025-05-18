@@ -16,7 +16,7 @@ export default function ClearInputBtn({
     setInputLang("");
     setOutputLang("Select a language");
     setInputText("");
-    setOutputText("Translation");
+    setOutputText("");
   }
 
   return (

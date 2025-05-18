@@ -8,7 +8,10 @@ import SelectLang from "./SelectLang";
 import Speaker from "./Speaker";
 
 import autosize from "autosize";
-import { TRANSLATION_FORM_INITIAL_STATE } from "../_lib/configs";
+import {
+  TRANSLATION_FORM_INITIAL_STATE,
+  USER_MOST_FREQUENT_OUT_LANG,
+} from "../_lib/configs";
 import { useTranslationHandler } from "../_lib/hooks/useTranslationHandler";
 import ClearInputBtn from "./ClearInputBtn";
 import CopyToClipboard from "./CopyToClipboard";
@@ -17,7 +20,8 @@ import SwapBtn from "./SwapBtn";
 import { TextareaBox } from "./TextareaBox";
 import TranslateFeatures from "./ui/TranslateFeatures";
 
-const initialState = TRANSLATION_FORM_INITIAL_STATE;
+// LATER
+const mostUsedLang = USER_MOST_FREQUENT_OUT_LANG;
 
 function TranslationForm({ languages: initialLanguages }) {
   const inputElementRef = useRef(null);
@@ -26,12 +30,12 @@ function TranslationForm({ languages: initialLanguages }) {
   const latestInText = useRef("");
   const latestOutLang = useRef("");
 
-  const [isSwaping, setIsSwaping] = useState(false);
   const [languages, setLanguages] = useState(initialLanguages);
-  const [inputText, setInputText] = useState(initialState.inputText);
-  const [outputText, setOutputText] = useState(initialState.outputText);
-  const [inputLang, setInputLang] = useState(initialState.inputLang);
-  const [outputLang, setOutputLang] = useState(initialState.outputLang);
+  const [inputText, setInputText] = useState("");
+  const [outputText, setOutputText] = useState("");
+  const [inputLang, setInputLang] = useState("");
+  const [outputLang, setOutputLang] = useState("");
+  const [isSwaping, setIsSwaping] = useState(false);
 
   // track recording status and prevent audio playback during recording
   const [isMicRecording, setIsMicRecording] = useState(false);
@@ -70,7 +74,6 @@ function TranslationForm({ languages: initialLanguages }) {
           <TextareaBox
             isOutput={false}
             ref={inputElementRef}
-            name="inputText"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
           >
@@ -126,7 +129,6 @@ function TranslationForm({ languages: initialLanguages }) {
             isOutput={true}
             isPending={isPending}
             ref={outputElementRef}
-            name="outputText"
             value={outputText}
           >
             <Speaker

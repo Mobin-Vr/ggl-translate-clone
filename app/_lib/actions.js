@@ -63,8 +63,6 @@ export async function translate({ inputText, inputLang, outputLang }) {
     // const { error } = await supabase.from("history").insert([historyRecord]);
     // if (error) throw new Error("Failed to store translation history");
 
-    console.log("jjj", translatedText);
-
     return { translatedText, detectedLanguage };
   } catch (err) {
     console.error("Translation or detection error:", err.message, err.stack);

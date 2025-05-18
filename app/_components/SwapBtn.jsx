@@ -26,8 +26,8 @@ export default function SwapBtn({
     const newOutLang =
       curInLang === "Not" || curInLang === "" ? "Select a language" : curInLang;
     const newInLang = curOutLang === "Select a language" ? "" : curOutLang;
-    const newInText = curOutText === "Translation" ? "" : curOutText;
-    const newOutText = curInText.trim() === "" ? "Translation" : curInText;
+    const newInText = curOutText;
+    const newOutText = curInText;
 
     setIsSwaping(true);
 

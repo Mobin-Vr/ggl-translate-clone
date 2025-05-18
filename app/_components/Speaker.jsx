@@ -2,8 +2,7 @@ import { PiSpeakerSimpleHigh } from "react-icons/pi";
 import Tooltip from "./ui/Tooltip";
 
 function SpeakerBtn({ onClick, isThereText, isRecordingInProgress }) {
-  if (!isThereText || isThereText === "Translation" || isRecordingInProgress)
-    return null;
+  if (!isThereText || isRecordingInProgress) return null;
 
   return (
     <Tooltip title="Listen">

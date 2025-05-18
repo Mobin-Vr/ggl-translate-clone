@@ -61,14 +61,13 @@ export function useTranslationHandler(
     if (!trimmed) {
       latestInText.current = "";
       setIsPending(false);
-      setOutputText("Translation");
+      setOutputText("");
       return;
     }
 
     if (!hasLang || !hasInput) return;
-    console.log("AA", inputText);
 
-    setOutputText("Translation");
+    setOutputText("");
     setInputLang("");
 
     handleTranslate(trimmed);

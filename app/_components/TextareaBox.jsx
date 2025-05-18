@@ -1,16 +1,17 @@
 import DoteLoader from "./ui/DoteLoader";
 
 export function TextareaBox({
-  value,
-  onChange,
-  name,
-  ref,
   isOutput = true,
-  maxLength = 1000,
   isPending,
+  ref,
+  value,
+  maxLength = 1000,
+  onChange,
   children,
 }) {
   const shouldShowLoader = isPending && isOutput;
+
+  const newVlue = isOutput && value === "" ? "Translation" : value;
 
   return (
     <div
@@ -25,9 +26,8 @@ export function TextareaBox({
             : "pr-12 md:pr-12"
         }`}
         dir="auto"
-        name={name}
         disabled={isOutput}
-        value={value}
+        value={newVlue}
         onChange={!isOutput ? onChange : undefined}
         maxLength={maxLength}
         ref={ref}
