@@ -14,26 +14,9 @@ export function TextareaBox({
   const shouldShowLoader = isPending && isOutput;
   const valueCond = isOutput && value === "" ? "Translation" : value;
 
-  // autosize doesn't work properly on disabled textareas, so we temporarily enable it, then apply autosize and revert it back to its original disabled state
-  //   useLayoutEffect(() => {
-  //     if (ref.current) {
-  //       const textarea = ref.current;
-  //       const wasDisabled = textarea.disabled;
-  //
-  //       // temporarily enable if disabled
-  //       if (wasDisabled) textarea.disabled = false;
-  //
-  //       autosize(textarea);
-  //       autosize.update(textarea);
-  //
-  //       // revert to original disabled state
-  //       if (wasDisabled) textarea.disabled = true;
-  //     }
-  //   }, [value]);
-
   return (
     <div
-      className={`text-text-color relative flex flex-col justify-between overflow-hidden rounded-sm text-lg sm:text-2xl ${
+      className={`text-text-color relative flex min-h-32 flex-col justify-between overflow-hidden rounded-sm text-lg sm:text-2xl lg:min-h-36 ${
         isOutput ? "bg-textaria-dis" : "border border-gray-200"
       }`}
     >
