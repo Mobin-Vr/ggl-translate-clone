@@ -4,8 +4,13 @@ import { PiSquareFill } from "react-icons/pi";
 
 import Tooltip from "./ui/Tooltip";
 import useSpeechRecognition from "../_lib/hooks/useSpeechRecog";
+import { MicSensitivityIcon, SquareIcon } from "@/public/icons";
 
-export default function Recorder({ onAudioTranscriped, onDisableSpeaker }) {
+export default function Recorder({
+  onAudioTranscriped,
+  onDisableSpeaker,
+  className,
+}) {
   // Use the custom hook for speech recognition
   const { isRecording, transcript, toggleRecording } = useSpeechRecognition();
 
@@ -21,26 +26,18 @@ export default function Recorder({ onAudioTranscriped, onDisableSpeaker }) {
 
   return (
     <div className="flex flex-col items-center">
-      <Tooltip title="Translate by voice">
+      <Tooltip title="Translate by voice (Only English)">
         <button
           onClick={toggleRecording}
           type="button"
-          className={`flex h-7 w-7 items-center justify-center rounded-full transition-all duration-300 ${
-            isRecording
-              ? "bg-blue-500 hover:bg-blue-600"
-              : "hover:bg-icon-hover bg-white"
+          className={`flex h-10 w-10 items-center justify-center rounded-full text-gray-600 transition-all duration-300 ${className} ${
+            isRecording ? "bg-blue-500" : "hover:bg-icon-hover bg-white"
           }`}
         >
           {!isRecording ? (
-            <PiMicrophone
-              strokeWidth={2}
-              className="h-[1.15rem] w-[1.15rem] text-inherit"
-            />
+            <MicSensitivityIcon />
           ) : (
-            <PiSquareFill
-              strokeWidth={1}
-              className="h-[0.8rem] w-[0.8rem] text-gray-100"
-            />
+            <SquareIcon color="#fff" size="14" />
           )}
         </button>
       </Tooltip>

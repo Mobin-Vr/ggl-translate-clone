@@ -12,11 +12,11 @@ export function TextareaBox({
   children,
 }) {
   const shouldShowLoader = isPending && isOutput;
-  const valueCond = isOutput && value === "" ? "Translation" : value;
+  const valueCond = isOutput && value === "" ? "" : value;
 
   return (
     <div
-      className={`text-text-color relative flex min-h-32 flex-col justify-between overflow-hidden rounded-sm text-lg sm:text-2xl lg:min-h-36 ${
+      className={`text-text-color relative flex min-h-32 flex-col justify-between overflow-hidden rounded-sm text-lg sm:text-2xl lg:min-h-42 ${
         isOutput ? "bg-textaria-dis" : "border border-gray-200"
       }`}
     >
@@ -26,16 +26,17 @@ export function TextareaBox({
         onChange={!isOutput ? onChange : undefined}
         disabled={isOutput}
         maxLength={maxLength}
+        placeholder={isOutput ? "Translation" : ""}
         dir="auto"
         className={`resize-none border-none p-4 pr-16 outline-none md:px-5 md:py-4 ${
           isOutput
-            ? "bg-textaria-dis placeholder:text-text-color"
+            ? "bg-textaria-dis placeholder:text-gray-500"
             : "pr-12 md:pr-12"
         }`}
       />
 
       {shouldShowLoader && (
-        <span className="absolute top-4 left-36">
+        <span className="absolute top-4 left-36 text-gray-500">
           <DoteLoader size="xs" />
         </span>
       )}

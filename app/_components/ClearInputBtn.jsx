@@ -25,9 +25,9 @@ export default function ClearInputBtn({
         <button
           onClick={handleClear}
           type="button"
-          className="hover:bg-icon-hover text-bold absolute top-0 right-0 z-50 flex h-7 w-7 -translate-x-1/2 translate-y-1/2 cursor-pointer items-center justify-center rounded-full text-gray-500 transition-all duration-300"
+          className="hover:bg-icon-hover text-bold absolute top-0 right-0 z-50 mt-2 mr-2 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-gray-600 transition-all duration-300"
         >
-          <MdClear />
+          <XIcon />
         </button>
       </Tooltip>
     </div>

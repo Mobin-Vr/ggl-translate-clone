@@ -28,13 +28,45 @@ export function parseFormDataLang(language) {
   return language;
 }
 
-export async function playAudio(output) {
+let currentUtterance = null;
+
+export function playAudio(output, onEnded) {
   const synth = window.speechSynthesis;
 
   if (!output || !synth) return;
 
-  const wordsToSay = new SpeechSynthesisUtterance(output);
-  synth.speak(wordsToSay);
+  // Stop any previous speech
+  if (synth.speaking || currentUtterance) {
+    synth.cancel();
+    currentUtterance = null;
+  }
+
+  const utterance = new SpeechSynthesisUtterance(output);
+
+  utterance.onend = () => {
+    currentUtterance = null;
+    if (typeof onEnded === "function") onEnded();
+  };
+
+  utterance.onerror = () => {
+    currentUtterance = null;
+    if (typeof onEnded === "function") onEnded();
+  };
+
+  currentUtterance = utterance;
+  synth.speak(utterance);
+}
+
+export function isSpeaking() {
+  return window.speechSynthesis.speaking;
+}
+
+export function stopAudio() {
+  const synth = window.speechSynthesis;
+  if (synth.speaking || currentUtterance) {
+    synth.cancel();
+    currentUtterance = null;
+  }
 }
 
 export function rtfToText(rtf) {

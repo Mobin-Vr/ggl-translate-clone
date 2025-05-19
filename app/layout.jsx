@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
             <UserSignupHandler />
           </SignedIn>
 
-          <main className="mx-auto max-w-6xl">{children}</main>
+          <main>{children}</main>
 
           <Toaster />
         </body>

@@ -52,6 +52,11 @@
   width: 100%;
 }
 
+.cl-userButtonAvatarBox {
+  height: 2rem;
+  width: 2rem;
+}
+
 .cl-footer {
   display: none;
 }

@@ -9,9 +9,8 @@ async function TranslatePage() {
   return (
     <>
       <Header />
-      <div className="mb-20 px-10 xl:px-0">
+      <div>
         <TranslationForm languages={supportedLanguages} />
-
         {/* History Button */}
         <HistoryIconLink />
       </div>

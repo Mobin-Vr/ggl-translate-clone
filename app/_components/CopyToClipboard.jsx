@@ -1,7 +1,7 @@
 import { CopyIcon } from "@/public/icons";
 import Tooltip from "./ui/Tooltip";
 
-export default function CopyToClipboard({ value }) {
+export default function CopyToClipboard({ value, className }) {
   if (!value) return;
 
   async function copyToClipboard() {
@@ -13,9 +13,9 @@ export default function CopyToClipboard({ value }) {
       <button
         type="button"
         onClick={copyToClipboard}
-        className="hover:bg-icon-hover mr-2 ml-auto flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-inherit transition-all duration-300"
+        className={`hover:bg-icon-hover flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-gray-600 transition-all duration-300 ${className}`}
       >
-        <CopyIcon size="16" />
+        <CopyIcon />
       </button>
     </Tooltip>
   );
