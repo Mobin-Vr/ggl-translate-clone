@@ -7,11 +7,7 @@ import Recorder from "./Recorder";
 import SelectLang from "./SelectLang";
 import Speaker from "./Speaker";
 
-import autosize from "autosize";
-import {
-  TRANSLATION_FORM_INITIAL_STATE,
-  USER_MOST_FREQUENT_OUT_LANG,
-} from "../_lib/configs";
+import { USER_MOST_FREQUENT_OUT_LANG } from "../_lib/configs";
 import { useTranslationHandler } from "../_lib/hooks/useTranslationHandler";
 import ClearInputBtn from "./ClearInputBtn";
 import CopyToClipboard from "./CopyToClipboard";
@@ -19,11 +15,12 @@ import DetectedLang from "./DetectedLang";
 import SwapBtn from "./SwapBtn";
 import { TextareaBox } from "./TextareaBox";
 import TranslateFeatures from "./ui/TranslateFeatures";
+import autosize from "autosize";
 
 // LATER
 const mostUsedLang = USER_MOST_FREQUENT_OUT_LANG;
 
-function TranslationForm({ languages: initialLanguages }) {
+export default function TranslationForm({ languages: initialLanguages }) {
   const inputElementRef = useRef(null);
   const outputElementRef = useRef(null);
 
@@ -52,14 +49,30 @@ function TranslationForm({ languages: initialLanguages }) {
     latestOutLang,
   );
 
-  useLayoutEffect(() => {
-    if (inputElementRef.current) autosize(inputElementRef.current);
-    if (outputElementRef.current) autosize(outputElementRef.current);
-  }, []);
-
   function handleAudioUpload(transcribedText) {
     setInputText(transcribedText);
   }
+
+  // Keeps both textareas at the same height by matching them to the taller one
+  useEffect(() => {
+    if (!inputElementRef.current || !outputElementRef.current) return;
+
+    // Step 1: Apply autosize
+    autosize(inputElementRef.current);
+    autosize(outputElementRef.current);
+
+    // Step 2: Force update to get accurate height
+    autosize.update(inputElementRef.current);
+    autosize.update(outputElementRef.current);
+
+    // Step 3: Compare and unify heights
+    const inputHeight = inputElementRef.current.scrollHeight;
+    const outputHeight = outputElementRef.current.scrollHeight;
+    const maxHeight = Math.max(inputHeight, outputHeight);
+
+    inputElementRef.current.style.height = `${maxHeight}px`;
+    outputElementRef.current.style.height = `${maxHeight}px`;
+  }, [inputText, outputText]);
 
   return (
     <div>
@@ -136,14 +149,10 @@ function TranslationForm({ languages: initialLanguages }) {
               onClick={() => playAudio(outputText)}
             />
 
-            {outputText && <CopyToClipboard value={outputText} />}
+            <CopyToClipboard value={outputText} />
           </TextareaBox>
         </div>
       </div>
     </div>
   );
 }
-
-export default TranslationForm;
-
-// ////////////////////////////////////

@@ -2,7 +2,7 @@ import { CopyIcon } from "@/public/icons";
 import Tooltip from "./ui/Tooltip";
 
 export default function CopyToClipboard({ value }) {
-  if (!value) return null;
+  if (!value) return;
 
   async function copyToClipboard() {
     await navigator.clipboard.writeText(value);
