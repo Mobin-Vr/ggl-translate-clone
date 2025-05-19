@@ -1,16 +1,16 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { auth } from "@clerk/nextjs/server";
 import {
+  addHistory,
   createUser,
   deleteTranslation,
   getHistory,
   getLanguages,
   getUserByEmail,
+  getUserById,
 } from "./data-services";
-import { supabase } from "./supabase";
 import { languageDetector, translator } from "./translation/data-services";
-import { auth } from "@clerk/nextjs/server";
 
 // Gets the translation history for a specific user
 export async function getHistoryAction(userId) {
@@ -27,7 +27,7 @@ export async function createUserAction(newUser) {
   return await createUser(newUser);
 }
 
-// Retrieves a user by their email address
+// Gets a user by their email (used in server actions)
 export async function getUserByEmailAction(userEmail) {
   return await getUserByEmail(userEmail);
 }
@@ -48,20 +48,22 @@ export async function translate({ inputText, inputLang, outputLang }) {
       translator(inputText, outputLang),
     ]);
 
-    // TODO: Add logic for language detection if inputLang is "Auto-Detection"
+    // 1) Authentican
+    const { userId } = await auth();
+    const user = await getUserById(userId);
+
+    if (!user)
+      throw new Error("You are not authorized to add a translation record.");
 
     const historyRecord = {
-      inputText,
-      outputText: translatedText,
-      userId: 1, // TODO: Replace with actual user ID
-      inputLang: inputLang.name,
-      outputLang: outputLang.name,
-      outputLanguageDir: outputLang.direction ?? null,
+      user_id: userId,
+      input_language: detectedLanguage === "Not" ? "Unknown" : detectedLanguage,
+      output_language: outputLang,
+      input_text: inputText,
+      output_text: translatedText,
     };
 
-    // TODO: Store the history in Supabase
-    // const { error } = await supabase.from("history").insert([historyRecord]);
-    // if (error) throw new Error("Failed to store translation history");
+    addHistory(historyRecord);
 
     return { translatedText, detectedLanguage };
   } catch (err) {
@@ -84,73 +86,3 @@ export async function deleteTranslationAction(translationId) {
   // 3) Delete record from DB
   await deleteTranslation(translationId);
 }
-
-//////////////////////////////////
-///////// User Actions //////////
-//////////////////////////////////
-
-///////////////////////////////////////////////
-
-// export async function translate(prevState, formData) {
-//   // CHANGE Do Authentican later
-//
-//   const rawFormData = {
-//     inputText: formData.get("inputText"),
-//     outputText: formData.get("outputText"),
-//     inputLang: parseFormDataLang(formData.get("inputLang")),
-//     outputLang: parseFormDataLang(formData.get("outputLang")),
-//   };
-//
-//   const { inputText, outputText, inputLang, outputLang} = rawFormData;
-//
-//   if (!inputText || !outputLang) {
-//     throw new Error(
-//       "Please provide both the text, input language, and the target language.",
-//     );
-//   }
-//
-//   try {
-//     // Call the translator functions
-//     const translatedText = await aiTranslator(inputText, outputLang.name);
-//
-//     //       const [detectedLanguage, translatedText] = await Promise.all([
-//     //          inputLang.name === 'Auto-Detection'
-//     //             ? detectLanguage(inputText)
-//     //             : Promise.resolve(inputLang),
-//     //
-//     //          aiTranslator(inputText, outputLang.name),
-//     //       ]);
-//
-//     // Create a new record to store translation history in the database
-//     const newHistory = {
-//       inputText: inputText,
-//       outputText: translatedText,
-//       userId: 1, // CHANGE as needed
-//       outputLang: outputLang.name,
-//       outputLanguageDir: outputLang.direction || null,
-//       inputLang: inputLang.name,
-//       //  inputLang:
-//       //     inputLang.name === 'Auto-Detection'
-//       //        ? detectedLanguage
-//       //        : inputLang.name,
-//     };
-//
-//     // Insert the new record into the history table in Supabase
-//     //       const { error } = await supabase.from('history').insert([newHistory]);
-//     //
-//     //       if (error) {
-//     //          console.error('Error inserting history:', error.message);
-//     //          throw new Error('History record could not be created');
-//     //       }
-//
-//     // Return translated text to the client
-//     return {
-//       ...prevState,
-//       outputText: translatedText,
-//       inputLang: newHistory.inputLang,
-//     };
-//   } catch (error) {
-//     console.error("Full error details:", error.message, error.stack);
-//     throw new Error("An error has occurred");
-//   }
-// }

@@ -16,6 +16,16 @@ export async function getHistory(userId) {
   return data;
 }
 
+// Stores a new translation history record for a user
+export async function addHistory(historyRecord) {
+  const { error } = await supabase.from("history").insert([historyRecord]);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to store translation history in supabase");
+  }
+}
+
 // Gets the supported languages from the translation service
 export async function getLanguages() {
   const { data, error } = await supabase.from("languages").select("*");
@@ -46,6 +56,17 @@ export async function getUserByEmail(userEmail) {
     .from("users")
     .select("*")
     .eq("user_email", userEmail)
+    .single();
+
+  return data;
+}
+
+// Retrieves a user by their ID
+export async function getUserById(userId) {
+  const { data } = await supabase
+    .from("users")
+    .select("*")
+    .eq("user_id", userId)
     .single();
 
   return data;
