@@ -5,9 +5,7 @@ function TranslateFeaturesView({ icon, text, onClick, isActive }) {
   return (
     <div
       onClick={onClick}
-      //   className="flex w-fit cursor-pointer items-center gap-1.5 rounded-sm border border-gray-300 bg-blue-50 px-3.5 py-1.5 text-blue-700 transition-colors duration-300 active:bg-blue-200"
-      // >
-      className={`flex w-fit cursor-pointer items-center gap-1.5 rounded-sm border border-gray-300 px-3.5 py-2 text-sm font-medium text-blue-700 transition-colors duration-300 ${
+      className={`flex h-9 w-fit cursor-pointer items-center gap-1.5 rounded-sm border border-gray-300 pr-[0.9375rem] pl-[0.6875rem] text-sm font-medium text-blue-700 transition-colors duration-300 ${
         isActive ? "bg-blue-100" : ""
       }`}
     >

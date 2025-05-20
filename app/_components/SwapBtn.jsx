@@ -16,6 +16,7 @@ export default function SwapBtn({
   setIsSwaping,
   latestInText,
   latestOutLang,
+  className,
 }) {
   function handleSwap() {
     const curInLang = inputLang;
@@ -43,16 +44,14 @@ export default function SwapBtn({
   }
 
   return (
-    <div className="flex flex-col items-center">
-      <Tooltip title="Swap languages">
-        <button
-          onClick={handleSwap}
-          type="button"
-          className="hover:bg-icon-hover absolute left-1/2 z-50 flex h-10 w-10 -translate-x-1/2 -translate-y-2.5 cursor-pointer items-center justify-center rounded-full transition-all duration-300"
-        >
-          <IoMdSwap size={22} strokeWidth={1} className="text-gray-500" />
-        </button>
-      </Tooltip>
-    </div>
+    <Tooltip title="Swap languages">
+      <button
+        onClick={handleSwap}
+        type="button"
+        className={`hover:bg-icon-hover z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300 ${className}`}
+      >
+        <IoMdSwap size={22} strokeWidth={1} className="text-gray-500" />
+      </button>
+    </Tooltip>
   );
 }

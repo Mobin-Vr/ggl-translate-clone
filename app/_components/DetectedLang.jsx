@@ -7,7 +7,7 @@ function DetectedLang({ detectedLanguage, className }) {
 
   return (
     <Tooltip title="Auto langauge detection">
-      <div className={`w-fit text-sm font-semibold text-blue-600 ${className}`}>
+      <div className={`w-fit text-sm text-blue-600 ${className}`}>
         {displayText}
       </div>
     </Tooltip>

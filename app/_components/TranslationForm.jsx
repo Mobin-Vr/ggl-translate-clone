@@ -2,26 +2,22 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { playAudio } from "@/app/_lib/utils";
-import Recorder from "./Recorder";
-import SelectLang from "./SelectLang";
-import Speaker from "./Speaker";
-
 import autosize from "autosize";
 import { USER_MOST_FREQUENT_OUT_LANG } from "../_lib/configs";
 import { useTranslationHandler } from "../_lib/hooks/useTranslationHandler";
-import ClearInputBtn from "./ClearInputBtn";
-import CopyToClipboard from "./CopyToClipboard";
-import DetectedLang from "./DetectedLang";
-import GoogleSearchBtn from "./GoogleSearchBtn";
-import SwapBtn from "./SwapBtn";
-import { TextareaBox } from "./TextareaBox";
+import InputView from "./InputView";
+import LanguageBar from "./LanguageBar";
+import OutputView from "./OutputView";
 import TranslateFeatures from "./ui/TranslateFeatures";
 
 // LATER
 const mostUsedLang = USER_MOST_FREQUENT_OUT_LANG;
 
-export default function TranslationForm({ languages: initialLanguages }) {
+export default function TranslationForm({
+  languages: initialLanguages,
+  isFormVertical,
+  showHistory,
+}) {
   const inputElementRef = useRef(null);
   const outputElementRef = useRef(null);
 
@@ -78,94 +74,86 @@ export default function TranslationForm({ languages: initialLanguages }) {
   }, [inputText, outputText]);
 
   return (
-    <div className="px-12">
-      {/* Header */}
-      <TranslateFeatures />
+    <div
+      className={`relative ${showHistory && isFormVertical ? "px-0" : "px-3"}`}
+    >
+      <TranslateFeatures
+        isFormVertical={isFormVertical}
+        className={`h-[3.5rem] px-3`}
+      />
 
-      <div className="flex flex-col space-y-8 lg:flex-row lg:space-y-0 lg:space-x-1">
-        {/* Input Section */}
-        <div className="relative flex-1 space-y-2">
-          <DetectedLang
-            detectedLanguage={inputLang}
-            className="mb-3.5 px-4 select-none"
-          />
+      {/* Visible only on form smaller than 720 */}
+      <LanguageBar
+        inputLang={inputLang}
+        outputLang={outputLang}
+        inputText={inputText}
+        outputText={outputText}
+        setInputText={setInputText}
+        setOutputText={setOutputText}
+        setInputLang={setInputLang}
+        setOutputLang={setOutputLang}
+        setIsSwaping={setIsSwaping}
+        latestInText={latestInText}
+        latestOutLang={latestOutLang}
+        languages={languages}
+        isFormVertical={isFormVertical}
+        className={isFormVertical ? "justify-around" : "hidden"}
+      />
 
-          <TextareaBox
-            isOutput={false}
-            ref={inputElementRef}
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-          >
-            <Recorder
-              onAudioTranscriped={handleAudioUpload}
-              onDisableSpeaker={setIsMicRecording}
-              className="mb-4 ml-1"
-            />
+      {/* Visible only on form bigger than 720 */}
+      <LanguageBar
+        inputLang={inputLang}
+        outputLang={outputLang}
+        inputText={inputText}
+        outputText={outputText}
+        setInputText={setInputText}
+        setOutputText={setOutputText}
+        setInputLang={setInputLang}
+        setOutputLang={setOutputLang}
+        setIsSwaping={setIsSwaping}
+        latestInText={latestInText}
+        latestOutLang={latestOutLang}
+        languages={languages}
+        isFormVertical={isFormVertical}
+        className={isFormVertical ? "hidden" : ""}
+      />
 
-            <Speaker
-              value={inputText}
-              isRecordingInProgress={isMicRecording} // Prevents audio playback while the microphone is actively recording
-              className="mb-4 ml-1"
-              speaking={isInputSpeaking}
-              setSpeaking={setIsInputSpeaking}
-            />
-
-            <ClearInputBtn
-              setInputLang={setInputLang}
-              setOutputLang={setOutputLang}
-              setInputText={setInputText}
-              setOutputText={setOutputText}
-              inputText={inputText}
-            />
-
-            <p className="mt-1.5 mr-2 mb-4 ml-auto flex items-center justify-center p-0 text-center align-middle text-xs leading-none text-gray-600 select-none">
-              {inputText.length} / 1,000
-            </p>
-          </TextareaBox>
-        </div>
-
-        <SwapBtn
-          inputText={inputText}
-          outputText={outputText}
+      <div
+        className={`flex items-center justify-center ${isFormVertical ? "flex-col" : "flex-row gap-2"}`}
+      >
+        <InputView
           inputLang={inputLang}
-          outputLang={outputLang}
-          setInputText={setInputText}
-          setOutputText={setOutputText}
+          inputText={inputText}
           setInputLang={setInputLang}
           setOutputLang={setOutputLang}
-          setIsSwaping={setIsSwaping}
-          latestInText={latestInText}
-          latestOutLang={latestOutLang}
+          setInputText={setInputText}
+          setOutputText={setOutputText}
+          inputElementRef={inputElementRef}
+          handleAudioUpload={handleAudioUpload}
+          setIsMicRecording={setIsMicRecording}
+          isMicRecording={isMicRecording}
+          isInputSpeaking={isInputSpeaking}
+          setIsInputSpeaking={setIsInputSpeaking}
+          isFormVertical={isFormVertical}
         />
 
-        {/* Output Section */}
-        <div className="relative flex-1 space-y-2">
-          <SelectLang
-            languages={languages}
-            value={outputLang}
-            onSelect={setOutputLang}
-            className="mb-3.5 px-4"
-          />
+        {/* Border bottom for input - it wii be invisible in some conditions */}
+        {isFormVertical && (!inputText || !outputLang) && (
+          <div className="w-full border-t border-t-gray-300"></div>
+        )}
 
-          <TextareaBox
-            isOutput={true}
-            isPending={isPending}
-            ref={outputElementRef}
-            value={outputText}
-          >
-            <Speaker
-              value={outputText}
-              speaking={isOutputSpeaking}
-              setSpeaking={setIsOutputSpeaking}
-              className="mb-4 ml-1"
-            />
-
-            <div className="mr-1 mb-4 ml-auto flex space-x-1">
-              <CopyToClipboard value={outputText} />
-              <GoogleSearchBtn value={outputText} />
-            </div>
-          </TextareaBox>
-        </div>
+        <OutputView
+          languages={languages}
+          outputLang={outputLang}
+          setOutputLang={setOutputLang}
+          outputText={outputText}
+          inputText={inputText}
+          isPending={isPending}
+          outputElementRef={outputElementRef}
+          isOutputSpeaking={isOutputSpeaking}
+          setIsOutputSpeaking={setIsOutputSpeaking}
+          isFormVertical={isFormVertical}
+        />
       </div>
     </div>
   );

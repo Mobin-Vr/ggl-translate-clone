@@ -1,6 +1,5 @@
-import TranslationForm from "@/app/_components/TranslationForm";
 import Header from "./_components/Header";
-import HistoryIconLink from "./_components/HistoryIconLink";
+import TranslationPanel from "./_components/TranslationPanel";
 import { getLanguagesAction } from "./_lib/actions";
 
 async function TranslatePage() {
@@ -9,11 +8,7 @@ async function TranslatePage() {
   return (
     <>
       <Header />
-      <div>
-        <TranslationForm languages={supportedLanguages} />
-        {/* History Button */}
-        <HistoryIconLink />
-      </div>
+      <TranslationPanel languages={supportedLanguages} />
     </>
   );
 }

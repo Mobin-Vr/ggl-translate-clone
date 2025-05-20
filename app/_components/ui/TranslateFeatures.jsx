@@ -1,13 +1,22 @@
 import { DocIcon, ImageIcon, LanguageIcon, WebsiteIcon } from "@/public/icons";
-import { HiOutlineTranslate } from "react-icons/hi";
+import { useRef, useState } from "react";
+import ScrollableFade from "../ScrollableFade";
 import TranslateFeaturesView from "./TranslateFeaturesView";
-import { useState } from "react";
 
-function TranslateFeatures({ icon, text }) {
+function TranslateFeatures({ icon, text, className, isFormVertical }) {
   const [active, setActive] = useState("Text"); // CHANGE later
+  const containerRef = useRef(null);
 
   return (
-    <div className="mt-4 mb-7 flex gap-2">
+    <div
+      ref={containerRef}
+      className={`no-scrollbar reletive flex items-center overflow-x-auto whitespace-nowrap ${isFormVertical ? "gap-1" : "gap-2"} ${className}`}
+    >
+      <ScrollableFade
+        containerRef={containerRef}
+        className="top-0 right-0 h-9.5 w-6"
+      />
+
       <TranslateFeaturesView
         text="Text"
         icon={<LanguageIcon size="20" />}

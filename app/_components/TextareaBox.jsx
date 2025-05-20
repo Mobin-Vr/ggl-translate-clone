@@ -1,6 +1,4 @@
-import autosize from "autosize";
 import DoteLoader from "./ui/DoteLoader";
-import { useLayoutEffect } from "react";
 
 export function TextareaBox({
   maxLength = 1000,
@@ -10,14 +8,33 @@ export function TextareaBox({
   value,
   onChange,
   children,
+  className,
+  isFormVertical,
+  inputValue = "",
+  outputLang,
 }) {
+  const hideEmptyOutputVertical =
+    isFormVertical && isOutput && (!inputValue || !outputLang);
+
+  if (hideEmptyOutputVertical) return null;
+
+  if (isOutput) {
+    console.log("hideEmptyOutputVertical", hideEmptyOutputVertical);
+  }
+
   const shouldShowLoader = isPending && isOutput;
   const valueCond = isOutput && value === "" ? "" : value;
 
   return (
     <div
-      className={`text-text-color relative flex min-h-32 flex-col justify-between overflow-hidden rounded-sm text-lg sm:text-2xl lg:min-h-42 ${
-        isOutput ? "bg-textaria-dis" : "border border-gray-200"
+      className={`text-text-color relative flex min-h-41 flex-col justify-between overflow-hidden text-2xl ${className} ${
+        isFormVertical ? "" : "rounded-sm"
+      } ${
+        isOutput
+          ? "bg-textaria-dis"
+          : isFormVertical
+            ? `border-t border-gray-300`
+            : "border border-gray-300"
       }`}
     >
       <textarea
@@ -28,7 +45,7 @@ export function TextareaBox({
         maxLength={maxLength}
         placeholder={isOutput ? "Translation" : ""}
         dir="auto"
-        className={`resize-none border-none p-4 pr-16 outline-none md:px-5 md:py-4 ${
+        className={`resize-none border-none p-4 outline-none md:px-5 md:py-4 ${isOutput ? "pr-6" : "pr-16"} ${
           isOutput
             ? "bg-textaria-dis placeholder:text-gray-500"
             : "pr-12 md:pr-12"

@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
             <UserSignupHandler />
           </SignedIn>
 
-          <main>{children}</main>
+          <main className="h-dvh overflow-hidden">{children}</main>
 
           <Toaster />
         </body>

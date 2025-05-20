@@ -12,7 +12,14 @@ import {
 import { useEffect, useState } from "react";
 import Tooltip from "./ui/Tooltip";
 
-function SelectLang({ languages, onSelect, value, className }) {
+export default function SelectLang({
+  languages,
+  onSelect,
+  value,
+  className,
+  className2,
+  isFormVertical,
+}) {
   const [selected, setSelected] = useState(value);
 
   function handleSelectChange(langName) {
@@ -26,9 +33,11 @@ function SelectLang({ languages, onSelect, value, className }) {
 
   return (
     <Tooltip title="Select target language">
-      <div className={`w-fit ${className}`}>
+      <div className={` ${className} ${isFormVertical ? "w-fit" : "w-44"}`}>
         <Select onValueChange={handleSelectChange} value={selected}>
-          <SelectTrigger className="no-shadow w-fit gap-1 border-none text-sm font-semibold text-blue-600">
+          <SelectTrigger
+            className={`no-shadow gap-1 border-none text-sm font-semibold text-blue-600 ${isFormVertical ? "w-fit" : "w-full"} ${className2}`}
+          >
             <SelectValue placeholder="Select a language">
               {selected}
             </SelectValue>
@@ -49,5 +58,3 @@ function SelectLang({ languages, onSelect, value, className }) {
     </Tooltip>
   );
 }
-
-export default SelectLang;
