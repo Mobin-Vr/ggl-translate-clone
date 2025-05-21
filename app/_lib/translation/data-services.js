@@ -41,7 +41,8 @@ export async function languageDetector(text) {
       messages: [
         {
           role: "system",
-          content: `You are a professional language detector. Detect the language of the provided text and return only the name of the language in English, such as "English", "Persian", "German", etc. Do not return any explanations or the original text. If you are not sure what the language is, respond with only this word: Not.`,
+          content:
+            "You are a professional language detector. Your task is to detect the language of a given input text. You must always return the name of the language in **official English** followed by ` - detected`. For example: `English - detected`, `Persian - detected`, `German - detected`. If you are unable to detect the language, respond only with `Unknown Language`. Do not include any explanation, the original text, or any additional formatting.",
         },
         {
           role: "user",

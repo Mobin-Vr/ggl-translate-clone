@@ -277,3 +277,35 @@ export const XIcon = ({ size = "24", color = "currentColor" }) => (
     />
   </svg>
 );
+
+export const AlertIcon = ({ size = "24" }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 14 14"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <circle cx="7" cy="7" r="7" fill="#F9AB00" />
+    <path d="M6 10H8V12H6V10ZM6 2H8V8H6V2Z" fill="#202124" />
+  </svg>
+);
+
+export const TrashIcon = ({ size = "20", color = "currentColor" }) => (
+  <svg
+    width={size}
+    height={size}
+    fill={color}
+    viewBox="0 0 20 20"
+    aria-label=""
+    aria-hidden="true"
+    focusable="false"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M8.5 4h3a1.5 1.5 0 00-3 0zm-1 0a2.5 2.5 0 015 0h5a.5.5 0 010 1h-1.05l-1.2 10.34A3 3 0 0112.27 18H7.73a3 3 0 01-2.98-2.66L3.55 5H2.5a.5.5 0 010-1h5zM5.74 15.23A2 2 0 007.73 17h4.54a2 2 0 001.99-1.77L15.44 5H4.56l1.18 10.23zM8.5 7.5c.28 0 .5.22.5.5v6a.5.5 0 01-1 0V8c0-.28.22-.5.5-.5zM12 8a.5.5 0 00-1 0v6a.5.5 0 001 0V8z"
+      fill={color}
+    ></path>
+  </svg>
+);

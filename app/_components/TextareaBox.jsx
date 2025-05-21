@@ -18,10 +18,6 @@ export function TextareaBox({
 
   if (hideEmptyOutputVertical) return null;
 
-  if (isOutput) {
-    console.log("hideEmptyOutputVertical", hideEmptyOutputVertical);
-  }
-
   const shouldShowLoader = isPending && isOutput;
   const valueCond = isOutput && value === "" ? "" : value;
 

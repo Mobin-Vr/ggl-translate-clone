@@ -84,3 +84,18 @@ export async function deleteTranslation(translationId) {
     throw new Error("Translation could not be deleted");
   }
 }
+
+// Delete many history rows
+export async function deleteHistoryRows(translationIds) {
+  const { data, error } = await supabase
+    .from("history")
+    .delete()
+    .in("translation_id", translationIds);
+
+  if (error) {
+    console.error("Error deleting rows:", error);
+    return;
+  }
+
+  return { successStatus: true };
+}

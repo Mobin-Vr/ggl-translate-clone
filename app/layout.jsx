@@ -6,6 +6,7 @@ import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
 import "tippy.js/dist/tippy.css"; // optional
 import UserSignupHandler from "./_components/UserSignupHandler";
+import Header from "./_components/Header";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -32,13 +33,15 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <ClerkProvider dynamic>
-      <html lang="en">
-        <body className={`${roboto.className} ${iranSansRegular.className} $`}>
+      <html lang="en" className="h-full">
+        <body
+          className={`h-full ${roboto.className} ${iranSansRegular.className} `}
+        >
           <SignedIn>
             <UserSignupHandler />
           </SignedIn>
 
-          <main className="h-dvh overflow-hidden">{children}</main>
+          <main className="h-full">{children}</main>
 
           <Toaster />
         </body>

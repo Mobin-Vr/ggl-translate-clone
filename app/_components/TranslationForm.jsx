@@ -14,40 +14,32 @@ import TranslateFeatures from "./ui/TranslateFeatures";
 const mostUsedLang = USER_MOST_FREQUENT_OUT_LANG;
 
 export default function TranslationForm({
-  languages: initialLanguages,
   isFormVertical,
   showHistory,
+  inputElementRef,
+  outputElementRef,
+  latestInText,
+  latestOutLang,
+  languages,
+  setLanguages,
+  inputText,
+  setInputText,
+  outputText,
+  setOutputText,
+  inputLang,
+  setInputLang,
+  outputLang,
+  setOutputLang,
+  isSwaping,
+  setIsSwaping,
+  isMicRecording,
+  setIsMicRecording,
+  isInputSpeaking,
+  setIsInputSpeaking,
+  isOutputSpeaking,
+  setIsOutputSpeaking,
+  isPending,
 }) {
-  const inputElementRef = useRef(null);
-  const outputElementRef = useRef(null);
-
-  const latestInText = useRef("");
-  const latestOutLang = useRef("");
-
-  const [languages, setLanguages] = useState(initialLanguages);
-  const [inputText, setInputText] = useState("");
-  const [outputText, setOutputText] = useState("");
-  const [inputLang, setInputLang] = useState("");
-  const [outputLang, setOutputLang] = useState("");
-  const [isSwaping, setIsSwaping] = useState(false);
-
-  // track recording status and prevent audio playback during recording
-  const [isMicRecording, setIsMicRecording] = useState(false);
-  const [isInputSpeaking, setIsInputSpeaking] = useState(false);
-  const [isOutputSpeaking, setIsOutputSpeaking] = useState(false);
-
-  const { isPending } = useTranslationHandler(
-    inputText,
-    outputLang,
-    inputLang,
-    setOutputText,
-    setInputLang,
-    isSwaping,
-    setIsSwaping,
-    latestInText,
-    latestOutLang,
-  );
-
   function handleAudioUpload(transcribedText) {
     setInputText(transcribedText);
   }

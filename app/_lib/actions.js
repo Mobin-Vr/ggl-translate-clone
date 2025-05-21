@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import {
   addHistory,
   createUser,
+  deleteHistoryRows,
   deleteTranslation,
   getHistory,
   getLanguages,
@@ -11,6 +12,7 @@ import {
   getUserById,
 } from "./data-services";
 import { languageDetector, translator } from "./translation/data-services";
+import { extractLanguageName } from "./utils";
 
 // Gets the translation history for a specific user
 export async function getHistoryAction(userId) {
@@ -57,7 +59,7 @@ export async function translate({ inputText, inputLang, outputLang }) {
 
     const historyRecord = {
       user_id: userId,
-      input_language: detectedLanguage === "Not" ? "Unknown" : detectedLanguage,
+      input_language: extractLanguageName(detectedLanguage),
       output_language: outputLang,
       input_text: inputText,
       output_text: translatedText,
@@ -72,11 +74,12 @@ export async function translate({ inputText, inputLang, outputLang }) {
   }
 }
 
+// Delete a specific translation
 export async function deleteTranslationAction(translationId) {
   // 1) Authentican
   const { userId } = await auth();
 
-  // 2) Authorization
+  // 2) Authorization // NOTE it can be done by a RPC fn
   const userHistory = await getHistory(userId);
   const userHistoryIds = userHistory.map((item) => item.translation_id);
 
@@ -85,4 +88,28 @@ export async function deleteTranslationAction(translationId) {
 
   // 3) Delete record from DB
   await deleteTranslation(translationId);
+}
+
+// Delete all translations of the user
+export async function deleteAllTranslationsAction() {
+  // 1) Authentication
+  const { userId } = await auth();
+
+  // 2) Authorization
+  const userHistory = await getHistory(userId);
+  const userHistoryIds = userHistory.map((item) => item.translation_id);
+
+  const allHistoriesBelongToUser = userHistory.every(
+    (h) => h.user_id === userId,
+  );
+
+  if (!allHistoriesBelongToUser)
+    throw new Error(
+      "You are not allowed to delete one or more of these translations",
+    );
+
+  // 3) Delete records from DB
+  const result = await deleteHistoryRows(userHistoryIds);
+
+  return result; // { successStatus: true/false }
 }

@@ -1,9 +1,7 @@
 import Tooltip from "./ui/Tooltip";
 
 function DetectedLang({ detectedLanguage, className }) {
-  const displayText = detectedLanguage
-    ? `${detectedLanguage} - Detected`
-    : "Auto-detection";
+  const displayText = detectedLanguage ? detectedLanguage : "Auto - detection";
 
   return (
     <Tooltip title="Auto langauge detection">

@@ -1,12 +1,13 @@
+import { TrashIcon } from "@/public/icons";
 import { HiOutlineTrash } from "react-icons/hi";
 
-function DeleteTranslationBtn({ onDelete }) {
+function DeleteTranslationBtn({ onDelete, className }) {
   return (
     <button
       onClick={onDelete}
-      className="flex h-8 w-8 items-center justify-center rounded-md text-gray-500 transition-colors duration-300 hover:bg-red-200 hover:text-red-500"
+      className={`mt-3 flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition-colors duration-300 hover:bg-red-500 hover:text-white ${className}`}
     >
-      <HiOutlineTrash className="h-5 w-5" />
+      <TrashIcon />
     </button>
   );
 }

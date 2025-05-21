@@ -3,13 +3,13 @@ import TranslationPanel from "./_components/TranslationPanel";
 import { getLanguagesAction } from "./_lib/actions";
 
 async function TranslatePage() {
-  const supportedLanguages = await getLanguagesAction();
+  const supportedLangs = await getLanguagesAction();
 
   return (
-    <>
+    <div className="flex h-full flex-col">
       <Header />
-      <TranslationPanel languages={supportedLanguages} />
-    </>
+      <TranslationPanel supportedLangs={supportedLangs} />
+    </div>
   );
 }
 

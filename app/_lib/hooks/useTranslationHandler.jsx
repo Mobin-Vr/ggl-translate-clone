@@ -13,6 +13,8 @@ export function useTranslationHandler(
   setIsSwaping,
   latestInText,
   latestOutLang,
+  isDataFromHistory,
+  setIsDataFromHistory,
 ) {
   const [isPending, setIsPending] = useState(false);
   const [debouncedInputText] = useDebounce(inputText, DEBOUNCE_DELAY);
@@ -49,6 +51,12 @@ export function useTranslationHandler(
 
     const inputChanged = trimmed !== latestInText.current;
     const langChanged = outputLang !== latestOutLang.current;
+
+    // If data is from history, do not translate
+    if (isDataFromHistory) {
+      if (inputChanged || langChanged) setIsDataFromHistory(false);
+      return;
+    }
 
     // If is just swapping dont do translation, just set in as false
     if (isSwaping) {

@@ -97,3 +97,16 @@ export function rtfToText(rtf) {
   }
   return output.join("");
 }
+
+export function extractLanguageName(detectedString) {
+  if (typeof detectedString !== "string") return "Invalid input";
+
+  const parts = detectedString.split("-");
+  if (parts.length === 2 && parts[1].toLowerCase().trim() === "detected") {
+    return parts[0].trim();
+  } else if (detectedString.trim() === "Unknown Language") {
+    return "Unknown Language";
+  }
+
+  return "Invalid format";
+}
