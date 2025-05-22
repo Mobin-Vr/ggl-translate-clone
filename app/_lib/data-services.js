@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { unstable_cache } from "next/cache";
 
 // Gets the translation history for a specific user
 export async function getHistory(userId) {
@@ -27,16 +28,20 @@ export async function addHistory(historyRecord) {
 }
 
 // Gets the supported languages from the translation service
-export async function getLanguages() {
-  const { data, error } = await supabase.from("languages").select("*");
+export const getLanguages = unstable_cache(
+  async () => {
+    const { data, error } = await supabase.from("languages").select("*");
 
-  if (error) {
-    console.error(error);
-    throw new Error("Languages could not be loaded");
-  }
+    if (error) {
+      console.error(error);
+      throw new Error("Languages could not be loaded");
+    }
 
-  return data;
-}
+    return data;
+  },
+  ["languages"],
+  { revalidate: 3600, tags: ["languages"] },
+);
 
 // Creates a new user in the "users" table
 export async function createUser(newUser) {
@@ -50,27 +55,33 @@ export async function createUser(newUser) {
   return data;
 }
 
-// Retrieves a user by their email address
-export async function getUserByEmail(userEmail) {
-  const { data } = await supabase
-    .from("users")
-    .select("*")
-    .eq("user_email", userEmail)
-    .single();
+export const getUserByEmail = unstable_cache(
+  async (userEmail) => {
+    const { data } = await supabase
+      .from("users")
+      .select("*")
+      .eq("user_email", userEmail)
+      .single();
 
-  return data;
-}
+    return data;
+  },
+  (userEmail) => ["getUserByEmail", userEmail], // Cache key based on email parameter
+  { revalidate: 3600 }, //  1h
+);
 
-// Retrieves a user by their ID
-export async function getUserById(userId) {
-  const { data } = await supabase
-    .from("users")
-    .select("*")
-    .eq("user_id", userId)
-    .single();
+export const getUserById = unstable_cache(
+  async (userId) => {
+    const { data } = await supabase
+      .from("users")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
 
-  return data;
-}
+    return data;
+  },
+  (userId) => ["getUserById", userId], // Cache key based on user ID parameter
+  { revalidate: 3600 }, // 1h
+);
 
 // Deletes a specific translation given its translation ID
 export async function deleteTranslation(translationId) {

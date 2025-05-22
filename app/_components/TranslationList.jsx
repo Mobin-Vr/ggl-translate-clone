@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, startTransition } from "react";
+import { useState } from "react";
 import {
   deleteAllTranslationsAction,
-  deleteManyTranslationsAction,
   deleteTranslationAction,
 } from "../_lib/actions";
 import HistoryCard from "./HistoryCard";
