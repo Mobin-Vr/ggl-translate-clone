@@ -14,8 +14,12 @@ function TranslationList({
   setInputLang,
   setOutputLang,
   setIsDataFromHistory,
+
   latestInText, // ref
   latestOutLang, // ref
+  setLatestInText,
+  setLatestOutLang,
+
   history,
   setHistory,
 }) {
@@ -55,8 +59,8 @@ function TranslationList({
     setInputLang(inputLang);
     setOutputLang(outputLang);
     setIsDataFromHistory(true);
-    latestInText.current = inputText;
-    latestOutLang.current = outputLang;
+    setLatestInText(inputText);
+    setLatestOutLang(outputLang);
   }
 
   // Handles deletion of all translation history

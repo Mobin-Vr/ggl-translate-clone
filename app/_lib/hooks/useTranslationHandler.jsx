@@ -11,8 +11,12 @@ export function useTranslationHandler(
   setInputLang,
   isSwaping,
   setIsSwaping,
-  latestInText,
-  latestOutLang,
+
+  getLatestInText,
+  getLatestOutLang,
+  setLatestInText,
+  setLatestOutLang,
+
   isDataFromHistory,
   setIsDataFromHistory,
 ) {
@@ -27,15 +31,17 @@ export function useTranslationHandler(
     };
 
     // This flag is used to track the latest input text so that only the most recent translation result is shown. Prevents displaying outdated results when input changes quickly.
-    latestInText.current = trimmedText;
-    latestOutLang.current = outputLang;
+    setLatestInText(trimmedText);
+    setLatestOutLang(outputLang);
 
     setIsPending(true);
     const result = await enqueueTranslation(translationPayload);
     const { translatedText, detectedLanguage } = result;
 
+    console.log(getLatestInText(), " - ", trimmedText);
+
     // If the input text has changed while waiting for the translation, do not update the output text and set isPending to false
-    if (latestInText.current === trimmedText) {
+    if (getLatestInText() === trimmedText) {
       setOutputText(translatedText);
       setInputLang(detectedLanguage);
       setIsPending(false);
@@ -49,8 +55,8 @@ export function useTranslationHandler(
     const hasLang =
       outputLang && outputLang !== "" && outputLang !== "Select a language";
 
-    const inputChanged = trimmed !== latestInText.current;
-    const langChanged = outputLang !== latestOutLang.current;
+    const inputChanged = trimmed !== getLatestInText();
+    const langChanged = outputLang !== getLatestOutLang();
 
     // If data is from history, do not translate
     if (isDataFromHistory) {
@@ -67,7 +73,7 @@ export function useTranslationHandler(
     if (!inputChanged && !langChanged) return;
 
     if (!trimmed) {
-      latestInText.current = "";
+      setLatestInText("");
       setIsPending(false);
       setOutputText("");
       return;
@@ -78,7 +84,11 @@ export function useTranslationHandler(
     setOutputText("");
     setInputLang("");
 
+    console.log(trimmed);
+
     handleTranslate(trimmed);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedInputText, outputLang]);
 
   return { isPending };

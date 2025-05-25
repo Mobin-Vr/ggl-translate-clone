@@ -14,8 +14,12 @@ export default function SwapBtn({
   setInputLang,
   setOutputLang,
   setIsSwaping,
+
   latestInText,
   latestOutLang,
+  setLatestInText,
+  setLatestOutLang,
+
   className,
 }) {
   function handleSwap() {
@@ -32,9 +36,9 @@ export default function SwapBtn({
 
     setIsSwaping(true);
 
-    // Reset the latests (refs)
-    latestInText.current = newInText;
-    latestOutLang.current = newOutLang;
+    // Reset the latests
+    setLatestInText(newInText);
+    setLatestOutLang(newOutLang);
 
     // Reset the states
     setOutputLang(newOutLang);

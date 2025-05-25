@@ -1,150 +1,164 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 
-import autosize from "autosize";
-import { USER_MOST_FREQUENT_OUT_LANG } from "../_lib/configs";
+import { useShallow } from "zustand/react/shallow";
+import { useTextareaSyncHeight } from "../_lib/hooks/useTextareaSyncHeight";
 import { useTranslationHandler } from "../_lib/hooks/useTranslationHandler";
+import useTranslateStore from "../translateStore";
 import InputView from "./InputView";
 import LanguageBar from "./LanguageBar";
 import OutputView from "./OutputView";
 import TranslateFeatures from "./ui/TranslateFeatures";
 
 // LATER
-const mostUsedLang = USER_MOST_FREQUENT_OUT_LANG;
+// const mostUsedLang = USER_MOST_FREQUENT_OUT_LANG;
 
-export default function TranslationForm({
-  isFormVertical,
-  showHistory,
-  inputElementRef,
-  outputElementRef,
-  latestInText,
-  latestOutLang,
-  languages,
-  setLanguages,
-  inputText,
-  setInputText,
-  outputText,
-  setOutputText,
-  inputLang,
-  setInputLang,
-  outputLang,
-  setOutputLang,
-  isSwaping,
-  setIsSwaping,
-  isMicRecording,
-  setIsMicRecording,
-  isInputSpeaking,
-  setIsInputSpeaking,
-  isOutputSpeaking,
-  setIsOutputSpeaking,
-  isPending,
-}) {
-  function handleAudioUpload(transcribedText) {
-    setInputText(transcribedText);
-  }
+export default function TranslationForm({ supportedLangs }) {
+  const {
+    isMainSectionVertical,
+    showHistory,
+    isDataFromHistory,
+    setIsDataFromHistory,
+    inputText,
+    outputText,
+    inputLang,
+    outputLang,
+    getLatestInText,
+    getLatestOutLang,
+    setInputText,
+    setOutputText,
+    setInputLang,
+    setOutputLang,
+    setLatestInText,
+    setLatestOutLang,
+  } = useTranslateStore(
+    useShallow((state) => ({
+      isMainSectionVertical: state.isMainSectionVertical,
+      showHistory: state.showHistory,
+
+      isDataFromHistory: state.isDataFromHistory,
+      setIsDataFromHistory: state.setIsDataFromHistory,
+
+      inputText: state.inputText,
+      outputText: state.outputText,
+      inputLang: state.inputLang,
+      outputLang: state.outputLang,
+      getLatestInText: state.getLatestInText,
+      getLatestOutLang: state.getLatestOutLang,
+
+      setInputText: state.setInputText,
+      setOutputText: state.setOutputText,
+      setInputLang: state.setInputLang,
+      setOutputLang: state.setOutputLang,
+      setLatestInText: state.setLatestInText,
+      setLatestOutLang: state.setLatestOutLang,
+    })),
+  );
+
+  const [isSwaping, setIsSwaping] = useState(false);
+  const inputElementRef = useRef(null);
+  const outputElementRef = useRef(null);
+
+  const [audioStatus, setAudioStatus] = useState({
+    isMicRecording: false,
+    isInputSpeaking: false,
+    isOutputSpeaking: false,
+  });
 
   // Keeps both textareas at the same height by matching them to the taller one
-  useEffect(() => {
-    if (!inputElementRef.current || !outputElementRef.current) return;
+  useTextareaSyncHeight(inputElementRef, outputElementRef, [
+    inputText,
+    outputText,
+  ]);
 
-    // Step 1: Apply autosize
-    autosize(inputElementRef.current);
-    autosize(outputElementRef.current);
+  const { isPending } = useTranslationHandler(
+    inputText,
+    outputLang,
+    inputLang,
+    setOutputText,
+    setInputLang,
 
-    // Step 2: Force update to get accurate height
-    autosize.update(inputElementRef.current);
-    autosize.update(outputElementRef.current);
+    isSwaping,
+    setIsSwaping,
 
-    // Step 3: Compare and unify heights
-    const inputHeight = inputElementRef.current.scrollHeight;
-    const outputHeight = outputElementRef.current.scrollHeight;
-    const maxHeight = Math.max(inputHeight, outputHeight);
+    getLatestInText,
+    getLatestOutLang,
+    setLatestInText,
+    setLatestOutLang,
 
-    inputElementRef.current.style.height = `${maxHeight}px`;
-    outputElementRef.current.style.height = `${maxHeight}px`;
-  }, [inputText, outputText]);
+    isDataFromHistory,
+    setIsDataFromHistory,
+  );
+
+  const translationProps = useMemo(
+    () => ({
+      inputLang,
+      outputLang,
+      inputText,
+      outputText,
+      setInputText,
+      setOutputText,
+      setInputLang,
+      setOutputLang,
+    }),
+    [
+      inputLang,
+      outputLang,
+      inputText,
+      outputText,
+      setInputText,
+      setOutputText,
+      setInputLang,
+      setOutputLang,
+    ],
+  );
 
   return (
     <div
-      className={`relative ${showHistory && isFormVertical ? "px-0" : "px-3"}`}
+      className={`relative ${showHistory && isMainSectionVertical ? "px-0" : "px-3"}`}
     >
       <TranslateFeatures
-        isFormVertical={isFormVertical}
+        isMainSectionVertical={isMainSectionVertical}
         className={`h-[3.5rem] px-3`}
       />
 
-      {/* Visible only on form smaller than 720 */}
       <LanguageBar
-        inputLang={inputLang}
-        outputLang={outputLang}
-        inputText={inputText}
-        outputText={outputText}
-        setInputText={setInputText}
-        setOutputText={setOutputText}
-        setInputLang={setInputLang}
-        setOutputLang={setOutputLang}
+        {...translationProps}
         setIsSwaping={setIsSwaping}
-        latestInText={latestInText}
-        latestOutLang={latestOutLang}
-        languages={languages}
-        isFormVertical={isFormVertical}
-        className={isFormVertical ? "justify-around" : "hidden"}
-      />
-
-      {/* Visible only on form bigger than 720 */}
-      <LanguageBar
-        inputLang={inputLang}
-        outputLang={outputLang}
-        inputText={inputText}
-        outputText={outputText}
-        setInputText={setInputText}
-        setOutputText={setOutputText}
-        setInputLang={setInputLang}
-        setOutputLang={setOutputLang}
-        setIsSwaping={setIsSwaping}
-        latestInText={latestInText}
-        latestOutLang={latestOutLang}
-        languages={languages}
-        isFormVertical={isFormVertical}
-        className={isFormVertical ? "hidden" : ""}
+        latestInText={getLatestInText()}
+        latestOutLang={getLatestOutLang()}
+        setLatestInText={setLatestInText}
+        setLatestOutLang={setLatestOutLang}
+        languages={supportedLangs}
+        isMainSectionVertical={isMainSectionVertical}
+        className={isMainSectionVertical ? "justify-around" : ""} // TODO LATER check this later
       />
 
       <div
-        className={`flex items-center justify-center ${isFormVertical ? "flex-col" : "flex-row gap-2"}`}
+        className={`flex items-center justify-center ${isMainSectionVertical ? "flex-col" : "flex-row gap-2"}`}
       >
         <InputView
-          inputLang={inputLang}
-          inputText={inputText}
-          setInputLang={setInputLang}
-          setOutputLang={setOutputLang}
-          setInputText={setInputText}
-          setOutputText={setOutputText}
+          audioStatus={audioStatus}
+          setAudioStatus={setAudioStatus}
           inputElementRef={inputElementRef}
-          handleAudioUpload={handleAudioUpload}
-          setIsMicRecording={setIsMicRecording}
-          isMicRecording={isMicRecording}
-          isInputSpeaking={isInputSpeaking}
-          setIsInputSpeaking={setIsInputSpeaking}
-          isFormVertical={isFormVertical}
+          isMainSectionVertical={isMainSectionVertical}
+          handleAudioUpload={(transcribedText) => setInputText(transcribedText)}
+          {...translationProps}
         />
 
         {/* Border bottom for input - it wii be invisible in some conditions */}
-        {isFormVertical && (!inputText || !outputLang) && (
+        {isMainSectionVertical && (!inputText || !outputLang) && (
           <div className="w-full border-t border-t-gray-300"></div>
         )}
 
         <OutputView
-          languages={languages}
-          outputLang={outputLang}
-          setOutputLang={setOutputLang}
-          outputText={outputText}
-          inputText={inputText}
           isPending={isPending}
           outputElementRef={outputElementRef}
-          isOutputSpeaking={isOutputSpeaking}
-          setIsOutputSpeaking={setIsOutputSpeaking}
-          isFormVertical={isFormVertical}
+          audioStatus={audioStatus}
+          setAudioStatus={setAudioStatus}
+          isMainSectionVertical={isMainSectionVertical}
+          {...translationProps}
         />
       </div>
     </div>

@@ -9,12 +9,12 @@ export function TextareaBox({
   onChange,
   children,
   className,
-  isFormVertical,
+  isMainSectionVertical,
   inputValue = "",
   outputLang,
 }) {
   const hideEmptyOutputVertical =
-    isFormVertical && isOutput && (!inputValue || !outputLang);
+    isMainSectionVertical && isOutput && (!inputValue || !outputLang);
 
   if (hideEmptyOutputVertical) return null;
 
@@ -24,11 +24,11 @@ export function TextareaBox({
   return (
     <div
       className={`text-text-color relative flex min-h-41 flex-col justify-between overflow-hidden text-2xl ${className} ${
-        isFormVertical ? "" : "rounded-sm"
+        isMainSectionVertical ? "" : "rounded-sm"
       } ${
         isOutput
           ? "bg-textaria-dis"
-          : isFormVertical
+          : isMainSectionVertical
             ? `border-t border-gray-300`
             : "border border-gray-300"
       }`}

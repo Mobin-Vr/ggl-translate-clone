@@ -14,7 +14,6 @@ export default function TranslationHistory({
   setOutputText,
   setInputLang,
   setOutputLang,
-  setIsDataFromHistory,
   handleCloseHistory,
   latestInText, // ref
   latestOutLang, // ref

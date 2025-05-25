@@ -3,18 +3,18 @@ import { useRef, useState } from "react";
 import ScrollableFade from "../ScrollableFade";
 import TranslateFeaturesView from "./TranslateFeaturesView";
 
-function TranslateFeatures({ icon, text, className, isFormVertical }) {
+function TranslateFeatures({ className, isMainSectionVertical }) {
   const [active, setActive] = useState("Text"); // CHANGE later
   const containerRef = useRef(null);
 
   return (
     <div
       ref={containerRef}
-      className={`no-scrollbar reletive flex items-center overflow-x-auto whitespace-nowrap ${isFormVertical ? "gap-1" : "gap-2"} ${className}`}
+      className={`no-scrollbar reletive flex items-center overflow-x-auto whitespace-nowrap ${isMainSectionVertical ? "gap-1" : "gap-2"} ${className}`}
     >
       <ScrollableFade
         containerRef={containerRef}
-        className="top-0 right-0 h-9.5 w-6"
+        className="top-0 right-0 h-[3.5rem] w-6"
       />
 
       <TranslateFeaturesView

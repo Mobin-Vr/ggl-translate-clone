@@ -4,16 +4,17 @@ import Speaker from "./Speaker";
 import { TextareaBox } from "./TextareaBox";
 
 export default function OutputView({
-  languages,
-  outputLang,
-  setOutputLang,
-  outputText,
-  inputText,
   isPending,
   outputElementRef,
-  isOutputSpeaking,
-  setIsOutputSpeaking,
-  isFormVertical,
+
+  outputLang,
+  outputText,
+  inputText,
+
+  audioStatus,
+  setAudioStatus,
+
+  isMainSectionVertical,
 }) {
   return (
     <TextareaBox
@@ -22,14 +23,16 @@ export default function OutputView({
       ref={outputElementRef}
       value={outputText}
       className="relative w-full flex-1"
-      isFormVertical={isFormVertical}
+      isMainSectionVertical={isMainSectionVertical}
       inputValue={inputText}
       outputLang={outputLang}
     >
       <Speaker
         value={outputText}
-        speaking={isOutputSpeaking}
-        setSpeaking={setIsOutputSpeaking}
+        speaking={audioStatus.isOutputSpeaking}
+        setSpeaking={(bool) =>
+          setAudioStatus({ ...audioStatus, isOutputSpeaking: bool })
+        }
         className="mb-4 ml-1"
       />
 

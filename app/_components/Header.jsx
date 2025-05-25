@@ -1,5 +1,3 @@
-// "use client";
-
 import { AppsDotsIcon } from "@/public/icons";
 import { headers } from "next/headers";
 import { MdMenu } from "react-icons/md";

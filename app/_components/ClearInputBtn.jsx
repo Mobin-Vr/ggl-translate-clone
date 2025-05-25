@@ -1,11 +1,8 @@
 import { XIcon } from "@/public/icons";
 import Tooltip from "./ui/Tooltip";
-import { PiXCircleDuotone } from "react-icons/pi";
-import { MdClear } from "react-icons/md";
 
 export default function ClearInputBtn({
   setInputLang,
-  setOutputLang,
   setInputText,
   setOutputText,
   inputText,
@@ -14,7 +11,6 @@ export default function ClearInputBtn({
 
   function handleClear() {
     setInputLang("");
-    setOutputLang("Select a language");
     setInputText("");
     setOutputText("");
   }

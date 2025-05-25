@@ -18,7 +18,7 @@ export default function SelectLang({
   value,
   className,
   className2,
-  isFormVertical,
+  isMainSectionVertical,
 }) {
   const [selected, setSelected] = useState(value);
 
@@ -33,10 +33,12 @@ export default function SelectLang({
 
   return (
     <Tooltip title="Select target language">
-      <div className={` ${className} ${isFormVertical ? "w-fit" : "w-44"}`}>
+      <div
+        className={` ${className} ${isMainSectionVertical ? "w-fit" : "w-44"}`}
+      >
         <Select onValueChange={handleSelectChange} value={selected}>
           <SelectTrigger
-            className={`no-shadow gap-1 border-none text-sm font-semibold text-blue-600 ${isFormVertical ? "w-fit" : "w-full"} ${className2}`}
+            className={`no-shadow gap-1 border-none text-sm font-semibold text-blue-600 ${isMainSectionVertical ? "w-fit" : "w-full"} ${className2}`}
           >
             <SelectValue placeholder="Select a language">
               {selected}

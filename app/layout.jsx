@@ -7,6 +7,7 @@ import { Toaster } from "react-hot-toast";
 import "tippy.js/dist/tippy.css"; // optional
 import UserSignupHandler from "./_components/UserSignupHandler";
 import Header from "./_components/Header";
+import ResponsiveWrapper from "./_components/ResponsiveWrapper";
 
 const roboto = Roboto({
   weight: ["400", "700"],
@@ -30,18 +31,21 @@ export const metadata = {
   description: "Translate text and recognize speech with Google Translate.",
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, history }) {
   return (
     <ClerkProvider dynamic>
       <html lang="en" className="h-full">
         <body
-          className={`h-full ${roboto.className} ${iranSansRegular.className} `}
+          className={`flex h-full flex-col ${roboto.className} ${iranSansRegular.className} `}
         >
           <SignedIn>
             <UserSignupHandler />
           </SignedIn>
 
-          <main className="h-full">{children}</main>
+          <Header />
+
+          {/* It is a wrapper component to handle the responsive design but the pages (main page: children & history page) are server components */}
+          <ResponsiveWrapper mainApp={children} theHistory={history} />
 
           <Toaster />
         </body>

@@ -17,6 +17,8 @@ export default function Recorder({
   // Update transcript state when it changes in the hook
   useEffect(() => {
     if (transcript) onAudioTranscriped(transcript);
+
+    console.log(transcript);
   }, [transcript]);
 
   // Update isMicRecording (TranslationForm) state when isRecordind changes in the custom hook

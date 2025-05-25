@@ -1,16 +1,8 @@
-import Header from "./_components/Header";
-import TranslationPanel from "./_components/TranslationPanel";
+import TranslationForm from "./_components/TranslationForm";
 import { getLanguagesAction } from "./_lib/actions";
 
-async function TranslatePage() {
+export default async function page() {
   const supportedLangs = await getLanguagesAction();
 
-  return (
-    <div className="flex h-full flex-col">
-      <Header />
-      <TranslationPanel supportedLangs={supportedLangs} />
-    </div>
-  );
+  return <TranslationForm supportedLangs={supportedLangs} />;
 }
-
-export default TranslatePage;

@@ -4,19 +4,18 @@ import Speaker from "./Speaker";
 import { TextareaBox } from "./TextareaBox";
 
 export default function InputView({
-  inputLang,
+  inputElementRef,
+  isMainSectionVertical,
+
+  audioStatus,
+  setAudioStatus,
+
+  handleAudioUpload,
+
   inputText,
   setInputLang,
-  setOutputLang,
   setInputText,
   setOutputText,
-  inputElementRef,
-  handleAudioUpload,
-  setIsMicRecording,
-  isMicRecording,
-  isInputSpeaking,
-  setIsInputSpeaking,
-  isFormVertical,
 }) {
   return (
     <TextareaBox
@@ -25,25 +24,28 @@ export default function InputView({
       value={inputText}
       onChange={(e) => setInputText(e.target.value)}
       className="relative w-full flex-1"
-      isFormVertical={isFormVertical}
+      isMainSectionVertical={isMainSectionVertical}
     >
       <Recorder
-        onAudioTranscriped={handleAudioUpload}
-        onDisableSpeaker={setIsMicRecording}
         className="mb-4 ml-1"
+        onAudioTranscriped={handleAudioUpload}
+        onDisableSpeaker={(bool) =>
+          setAudioStatus({ ...audioStatus, isMicRecording: bool })
+        }
       />
 
       <Speaker
-        value={inputText}
-        isRecordingInProgress={isMicRecording} // Prevents audio playback while the microphone is actively recording
         className="mb-4 ml-1"
-        speaking={isInputSpeaking}
-        setSpeaking={setIsInputSpeaking}
+        value={inputText}
+        speaking={audioStatus.isInputSpeaking}
+        setSpeaking={(bool) =>
+          setAudioStatus({ ...audioStatus, isInputSpeaking: bool })
+        }
+        isRecordingInProgress={audioStatus.isMicRecording} // Prevents audio playback while the microphone is actively recording
       />
 
       <ClearInputBtn
         setInputLang={setInputLang}
-        setOutputLang={setOutputLang}
         setInputText={setInputText}
         setOutputText={setOutputText}
         inputText={inputText}
