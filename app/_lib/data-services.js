@@ -1,5 +1,6 @@
-import { supabase } from "./supabase";
 import { unstable_cache } from "next/cache";
+import { supabase } from "./supabase";
+import { getErrorMessage } from "./utils";
 
 // Gets the translation history for a specific user
 export async function getHistory(userId) {
@@ -8,6 +9,8 @@ export async function getHistory(userId) {
     .select("*")
     .eq("user_id", userId)
     .order("created_at", { ascending: false });
+
+  await new Promise((resolve) => setTimeout(resolve, 5000));
 
   if (error) {
     console.error(error);
@@ -85,28 +88,23 @@ export const getUserById = unstable_cache(
 
 // Deletes a specific translation given its translation ID
 export async function deleteTranslation(translationId) {
-  const { error } = await supabase
-    .from("history")
-    .delete()
-    .eq("translation_id", translationId);
-
-  if (error) {
+  try {
+    await supabase.from("history").delete().eq("translation_id", translationId);
+  } catch (error) {
     console.error(error);
-    throw new Error("Translation could not be deleted");
+    return { error: getErrorMessage(error) };
   }
 }
 
 // Delete many history rows
 export async function deleteHistoryRows(translationIds) {
-  const { data, error } = await supabase
-    .from("history")
-    .delete()
-    .in("translation_id", translationIds);
-
-  if (error) {
-    console.error("Error deleting rows:", error);
-    return;
+  try {
+    await supabase
+      .from("history")
+      .delete()
+      .in("translation_id", translationIds);
+  } catch (error) {
+    console.error(error);
+    return { error: getErrorMessage(error) };
   }
-
-  return { successStatus: true };
 }

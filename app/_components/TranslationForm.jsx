@@ -18,7 +18,7 @@ export default function TranslationForm({ supportedLangs }) {
   const {
     isMainSectionVertical,
     showHistory,
-    isDataFromHistory,
+    getIsDataFromHistory,
     setIsDataFromHistory,
     inputText,
     outputText,
@@ -37,7 +37,7 @@ export default function TranslationForm({ supportedLangs }) {
       isMainSectionVertical: state.isMainSectionVertical,
       showHistory: state.showHistory,
 
-      isDataFromHistory: state.isDataFromHistory,
+      getIsDataFromHistory: state.getIsDataFromHistory,
       setIsDataFromHistory: state.setIsDataFromHistory,
 
       inputText: state.inputText,
@@ -87,7 +87,7 @@ export default function TranslationForm({ supportedLangs }) {
     setLatestInText,
     setLatestOutLang,
 
-    isDataFromHistory,
+    getIsDataFromHistory,
     setIsDataFromHistory,
   );
 

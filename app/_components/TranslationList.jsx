@@ -1,100 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useOptimistic, useTransition } from "react";
+import toast from "react-hot-toast";
 import {
   deleteAllTranslationsAction,
   deleteTranslationAction,
 } from "../_lib/actions";
 import HistoryCard from "./HistoryCard";
-import { showCustomToast } from "./ui/Notification";
 
-function TranslationList({
-  setInputText,
-  setOutputText,
-  setInputLang,
-  setOutputLang,
-  setIsDataFromHistory,
+function TranslationList({ history, moveHistoryDataToForm }) {
+  // eslint-disable-next-line no-unused-vars
+  const [isPending, startTransition] = useTransition();
+  const [optimisticHistory, deleteOptimistic] = useOptimistic(
+    history,
+    (current, action) => {
+      return action.type === "all"
+        ? []
+        : current.filter((t) => t.translation_id !== action.id);
+    },
+  );
 
-  latestInText, // ref
-  latestOutLang, // ref
-  setLatestInText,
-  setLatestOutLang,
+  // Delete a specific translation
+  function handleDelete(id) {
+    deleteOptimistic({ type: "single", id });
 
-  history,
-  setHistory,
-}) {
-  // Keep a local copy of history for UI interaction.
-  // We avoid mutating the original source (`history`) since it's refreshed on each page load —
-  // this allows safe local edits (like optimistic updates) without risk of losing the main data.
-  const [translations, setTranslations] = useState(history);
-
-  // Handles deletion of a single translation
-  async function handleDelete(translationId) {
-    //1. Optimistically update UI by removing the translation locally
-    setTranslations((prev) =>
-      prev.filter((item) => item.translation_id !== translationId),
-    );
-
-    try {
-      //2. Attempt to delete the translation from the database
-      await deleteTranslationAction(translationId);
-    } catch (error) {
-      // 3. If deletion fails, show error and revert local state
-      showCustomToast("❌ Failed to delete the translation. Please try again.");
-      setTranslations(history);
-    }
+    startTransition(async () => {
+      const res = await deleteTranslationAction(id);
+      if (res?.error) toast.error(res.error);
+    });
   }
 
-  // Moves the selected history item back into the translation form
-  function handleMoveHistoryDataToForm(translation) {
-    const {
-      input_text: inputText,
-      output_text: outputText,
-      input_language: inputLang,
-      output_language: outputLang,
-    } = translation;
+  // Delete all translations
+  function handleDeleteAll() {
+    deleteOptimistic({ type: "all" });
 
-    setInputText(inputText);
-    setOutputText(outputText);
-    setInputLang(inputLang);
-    setOutputLang(outputLang);
-    setIsDataFromHistory(true);
-    setLatestInText(inputText);
-    setLatestOutLang(outputLang);
+    startTransition(async () => {
+      const res = await deleteAllTranslationsAction();
+      if (res?.error) toast.error(res.error);
+    });
   }
 
-  // Handles deletion of all translation history
-  async function handleDeleteAll() {
-    // 1. Optimistically clear the translation list from UI
-    setTranslations([]);
-
-    try {
-      // 2. Attempt to delete all translations from the database
-      await deleteAllTranslationsAction();
-
-      // 3. Update history state to keep all UI components synchronized after successful deletion
-      setHistory([]);
-    } catch (error) {
-      // 4. If deletion fails, show error and restore original history
-      showCustomToast("❌ Failed to clear the history. Please try again.");
-      setTranslations(history);
-    }
-  }
+  const isOptEmpty = optimisticHistory.length === 0;
 
   return (
     <div className="flex h-full flex-1 flex-col overflow-hidden">
       <ul className="flex-1 overflow-y-auto">
-        {translations.map((translation) => (
+        {optimisticHistory.map((translation) => (
           <HistoryCard
             key={translation.translation_id}
             translation={translation}
             onDelete={() => handleDelete(translation.translation_id)}
-            onClick={() => handleMoveHistoryDataToForm(translation)}
+            moveHistoryDataToForm={moveHistoryDataToForm}
           />
         ))}
       </ul>
 
-      {translations.length !== 0 && (
+      {!isOptEmpty && (
         <div className="flex w-full shrink-0 justify-end bg-gray-100">
           <button
             onClick={handleDeleteAll}

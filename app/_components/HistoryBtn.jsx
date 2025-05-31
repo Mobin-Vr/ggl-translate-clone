@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { RiHistoryLine } from "react-icons/ri";
 
 export default function HistoryBtn({ onClick }) {

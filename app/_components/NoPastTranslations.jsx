@@ -3,9 +3,11 @@
 import desert from "@/public/desert.png";
 import Image from "next/image";
 
-export default function NoPastTranslations({ onClose, className }) {
+export default function NoPastTranslations({ className }) {
   return (
-    <div className={`flex items-center justify-center ${className}`}>
+    <div
+      className={`flex h-full -translate-y-12 items-center justify-center ${className}`}
+    >
       <div className="flex max-w-72 flex-col items-center p-6 text-center">
         <div className="mb-4 max-w-48">
           <Image src={desert} alt="No translations" />

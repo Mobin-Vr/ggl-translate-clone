@@ -11,7 +11,7 @@ import {
   getUserByEmail,
   getUserById,
 } from "./data-services";
-import { languageDetector, translator } from "./translation/data-services";
+import { detectAndTranslate } from "./translation/data-services";
 import { extractLanguageName } from "./utils";
 
 // Gets the translation history for a specific user
@@ -35,20 +35,17 @@ export async function getUserByEmailAction(userEmail) {
 }
 
 // Translates the input text to the specified output language and detects the input language if needed
-export async function translate({ inputText, inputLang, outputLang }) {
+export async function translate({ inputText, outputLang }) {
   if (!inputText || !outputLang) {
     throw new Error("Please provide both the text and the target language.");
   }
 
   try {
     // Perform translation and language detection
-    const [detectedLanguage, translatedText] = await Promise.all([
-      // 1. Detect the input language
-      languageDetector(inputText),
-
-      // 2. Translate the text
-      translator(inputText, outputLang),
-    ]);
+    const { detectedLanguage, translation } = await detectAndTranslate(
+      inputText,
+      outputLang,
+    );
 
     // 1) Authentican
     const { userId } = await auth();
@@ -62,12 +59,12 @@ export async function translate({ inputText, inputLang, outputLang }) {
       input_language: extractLanguageName(detectedLanguage),
       output_language: outputLang,
       input_text: inputText,
-      output_text: translatedText,
+      output_text: translation,
     };
 
     addHistory(historyRecord);
 
-    return { translatedText, detectedLanguage };
+    return { translation, detectedLanguage };
   } catch (err) {
     console.error("Translation or detection error:", err.message, err.stack);
     throw new Error(err.message);
@@ -111,5 +108,5 @@ export async function deleteAllTranslationsAction() {
   // 3) Delete records from DB
   const result = await deleteHistoryRows(userHistoryIds);
 
-  return result; // { successStatus: true/false }
+  return result;
 }

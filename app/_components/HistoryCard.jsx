@@ -2,10 +2,12 @@ import { HiOutlineArrowLongRight } from "react-icons/hi2";
 import DeleteTranslationBtn from "./DeleteTranslationBtn";
 import TimeAgo from "./TimeAgo";
 import TextExpander from "./TextExpander";
+import { useRef } from "react";
 
-function HistoryCard({ translation, onDelete, onClick }) {
+function HistoryCard({ translation, onDelete, moveHistoryDataToForm }) {
+  const deleteBtnRef = useRef(null);
+
   const {
-    translation_id: translationId,
     input_language: inputLang,
     output_language: outputLang,
     input_text: inputText,
@@ -13,9 +15,15 @@ function HistoryCard({ translation, onDelete, onClick }) {
     created_at: createdAt,
   } = translation;
 
+  function handleClick(e) {
+    if (deleteBtnRef.current?.contains(e.target)) return;
+
+    moveHistoryDataToForm(translation);
+  }
+
   return (
     <li
-      onClick={onClick}
+      onClick={(e) => handleClick(e)}
       className="group relative flex cursor-pointer items-center justify-between border-b border-gray-300 p-4 text-sm hover:bg-slate-50"
     >
       <div>
@@ -39,6 +47,7 @@ function HistoryCard({ translation, onDelete, onClick }) {
       />
 
       <DeleteTranslationBtn
+        ref={deleteBtnRef}
         onDelete={onDelete}
         className="opacity-0 transition-opacity group-hover:opacity-100"
       />

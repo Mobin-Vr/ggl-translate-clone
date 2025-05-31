@@ -1,16 +1,12 @@
-import useTranslateStore from "@/app/translateStore";
-import { useEffect, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
+import { useEffect } from "react";
 import { MAIN_BREAKPOINT } from "../configs";
 
-export function useResponsiveLayout(isHistoryVisible, mainSectionRef) {
-  const [showFormSection, setShowFormSection] = useState(true);
-  const { setIsMainSectionVertical } = useTranslateStore(
-    useShallow((state) => ({
-      setIsMainSectionVertical: state.setIsMainSectionVertical,
-    })),
-  );
-
+export function useResponsiveLayout(
+  mainSectionRef,
+  setIsMainSectionVertical,
+  setShowFormSection,
+  showHistory,
+) {
   // Detect vertical layout via ResizeObserver
   useEffect(() => {
     const section = mainSectionRef.current;
@@ -30,7 +26,7 @@ export function useResponsiveLayout(isHistoryVisible, mainSectionRef) {
   useEffect(() => {
     const handleResize = () => {
       setShowFormSection(
-        !(isHistoryVisible && window.innerWidth <= MAIN_BREAKPOINT),
+        !(showHistory && window.innerWidth <= MAIN_BREAKPOINT),
       );
     };
 
@@ -38,7 +34,6 @@ export function useResponsiveLayout(isHistoryVisible, mainSectionRef) {
     handleResize(); // run initially
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [isHistoryVisible]);
-
-  return { mainSectionRef, showFormSection };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showHistory]);
 }

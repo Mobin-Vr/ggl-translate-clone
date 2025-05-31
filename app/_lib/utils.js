@@ -101,12 +101,25 @@ export function rtfToText(rtf) {
 export function extractLanguageName(detectedString) {
   if (typeof detectedString !== "string") return "Invalid input";
 
-  const parts = detectedString.split("-");
-  if (parts.length === 2 && parts[1].toLowerCase().trim() === "detected") {
-    return parts[0].trim();
-  } else if (detectedString.trim() === "Unknown Language") {
+  if (detectedString.trim().toLowerCase() === "unknown language")
     return "Unknown Language";
+
+  return detectedString;
+}
+
+// Function to extract the error message to show a proper message
+export const getErrorMessage = (error) => {
+  let message;
+
+  if (error instanceof Error) {
+    message = error.message;
+  } else if (error && typeof error === "object" && "message" in error) {
+    message = String(error.message);
+  } else if (typeof error === "string") {
+    message = error;
+  } else {
+    message = "Something went wrong";
   }
 
-  return "Invalid format";
-}
+  return message;
+};

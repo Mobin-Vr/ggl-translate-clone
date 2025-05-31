@@ -17,7 +17,7 @@ export function useTranslationHandler(
   setLatestInText,
   setLatestOutLang,
 
-  isDataFromHistory,
+  getIsDataFromHistory,
   setIsDataFromHistory,
 ) {
   const [isPending, setIsPending] = useState(false);
@@ -34,22 +34,19 @@ export function useTranslationHandler(
     setLatestInText(trimmedText);
     setLatestOutLang(outputLang);
 
-    setIsPending(true);
     const result = await enqueueTranslation(translationPayload);
-    const { translatedText, detectedLanguage } = result;
-
-    console.log(getLatestInText(), " - ", trimmedText);
+    const { translation, detectedLanguage } = result;
 
     // If the input text has changed while waiting for the translation, do not update the output text and set isPending to false
     if (getLatestInText() === trimmedText) {
-      setOutputText(translatedText);
+      setOutputText(translation);
       setInputLang(detectedLanguage);
       setIsPending(false);
     }
   }
 
   useEffect(() => {
-    const trimmed = debouncedInputText.trim();
+    const trimmed = inputText.trim();
 
     const hasInput = trimmed !== "";
     const hasLang =
@@ -58,11 +55,12 @@ export function useTranslationHandler(
     const inputChanged = trimmed !== getLatestInText();
     const langChanged = outputLang !== getLatestOutLang();
 
-    // If data is from history, do not translate
-    if (isDataFromHistory) {
-      if (inputChanged || langChanged) setIsDataFromHistory(false);
-      return;
+    if ((inputChanged || langChanged) && getIsDataFromHistory()) {
+      setIsDataFromHistory(false);
     }
+
+    // If data is from history, do not translate
+    if (getIsDataFromHistory()) return;
 
     // If is just swapping dont do translation, just set in as false
     if (isSwaping) {
@@ -81,12 +79,12 @@ export function useTranslationHandler(
 
     if (!hasLang || !hasInput) return;
 
+    if (inputChanged || langChanged) setIsPending(true);
+
     setOutputText("");
     setInputLang("");
 
-    console.log(trimmed);
-
-    handleTranslate(trimmed);
+    handleTranslate(debouncedInputText.trim());
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedInputText, outputLang]);

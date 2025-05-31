@@ -1,135 +1,121 @@
-import { produce } from "immer";
 import { create } from "zustand";
+import { produce } from "immer";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
+
+// Reusable form state
+const initialFormState = {
+  inputText: "",
+  outputText: "",
+  inputLang: "",
+  outputLang: "",
+  latestInText: "",
+  latestOutLang: "",
+  isDataFromHistory: false,
+};
 
 const useTranslateStore = create(
   devtools(
     persist(
-      (set, get) => ({
-        userState: null,
+      (set, get) => {
+        const immerSet = (fn) => set(produce(fn));
 
-        isMainSectionVertical: false,
-        showHistory: false,
-        isDataFromHistory: false,
+        return {
+          userState: null,
 
-        inputText: "",
-        outputText: "",
-        inputLang: "",
-        outputLang: "",
-        latestInText: "",
-        latestOutLang: "",
+          showHistory: false,
+          showFormSection: true,
+          isMainSectionVertical: false,
 
-        // # Set user's info
-        setUserState: (userState) => {
-          set(
-            produce((state) => {
-              state.userState = userState;
+          ...initialFormState,
+
+          // Setters
+          setUserState: (userState) =>
+            immerSet((s) => {
+              s.userState = userState;
             }),
-          );
-        },
 
-        // # Set main section layout vertical or horizontal
-        setIsMainSectionVertical: (bool) => {
-          set(
-            produce((state) => {
-              state.isMainSectionVertical = bool;
+          setIsMainSectionVertical: (bool) =>
+            immerSet((s) => {
+              s.isMainSectionVertical = bool;
             }),
-          );
-        },
 
-        // # Set show history or not
-        setShowHistory: (bool) => {
-          set(
-            produce((state) => {
-              state.showHistory = bool;
+          setShowHistory: (bool) =>
+            immerSet((s) => {
+              s.showHistory = bool;
             }),
-          );
-        },
 
-        // # Set input text
-        setInputText: (text) => {
-          set(
-            produce((state) => {
-              state.inputText = text;
+          setShowFormSection: (bool) =>
+            immerSet((s) => {
+              s.showFormSection = bool;
             }),
-          );
-        },
 
-        // # Set output text
-        setOutputText: (text) => {
-          set(
-            produce((state) => {
-              state.outputText = text;
+          setInputText: (text) =>
+            immerSet((s) => {
+              s.inputText = text;
             }),
-          );
-        },
 
-        // # Set input language
-        setInputLang: (lang) => {
-          set(
-            produce((state) => {
-              state.inputLang = lang;
+          setOutputText: (text) =>
+            immerSet((s) => {
+              s.outputText = text;
             }),
-          );
-        },
 
-        // # Set output language
-        setOutputLang: (lang) => {
-          set(
-            produce((state) => {
-              state.outputLang = lang;
+          setInputLang: (lang) =>
+            immerSet((s) => {
+              s.inputLang = lang;
             }),
-          );
-        },
 
-        // # Set latest input text
-        setLatestInText: (text) => {
-          set(
-            produce((state) => {
-              state.latestInText = text;
+          setOutputLang: (lang) =>
+            immerSet((s) => {
+              s.outputLang = lang;
             }),
-          );
-        },
 
-        // # Set latest output language
-        setLatestOutLang: (lang) => {
-          set(
-            produce((state) => {
-              state.latestOutLang = lang;
+          setLatestInText: (text) =>
+            immerSet((s) => {
+              s.latestInText = text;
             }),
-          );
-        },
 
-        // # Set is data from history or not
-        setIsDataFromHistory: (bool) => {
-          set(
-            produce((state) => {
-              state.isDataFromHistory = bool;
+          setLatestOutLang: (lang) =>
+            immerSet((s) => {
+              s.latestOutLang = lang;
             }),
-          );
-        },
 
-        // # get users info
-        getUserState: () => {
-          return get().userState;
-        },
+          setIsDataFromHistory: (bool) =>
+            immerSet((s) => {
+              s.isDataFromHistory = bool;
+            }),
 
-        // # get latest input text
-        getLatestInText: () => {
-          return get().latestInText;
-        },
+          // Set form with translation from history
+          moveHistoryDataToForm: (translation) => {
+            immerSet(() => ({
+              inputText: translation.input_text,
+              outputText: translation.output_text,
+              inputLang: translation.input_language,
+              outputLang: translation.output_language,
+              latestInText: translation.input_text,
+              latestOutLang: translation.output_language,
+              isDataFromHistory: true,
+            }));
+          },
 
-        // # get latest output language
-        getLatestOutLang: () => {
-          return get().latestOutLang;
-        },
-      }),
+          // Reset form to initial state
+          resetForm: () =>
+            immerSet((state) => {
+              Object.assign(state, initialFormState);
+            }),
+
+          // Getters
+          getUserState: () => get().userState,
+          getLatestInText: () => get().latestInText,
+          getLatestOutLang: () => get().latestOutLang,
+          getIsDataFromHistory: () => get().isDataFromHistory,
+        };
+      },
       {
-        name: "Translate Store", // Key name for storage
-        storage: createJSONStorage(() => sessionStorage), // Use localStorage for persisting the data
+        name: "Translate Store",
+        storage: createJSONStorage(() => sessionStorage),
       },
     ),
-    { name: "Translate Store" }, // Redux DevTools name
+    { name: "Translate Store" },
   ),
 );
 

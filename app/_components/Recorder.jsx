@@ -1,10 +1,8 @@
 import { useEffect } from "react";
-import { PiMicrophone } from "react-icons/pi";
-import { PiSquareFill } from "react-icons/pi";
 
-import Tooltip from "./ui/Tooltip";
-import useSpeechRecognition from "../_lib/hooks/useSpeechRecog";
 import { MicSensitivityIcon, SquareIcon } from "@/public/icons";
+import useSpeechRecognition from "../_lib/hooks/useSpeechRecog";
+import Tooltip from "./ui/Tooltip";
 
 export default function Recorder({
   onAudioTranscriped,
@@ -17,8 +15,6 @@ export default function Recorder({
   // Update transcript state when it changes in the hook
   useEffect(() => {
     if (transcript) onAudioTranscriped(transcript);
-
-    console.log(transcript);
   }, [transcript]);
 
   // Update isMicRecording (TranslationForm) state when isRecordind changes in the custom hook
