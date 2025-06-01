@@ -9,20 +9,18 @@ function Profile() {
   const { isOpen, toggle, close, ref } = useProfileModal();
 
   return (
-    <Tooltip title="Profile">
-      <div className="relative" ref={ref}>
-        <div
-          onClick={toggle}
-          className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200"
-        >
-          <UserButton userProfileMode={false} />
-        </div>
-
-        {isOpen && (
-          <ProfileModal user={user} isLoaded={isLoaded} onClose={close} />
-        )}
+    <div className="relative" ref={ref}>
+      <div
+        onClick={toggle}
+        className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200"
+      >
+        <UserButton userProfileMode={false} />
       </div>
-    </Tooltip>
+
+      {isOpen && (
+        <ProfileModal user={user} isLoaded={isLoaded} onClose={close} />
+      )}
+    </div>
   );
 }
 

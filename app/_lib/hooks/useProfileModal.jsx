@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function useProfileModal() {
   const ref = useRef(null);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => setIsOpen((prev) => !prev);
   const close = () => setIsOpen(false);

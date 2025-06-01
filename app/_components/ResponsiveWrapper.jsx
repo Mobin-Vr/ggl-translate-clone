@@ -80,7 +80,7 @@ export default function ResponsiveWrapper({ mainApp, theHistory, userId }) {
 
       {showHistory && (
         <aside
-          className={`fixed right-0 z-50 flex w-full flex-col ${isMobileHistoryView ? "top-0 h-dvh" : "top-header-height md:max-w-history-md h-screen-minus-header xl:max-w-history-xl border-l border-gray-300"}`}
+          className={`fixed right-0 z-40 flex w-full flex-col ${isMobileHistoryView ? "top-0 h-dvh" : "top-header-height md:max-w-history-md h-screen-minus-header xl:max-w-history-xl border-l border-gray-300"}`}
         >
           {theHistory}
         </aside>
