@@ -25,18 +25,21 @@ function TranslateFeatures({ className, isMainSectionVertical }) {
       />
       <TranslateFeaturesView
         text="Images"
+        title="Not available"
         icon={<ImageIcon size="20" />}
         isActive={active === "Images"}
         onClick={() => setActive("Images")}
       />
       <TranslateFeaturesView
         text="Documents"
+        title="Not available"
         icon={<DocIcon size="20" />}
         isActive={active === "Documents"}
         onClick={() => setActive("Documents")}
       />
       <TranslateFeaturesView
         text="Websites"
+        title="Not available"
         icon={<WebsiteIcon size="20" />}
         isActive={active === "Websites"}
         onClick={() => setActive("Websites")}

@@ -23,7 +23,7 @@ const useTranslateStore = create(
           userState: null,
 
           showHistory: false,
-          showFormSection: true,
+          isMobileHistoryView: false,
           isMainSectionVertical: false,
 
           ...initialFormState,
@@ -44,9 +44,9 @@ const useTranslateStore = create(
               s.showHistory = bool;
             }),
 
-          setShowFormSection: (bool) =>
+          setIsMobileHistoryView: (bool) =>
             immerSet((s) => {
-              s.showFormSection = bool;
+              s.isMobileHistoryView = bool;
             }),
 
           setInputText: (text) =>

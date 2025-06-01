@@ -1,39 +1,56 @@
 import { useEffect } from "react";
 import { MAIN_BREAKPOINT } from "../configs";
 
+/**
+ * Hook for handling responsive layout behavior.
+ * - Determines if the layout is vertical based on a container's width.
+ * - Shows or hides the form section and header based on screen size and history visibility.
+ */
+
 export function useResponsiveLayout(
-  mainSectionRef,
-  setIsMainSectionVertical,
-  setShowFormSection,
-  showHistory,
+  containerRef,
+  setIsVerticalLayout, // setter to indicate vertical layout (true/false)
+  setIsMobileHistoryView, // setter to toggle form section visibility
+  showHistory, // boolean: whether the history panel is visible
 ) {
-  // Detect vertical layout via ResizeObserver
+  // Detects vertical layout by observing container's
   useEffect(() => {
-    const section = mainSectionRef.current;
-    if (!section) return;
+    const container = containerRef.current;
+
+    if (!container) return;
 
     const observer = new ResizeObserver(() => {
-      setIsMainSectionVertical(section.offsetWidth <= MAIN_BREAKPOINT);
+      setIsVerticalLayout(container.offsetWidth <= MAIN_BREAKPOINT);
     });
 
-    observer.observe(section);
+    observer.observe(container);
     return () => observer.disconnect();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mainSectionRef.current]);
+    // eslint-disable-next-line
+  }, [containerRef.current]);
 
-  // Show/hide form section based on window size and history panel
+  // Adjusts visibility of form section and header on window resize
   useEffect(() => {
-    const handleResize = () => {
-      setShowFormSection(
-        !(showHistory && window.innerWidth <= MAIN_BREAKPOINT),
-      );
-    };
+    function handleResize() {
+      const isNarrowScreenWithHistory =
+        showHistory && window.innerWidth <= MAIN_BREAKPOINT;
+
+      const header = document.getElementById("main-header");
+
+      // Set isMobileHistoryView to true if it's a mobile screen and history is visible
+      setIsMobileHistoryView(isNarrowScreenWithHistory);
+
+      // Conditionally hide or show the header based on screen size and history
+      if (header) {
+        header.style.display = isNarrowScreenWithHistory ? "none" : "flex";
+      }
+    }
 
     window.addEventListener("resize", handleResize);
-    handleResize(); // run initially
+    handleResize(); // Run once on mount
 
     return () => window.removeEventListener("resize", handleResize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showHistory]);
+  }, [showHistory, setIsMobileHistoryView]);
+
+  return { containerRef };
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { AppsDotsIcon, MenuIcon } from "@/public/icons";
+import { MenuIcon } from "@/public/icons";
 import Tooltip from "./Tooltip";
 
 export default function MenuBtn() {
   return (
-    <Tooltip title="Main menu">
+    <Tooltip title="Not available">
       <button
         onClick={() => {}}
         type="button"

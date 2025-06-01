@@ -1,13 +1,15 @@
 import { RiHistoryLine } from "react-icons/ri";
 
-export default function HistoryBtn({ onClick }) {
+export default function HistoryBtn({ onClick, ref, showHistory }) {
   return (
-    <div className="mt-12 flex justify-center">
+    <div ref={ref} className="mt-12 flex justify-center">
       <button
         onClick={onClick}
-        className="flex flex-col items-center gap-2 text-gray-500 transition duration-300 hover:text-gray-700"
+        className={`flex w-fit cursor-pointer flex-col items-center gap-2 transition duration-300 ${showHistory ? "text-blue-600" : "text-gray-500"}`}
       >
-        <div className="flex h-16 w-16 items-center justify-center rounded-full border border-gray-300">
+        <div
+          className={`flex h-15 w-15 items-center justify-center rounded-full ${showHistory ? "border-0 bg-blue-100" : "border border-gray-300"}`}
+        >
           <RiHistoryLine className="text-3xl" />
         </div>
 

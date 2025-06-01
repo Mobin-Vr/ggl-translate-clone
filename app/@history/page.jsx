@@ -4,6 +4,9 @@ import { getHistoryAction } from "../_lib/actions";
 
 export default async function history() {
   const { userId } = await auth();
+
+  if (!userId) return null;
+
   const history = await getHistoryAction(userId);
 
   return <TranslationHistory history={history} />;

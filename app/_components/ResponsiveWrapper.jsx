@@ -1,46 +1,50 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { startTransition, useEffect, useRef } from "react";
-import { useResponsiveLayout } from "../_lib/hooks/useResponsiveLayout";
-import HistoryBtn from "./HistoryBtn";
-import useTranslateStore from "../translateStore";
 import { useShallow } from "zustand/react/shallow";
+import { useHistoryModal } from "../_lib/hooks/useHistoryModal";
+import { useResponsiveLayout } from "../_lib/hooks/useResponsiveLayout";
+import useTranslateStore from "../translateStore";
+import HistoryAccessModal from "./HistoryAccessModal";
+import HistoryBtn from "./HistoryBtn";
 
-export default function ResponsiveWrapper({ mainApp, theHistory }) {
-  const mainSectionRef = useRef(null);
-  const router = useRouter();
+export default function ResponsiveWrapper({ mainApp, theHistory, userId }) {
+  const containerRef = useRef(null);
 
   const {
     showHistory,
-    showFormSection,
-    setShowFormSection,
+    isMobileHistoryView,
+    setIsMobileHistoryView,
     setShowHistory,
     setIsMainSectionVertical,
     resetForm,
   } = useTranslateStore(
     useShallow((state) => ({
       showHistory: state.showHistory,
-      showFormSection: state.showFormSection,
-      setShowFormSection: state.setShowFormSection,
+      isMobileHistoryView: state.isMobileHistoryView,
+      setIsMobileHistoryView: state.setIsMobileHistoryView,
       setShowHistory: state.setShowHistory,
       setIsMainSectionVertical: state.setIsMainSectionVertical,
       resetForm: state.resetForm,
     })),
   );
 
-  // Custom hook to manage responsive layout; updates state via store without returning any value
+  const { isModalOpen, openModal, closeModal, modalRef } = useHistoryModal();
+
+  // Layout responsiveness
   useResponsiveLayout(
-    mainSectionRef,
+    containerRef,
     setIsMainSectionVertical,
-    setShowFormSection,
+    setIsMobileHistoryView,
     showHistory,
   );
 
-  // Refreshes server components to fetch fresh history when panel opens
+  // Reset form on mount
+  // eslint-disable-next-line
+  useEffect(() => resetForm(), []);
+
+  // Refresh server history
   useEffect(() => {
-    // Only when the history panel opens
-    // if (showHistory) router.refresh();
     if (showHistory) {
       startTransition(async () => {
         // await revalidateHistory();
@@ -48,30 +52,42 @@ export default function ResponsiveWrapper({ mainApp, theHistory }) {
     }
   }, [showHistory]);
 
-  // Resets form fields when component mounts
-  useEffect(() => {
-    resetForm();
-    // eslint-disable-next-line
-  }, []);
+  function handleHistoryBtnClick() {
+    if (!userId) {
+      openModal();
+      return;
+    }
+
+    setShowHistory(!showHistory);
+  }
 
   return (
     <main className="flex h-full">
-      {showFormSection && (
+      {!isMobileHistoryView && (
         <section
-          ref={mainSectionRef}
+          ref={containerRef}
           className={`flex-1 overflow-x-auto ${
-            showHistory ? "md:mr-[21rem] xl:mr-[30rem]" : ""
+            showHistory ? "md:mr-history-md xl:mr-history-xl" : ""
           }`}
         >
-          {mainApp} {/* a parallel server component */}
-          <HistoryBtn onClick={() => setShowHistory(!showHistory)} />
+          {mainApp}
+          <HistoryBtn
+            showHistory={showHistory}
+            onClick={handleHistoryBtnClick}
+          />
         </section>
       )}
 
       {showHistory && (
-        <aside className="fixed top-[65px] right-0 z-50 h-[calc(100vh-65px)] w-full border-l border-gray-300 md:max-w-[21rem] xl:max-w-[30rem]">
-          {theHistory} {/* a parallel server component */}
+        <aside
+          className={`fixed right-0 z-50 flex w-full flex-col ${isMobileHistoryView ? "top-0 h-dvh" : "top-header-height md:max-w-history-md h-screen-minus-header xl:max-w-history-xl border-l border-gray-300"}`}
+        >
+          {theHistory}
         </aside>
+      )}
+
+      {isModalOpen && (
+        <HistoryAccessModal ref={modalRef} onClose={closeModal} />
       )}
     </main>
   );

@@ -2,10 +2,18 @@ export const DEBOUNCE_DELAY = 1000; // Delay before triggering translation (in m
 export const TEXT_EXPANDER_MAX_LENGTH = 45; // Maximum number of characters to show before expanding text
 export const USER_MOST_FREQUENT_OUT_LANG = "";
 
+// Truncate text
+export const MAX_TRUNC_TEXT_CHAR = 40;
+
+// UI Sizes
 export const MAIN_BREAKPOINT = 720;
-// export const HISTORY_WIDTH_MD = "21rem";
-// export const HISTORY_WIDTH_XL = "30rem";
-// export const NAVBAR_HEIGHT = 65;
+// export const MAX_HEADER_HEIGHT = "65px";
+// export const MAX_HISTORY_SIZES = {
+//   md: "23rem",
+//   xl: "30rem",
+// };
+
+// NOTE Refer to global.css, theme for changing ui sizes
 
 // Deep seek configs
 export const PROMPT_TEMPERATURE = 0.7;

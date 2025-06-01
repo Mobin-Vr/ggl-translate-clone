@@ -52,7 +52,7 @@ export default function SwapBtn({
       <button
         onClick={handleSwap}
         type="button"
-        className={`hover:bg-icon-hover z-50 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300 ${className}`}
+        className={`hover:bg-icon-hover z-40 flex h-10 w-10 cursor-pointer items-center justify-center rounded-full transition-all duration-300 ${className}`}
       >
         <IoMdSwap size={22} strokeWidth={1} className="text-gray-500" />
       </button>

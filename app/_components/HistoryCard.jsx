@@ -49,7 +49,7 @@ function HistoryCard({ translation, onDelete, moveHistoryDataToForm }) {
       <DeleteTranslationBtn
         ref={deleteBtnRef}
         onDelete={onDelete}
-        className="opacity-0 transition-opacity group-hover:opacity-100"
+        className="pointer-events-none opacity-0 transition-all duration-300 group-hover:pointer-events-auto group-hover:opacity-100"
       />
     </li>
   );
