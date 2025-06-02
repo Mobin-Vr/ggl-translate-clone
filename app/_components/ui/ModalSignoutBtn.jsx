@@ -1,11 +1,21 @@
+import useTranslateStore from "@/app/translateStore";
 import { SignOutIcon } from "@/public/icons";
 import { useClerk } from "@clerk/nextjs";
+import { useShallow } from "zustand/react/shallow";
 
 export default function ModalSignoutBtn({ closeModal }) {
   const { signOut } = useClerk();
 
+  const { setShowHistory } = useTranslateStore(
+    useShallow((state) => ({
+      setShowHistory: state.setShowHistory,
+    })),
+  );
+
   async function handleSignOut() {
     closeModal();
+    setShowHistory(false); // Close history
+
     await new Promise((r) => setTimeout(r, 300));
     await signOut();
   }

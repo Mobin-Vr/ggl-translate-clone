@@ -2,7 +2,6 @@
 import { UserButton, useUser } from "@clerk/nextjs";
 import useProfileModal from "../_lib/hooks/useProfileModal";
 import ProfileModal from "./ProfileModal";
-import Tooltip from "./ui/Tooltip";
 
 function Profile() {
   const { user, isLoaded } = useUser();
