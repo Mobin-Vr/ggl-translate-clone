@@ -1,24 +1,34 @@
-export const DEBOUNCE_DELAY = 1000; // Delay before triggering translation (in ms)
-export const TEXT_EXPANDER_MAX_LENGTH = 45; // Maximum number of characters to show before expanding text
-export const USER_MOST_FREQUENT_OUT_LANG = "";
+export const CONFIG = {
+  debounceDelay: 1000, // Delay before triggering translation (in ms)
 
-// Truncate text
-export const MAX_TRUNC_TEXT_CHAR = 40;
+  // =========================================
+  // UI Config
+  ui: {
+    mainBreakpoint: 720, // Refer to global.css for breakpoints
+    textExpanderMaxLength: 45, // Max chars before expanding long text
+    maxTruncTextChar: 40, // For truncated UI preview
+  },
 
-// UI Sizes
-export const MAIN_BREAKPOINT = 720;
-// export const MAX_HEADER_HEIGHT = "65px";
-// export const MAX_HISTORY_SIZES = {
-//   md: "23rem",
-//   xl: "30rem",
-// };
+  // =========================================
+  // Revalidation Times (in seconds)
+  revalidate: {
+    languages: 3600, // 1 hour
+    userByEmail: 3600,
+    userById: 3600,
+  },
 
-// NOTE Refer to global.css, theme for changing ui sizes
+  // =========================================
+  // User Preferences (placeholder)
+  user: {
+    mostFrequentOutLang: "",
+  },
 
-// Deep seek configs
-export const PROMPT_TEMPERATURE = 0.7;
-export const AI_MAX_TOKENS = 1000;
-export const DETECT_AND_TRANSLATE_PROMPT = `
+  // =========================================
+  // AI Translation Configs
+  ai: {
+    promptTemperature: 0.7,
+    maxTokens: 1000,
+    promptText: `
 You are a professional translator and language detector.
 Your task is to:
 1. Detect the language of the given input.
@@ -35,4 +45,6 @@ If detection fails, return:
   "detectedLanguage": "Unknown language",
   "translation": "<Translated text>"
 }
-`.trim();
+`.trim(),
+  },
+};

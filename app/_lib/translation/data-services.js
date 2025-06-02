@@ -1,8 +1,4 @@
-import {
-  AI_MAX_TOKENS,
-  DETECT_AND_TRANSLATE_PROMPT,
-  PROMPT_TEMPERATURE,
-} from "../configs";
+import { CONFIG } from "../configs";
 import { openai } from "../deepseek";
 
 export async function detectAndTranslate(text, targetLang) {
@@ -11,7 +7,7 @@ export async function detectAndTranslate(text, targetLang) {
       messages: [
         {
           role: "system",
-          content: DETECT_AND_TRANSLATE_PROMPT,
+          content: CONFIG.ai.promptText,
         },
         {
           role: "user",
@@ -22,8 +18,8 @@ export async function detectAndTranslate(text, targetLang) {
         },
       ],
       model: "deepseek-chat",
-      temperature: PROMPT_TEMPERATURE,
-      max_tokens: AI_MAX_TOKENS,
+      temperature: CONFIG.ai.promptTemperature,
+      max_tokens: CONFIG.ai.maxTokens,
     });
 
     let raw = response.choices[0]?.message?.content?.trim();

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { MAIN_BREAKPOINT } from "../configs";
+import { CONFIG } from "../configs";
 
 /**
  * Hook for handling responsive layout behavior.
@@ -20,7 +20,7 @@ export function useResponsiveLayout(
     if (!container) return;
 
     const observer = new ResizeObserver(() => {
-      setIsVerticalLayout(container.offsetWidth <= MAIN_BREAKPOINT);
+      setIsVerticalLayout(container.offsetWidth <= CONFIG.ui.mainBreakpoint);
     });
 
     observer.observe(container);
@@ -33,7 +33,7 @@ export function useResponsiveLayout(
   useEffect(() => {
     function handleResize() {
       const isNarrowScreenWithHistory =
-        showHistory && window.innerWidth <= MAIN_BREAKPOINT;
+        showHistory && window.innerWidth <= CONFIG.ui.mainBreakpoint;
 
       const header = document.getElementById("main-header");
 

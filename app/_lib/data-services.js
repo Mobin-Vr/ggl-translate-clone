@@ -1,6 +1,7 @@
 import { unstable_cache } from "next/cache";
 import { supabase } from "./supabase";
 import { getErrorMessage } from "./utils";
+import { CONFIG } from "./configs";
 
 // Gets the translation history for a specific user
 export async function getHistory(userId) {
@@ -20,16 +21,6 @@ export async function getHistory(userId) {
   return data;
 }
 
-// Stores a new translation history record for a user
-export async function addHistory(historyRecord) {
-  const { error } = await supabase.from("history").insert([historyRecord]);
-
-  if (error) {
-    console.error(error);
-    throw new Error("Failed to store translation history in supabase");
-  }
-}
-
 // Gets the supported languages from the translation service
 export const getLanguages = unstable_cache(
   async () => {
@@ -43,20 +34,8 @@ export const getLanguages = unstable_cache(
     return data;
   },
   ["languages"],
-  { revalidate: 3600, tags: ["languages"] },
+  { revalidate: CONFIG.revalidate.languages },
 );
-
-// Creates a new user in the "users" table
-export async function createUser(newUser) {
-  const { data, error } = await supabase
-    .from("users")
-    .insert([newUser])
-    .select();
-
-  if (error) throw new Error(error.message || JSON.stringify(error));
-
-  return data;
-}
 
 export const getUserByEmail = unstable_cache(
   async (userEmail) => {
@@ -69,7 +48,7 @@ export const getUserByEmail = unstable_cache(
     return data;
   },
   (userEmail) => ["getUserByEmail", userEmail], // Cache key based on email parameter
-  { revalidate: 3600 }, //  1h
+  { revalidate: CONFIG.revalidate.userByEmail },
 );
 
 export const getUserById = unstable_cache(
@@ -83,8 +62,20 @@ export const getUserById = unstable_cache(
     return data;
   },
   (userId) => ["getUserById", userId], // Cache key based on user ID parameter
-  { revalidate: 3600 }, // 1h
+  { revalidate: CONFIG.revalidate.userById }, // 1h
 );
+
+// Creates a new user in the "users" table
+export async function createUser(newUser) {
+  const { data, error } = await supabase
+    .from("users")
+    .insert([newUser])
+    .select();
+
+  if (error) throw new Error(error.message || JSON.stringify(error));
+
+  return data;
+}
 
 // Deletes a specific translation given its translation ID
 export async function deleteTranslation(translationId) {
@@ -106,5 +97,15 @@ export async function deleteHistoryRows(translationIds) {
   } catch (error) {
     console.error(error);
     return { error: getErrorMessage(error) };
+  }
+}
+
+// Stores a new translation history record for a user
+export async function addHistory(historyRecord) {
+  const { error } = await supabase.from("history").insert([historyRecord]);
+
+  if (error) {
+    console.error(error);
+    throw new Error("Failed to store translation history in supabase");
   }
 }

@@ -7,31 +7,14 @@ import {
   deleteHistoryRows,
   deleteTranslation,
   getHistory,
-  getLanguages,
-  getUserByEmail,
   getUserById,
 } from "./data-services";
 import { detectAndTranslate } from "./translation/data-services";
 import { extractLanguageName } from "./utils";
 
-// Gets the translation history for a specific user
-export async function getHistoryAction(userId) {
-  return await getHistory(userId);
-}
-
-// Gets the supported languages from the translation service
-export async function getLanguagesAction() {
-  return await getLanguages();
-}
-
 // Creates a new user in the database
 export async function createUserAction(newUser) {
   return await createUser(newUser);
-}
-
-// Gets a user by their email (used in server actions)
-export async function getUserByEmailAction(userEmail) {
-  return await getUserByEmail(userEmail);
 }
 
 // Translates the input text to the specified output language and detects the input language if needed

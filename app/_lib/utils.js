@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { MAX_TRUNC_TEXT_CHAR } from "./configs";
+import { CONFIG } from "./configs";
 
 export function cn(...inputs) {
   return twMerge(clsx(inputs));
@@ -125,7 +125,7 @@ export const getErrorMessage = (error) => {
   return message;
 };
 
-export function truncateText(text, maxLength = MAX_TRUNC_TEXT_CHAR) {
+export function truncateText(text, maxLength = CONFIG.ui.maxTruncTextChar) {
   if (!text) return "";
 
   return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;

@@ -1,7 +1,7 @@
 import { enqueueTranslation } from "@/app/_lib/translation/queu";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { DEBOUNCE_DELAY } from "../configs";
+import { CONFIG } from "../configs";
 
 export function useTranslationHandler(
   inputText,
@@ -21,7 +21,7 @@ export function useTranslationHandler(
   setIsDataFromHistory,
 ) {
   const [isPending, setIsPending] = useState(false);
-  const [debouncedInputText] = useDebounce(inputText, DEBOUNCE_DELAY);
+  const [debouncedInputText] = useDebounce(inputText, CONFIG.debounceDelay);
 
   async function handleTranslate(trimmedText) {
     const translationPayload = {

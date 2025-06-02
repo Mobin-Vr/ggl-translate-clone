@@ -7,9 +7,11 @@ import { useResponsiveLayout } from "../_lib/hooks/useResponsiveLayout";
 import useTranslateStore from "../translateStore";
 import HistoryAccessModal from "./HistoryAccessModal";
 import HistoryBtn from "./HistoryBtn";
+import { useRouter } from "next/navigation";
 
 export default function ResponsiveWrapper({ mainApp, theHistory, userId }) {
   const containerRef = useRef(null);
+  const router = useRouter();
 
   const {
     showHistory,
@@ -57,6 +59,8 @@ export default function ResponsiveWrapper({ mainApp, theHistory, userId }) {
       openModal();
       return;
     }
+
+    if (!showHistory) startTransition(() => router.refresh());
 
     setShowHistory(!showHistory);
   }

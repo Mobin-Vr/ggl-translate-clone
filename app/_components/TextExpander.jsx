@@ -2,18 +2,18 @@
 
 import { useState } from "react";
 import { HiChevronDown, HiChevronUp } from "react-icons/hi";
-import { TEXT_EXPANDER_MAX_LENGTH } from "../_lib/configs";
 import Tooltip from "./ui/Tooltip";
+import { CONFIG } from "../_lib/configs";
 
 function TextExpander({ children, className }) {
   const text = typeof children === "string" ? children : String(children);
-  const shouldTruncate = text.length > TEXT_EXPANDER_MAX_LENGTH;
+  const shouldTruncate = text.length > CONFIG.ui.textExpanderMaxLength;
 
   const [isExpanded, setIsExpanded] = useState(false);
   const displayText = shouldTruncate
     ? isExpanded
       ? text
-      : text.slice(0, TEXT_EXPANDER_MAX_LENGTH) + " ..."
+      : text.slice(0, CONFIG.ui.textExpanderMaxLength) + " ..."
     : text;
 
   return (

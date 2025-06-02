@@ -1,6 +1,6 @@
 <div style="display: flex; align-items: center; justify-content: center;">
   <h1 style="margin: 0; display: flex; align-items: center;">
-    <img src="public/icon.png" alt="logo" style="width: 35px; height: 35px; border-radius: 3px; margin-right: 10px;" />
+    <img src="public/trIcon.png" alt="logo" style="width: 35px; height: 35px; border-radius: 3px; margin-right: 10px;" />
     Google Translate&nbsp;<small style="font-size: 0.7em;">(clone)</small>
   </h1>
 </div>
