@@ -1,7 +1,6 @@
+import GoogleIcon from "@/public/google.png";
 import Image from "next/image";
 import Link from "next/link";
-import { MdMenu } from "react-icons/md";
-import GoogleIcon from "@/public/google.png";
 
 function Logo({ className }) {
   return (

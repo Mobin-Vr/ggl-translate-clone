@@ -1,6 +1,6 @@
 const allowedSizes = ["xs", "sm", "md", "lg", "xl"];
 
-export default function DotLoader({ size }) {
+export default function DoteLoader({ size }) {
   const finalSize = allowedSizes.includes(size) ? size : "xs";
 
   return (

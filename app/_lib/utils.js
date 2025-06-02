@@ -21,7 +21,7 @@ export function parseFormDataLang(language) {
       const result = JSON.parse(language);
       const { name, direction } = result;
       return { name, direction };
-    } catch (error) {
+    } catch {
       return language;
     }
   }
