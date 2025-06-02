@@ -19,7 +19,7 @@ export default function HistoryHeader({ setShowHistory, isMobileHistoryView }) {
         </>
       ) : (
         <>
-          <h1 className="text-3xl">History</h1>
+          <h1 className="text-[1.7rem]">History</h1>
           <button
             onClick={() => setShowHistory(false)}
             className="hover:bg-icon-hover ml-auto flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300"
