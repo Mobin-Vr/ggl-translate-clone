@@ -24,33 +24,46 @@ export async function translate({ inputText, outputLang }) {
   }
 
   try {
-    // Perform translation and language detection
+    // Detect input language and translate
     const { detectedLanguage, translation } = await detectAndTranslate(
       inputText,
       outputLang,
     );
 
-    // 1) Authentican
     const { userId } = await auth();
-    const user = await getUserById(userId);
 
-    if (!user)
-      throw new Error("You are not authorized to add a translation record.");
+    if (userId) {
+      try {
+        // to ensure existence of the user
+        const user = await getUserById(userId);
 
-    const historyRecord = {
-      user_id: userId,
-      input_language: extractLanguageName(detectedLanguage),
-      output_language: outputLang,
-      input_text: inputText,
-      output_text: translation,
-    };
+        if (!user) {
+          console.warn(
+            `User with auth ID ${userId} not found in our database. Skipping history save.`,
+          );
 
-    addHistory(historyRecord);
+          // Save translation history
+        } else {
+          const historyRecord = {
+            user_id: userId,
+            input_language: extractLanguageName(detectedLanguage),
+            output_language: outputLang,
+            input_text: inputText,
+            output_text: translation,
+          };
+
+          await addHistory(historyRecord);
+        }
+      } catch (historyError) {
+        console.error("Failed to save translation history", historyError);
+        // Do not throw – translation already succeeded
+      }
+    }
 
     return { translation, detectedLanguage };
   } catch (err) {
-    console.error("Translation or detection error:", err.message, err.stack);
-    throw new Error(err.message);
+    console.error("Core translation error:", err.message, err.stack);
+    throw new Error("Translation failed. Please try again.");
   }
 }
 
