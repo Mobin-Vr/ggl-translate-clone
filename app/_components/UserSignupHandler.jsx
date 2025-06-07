@@ -16,8 +16,6 @@ export default function UserSignupHandler() {
   );
 
   useEffect(() => {
-    console.log("AAA");
-
     async function handleSignIn() {
       // Skip if no user is logged in
       if (!user) return;

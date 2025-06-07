@@ -17,6 +17,8 @@ export default function LanguageBar({
   setLatestInText,
   setLatestOutLang,
 
+  recentHistory,
+
   setIsSwaping,
   isMainSectionVertical,
 
@@ -51,6 +53,7 @@ export default function LanguageBar({
         languages={languages}
         value={outputLang}
         onSelect={setOutputLang}
+        recentHistory={recentHistory}
         isMainSectionVertical={isMainSectionVertical}
         className={`font-sans text-sm font-[500] ${isMainSectionVertical ? "" : "absolute left-1/2 -translate-x-[calc(50%-7.5rem)]"}`}
       />

@@ -18,8 +18,6 @@ export default function TranslationHistory({ history }) {
 
   const isEmpty = history.length === 0;
 
-  console.log(<TranslationList history={history} />);
-
   return (
     <>
       <HistoryHeader

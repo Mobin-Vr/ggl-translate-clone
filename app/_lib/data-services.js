@@ -1,25 +1,46 @@
 import { unstable_cache } from "next/cache";
-import { supabase } from "./supabase";
-import { getErrorMessage } from "./utils";
 import { CONFIG } from "./configs";
+import { supabase } from "./supabase";
 
 // Gets the translation history for a specific user
-export async function getHistory(userId) {
-  const { data, error } = await supabase
-    .from("history")
-    .select("*")
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+export const getHistory = unstable_cache(
+  async (userId) => {
+    const { data, error } = await supabase
+      .from("history")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+    if (error) {
+      console.error(error);
+      throw new Error("History could not be loaded");
+    }
+    return data;
+  },
+  (userId) => ["history", userId],
+  { revalidate: CONFIG.revalidate.languages },
+);
 
-  if (error) {
-    console.error(error);
-    throw new Error("History could not be loaded");
-  }
+// Gets the latest 5 translation history records for a specific user
+export const getRecentHistory = unstable_cache(
+  async (userId) => {
+    const { data, error } = await supabase
+      .from("history")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false })
+      .limit(5); // Limit to the last 5 records (latest records)
 
-  return data;
-}
+    if (error) {
+      console.error(error);
+      throw new Error("Recent history could not be loaded");
+    }
+    return data;
+  },
+  (userId) => ["recent-history", userId],
+  // { revalidate: CONFIG.revalidate.languages },
+  { revalidate: 1 },
+);
 
 // Gets the supported languages from the translation service
 export const getLanguages = unstable_cache(
@@ -72,40 +93,34 @@ export async function createUser(newUser) {
     .insert([newUser])
     .select();
 
-  if (error) throw new Error(error.message || JSON.stringify(error));
+  if (error) throw error;
 
   return data;
-}
-
-// Deletes a specific translation given its translation ID
-export async function deleteTranslation(translationId) {
-  try {
-    await supabase.from("history").delete().eq("translation_id", translationId);
-  } catch (error) {
-    console.error(error);
-    return { error: getErrorMessage(error) };
-  }
-}
-
-// Delete many history rows
-export async function deleteHistoryRows(translationIds) {
-  try {
-    await supabase
-      .from("history")
-      .delete()
-      .in("translation_id", translationIds);
-  } catch (error) {
-    console.error(error);
-    return { error: getErrorMessage(error) };
-  }
 }
 
 // Stores a new translation history record for a user
 export async function addHistory(historyRecord) {
   const { error } = await supabase.from("history").insert([historyRecord]);
 
-  if (error) {
-    console.error(error);
-    throw new Error("Failed to store translation history in supabase");
-  }
+  if (error) throw error;
+}
+
+// Deletes a specific translation given its translation ID
+export async function deleteTranslation(translationId, userId) {
+  const { error } = await supabase.from("history").delete().match({
+    translation_id: translationId,
+    user_id: userId,
+  });
+
+  if (error) throw error;
+}
+
+// Delete many history rows
+export async function clearUserHistory(userId) {
+  const { error } = await supabase
+    .from("history")
+    .delete()
+    .eq("user_id", userId);
+
+  if (error) throw error;
 }

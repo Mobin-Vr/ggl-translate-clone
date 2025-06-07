@@ -3,7 +3,7 @@
 import { useOptimistic, useTransition } from "react";
 import toast from "react-hot-toast";
 import {
-  deleteAllTranslationsAction,
+  clearUserHistoryAction,
   deleteTranslationAction,
 } from "../_lib/actions";
 import HistoryCard from "./HistoryCard";
@@ -35,7 +35,7 @@ function TranslationList({ history, moveHistoryDataToForm }) {
     deleteOptimistic({ type: "all" });
 
     startTransition(async () => {
-      const res = await deleteAllTranslationsAction();
+      const res = await clearUserHistoryAction();
       if (res?.error) toast.error(res.error);
     });
   }

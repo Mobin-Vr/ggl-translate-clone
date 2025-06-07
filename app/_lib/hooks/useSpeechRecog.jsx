@@ -1,5 +1,4 @@
-import { showCustomToast } from "@/app/_components/ui/Notification";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const useSpeechRecognition = () => {
   const [isRecording, setIsRecording] = useState(false);
@@ -9,7 +8,7 @@ const useSpeechRecognition = () => {
 
   const startRecording = () => {
     setIsRecording(true);
-    showCustomToast("Recording started..."); // Changed message for start
+
     recognitionRef.current = new window.webkitSpeechRecognition();
     recognitionRef.current.continuous = true;
     recognitionRef.current.interimResults = true;
@@ -29,7 +28,6 @@ const useSpeechRecognition = () => {
         setError("An error occurred during speech recognition.");
       }
       setIsRecording(false);
-      showCustomToast("Please enable microphone access."); // Changed error message
     };
 
     recognitionRef.current.start();
@@ -38,7 +36,6 @@ const useSpeechRecognition = () => {
   const stopRecording = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
-      showCustomToast("Recording stopped."); // Changed message for stop
     }
   };
 

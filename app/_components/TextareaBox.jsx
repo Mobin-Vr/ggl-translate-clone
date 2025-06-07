@@ -1,7 +1,7 @@
+import { CONFIG } from "../_lib/configs";
 import DoteLoader from "./ui/DoteLoader";
 
 export function TextareaBox({
-  maxLength = 1000,
   isOutput = true,
   isPending,
   ref,
@@ -38,7 +38,7 @@ export function TextareaBox({
         value={valueCond}
         onChange={!isOutput ? onChange : undefined}
         disabled={isOutput}
-        maxLength={maxLength}
+        maxLength={CONFIG.ui.inputMaxLength}
         placeholder={isOutput ? "Translation" : ""}
         dir="auto"
         className={`resize-none border-none p-4 outline-none md:px-5 md:py-4 ${isOutput ? "pr-6" : "pr-16"} ${

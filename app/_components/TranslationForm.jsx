@@ -14,7 +14,7 @@ import TranslateFeatures from "./ui/TranslateFeatures";
 // LATER
 // const mostUsedLang = USER_MOST_FREQUENT_OUT_LANG;
 
-export default function TranslationForm({ supportedLangs }) {
+export default function TranslationForm({ supportedLangs, recentHistory }) {
   const {
     isMainSectionVertical,
     showHistory,
@@ -131,6 +131,7 @@ export default function TranslationForm({ supportedLangs }) {
         setLatestInText={setLatestInText}
         setLatestOutLang={setLatestOutLang}
         languages={supportedLangs}
+        recentHistory={recentHistory}
         isMainSectionVertical={isMainSectionVertical}
         className={isMainSectionVertical ? "justify-around" : ""} // TODO LATER check this later
       />

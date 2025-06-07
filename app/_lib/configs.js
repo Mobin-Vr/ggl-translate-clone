@@ -7,6 +7,7 @@ export const CONFIG = {
     mainBreakpoint: 720, // Refer to global.css for breakpoints
     textExpanderMaxLength: 45, // Max chars before expanding long text
     maxTruncTextChar: 40, // For truncated UI preview
+    inputMaxLength: 1000,
   },
 
   // =========================================
@@ -15,12 +16,6 @@ export const CONFIG = {
     languages: 3600, // 1 hour
     userByEmail: 3600,
     userById: 3600,
-  },
-
-  // =========================================
-  // User Preferences (placeholder)
-  user: {
-    mostFrequentOutLang: "",
   },
 
   // =========================================

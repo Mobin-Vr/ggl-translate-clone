@@ -1,3 +1,4 @@
+import { CONFIG } from "../_lib/configs";
 import ClearInputBtn from "./ClearInputBtn";
 import Recorder from "./Recorder";
 import Speaker from "./Speaker";
@@ -52,7 +53,8 @@ export default function InputView({
       />
 
       <p className="mt-1.5 mr-2 mb-4 ml-auto flex items-center justify-center p-0 text-center align-middle text-xs leading-none text-gray-600 select-none">
-        {inputText.length} / 1,000
+        {inputText.length.toLocaleString("en-US")} /{" "}
+        {CONFIG.ui.inputMaxLength.toLocaleString("en-US")}
       </p>
     </TextareaBox>
   );

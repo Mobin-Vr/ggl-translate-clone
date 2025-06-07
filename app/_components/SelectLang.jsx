@@ -11,16 +11,20 @@ import {
 } from "@/app/_components/ui/select";
 import { useEffect, useState } from "react";
 import Tooltip from "./ui/Tooltip";
+import useMostFrequentOutLang from "../_lib/hooks/useMostFrequentOutLang";
 
 export default function SelectLang({
   languages,
   onSelect,
   value,
+  recentHistory,
   className,
   className2,
   isMainSectionVertical,
 }) {
   const [selected, setSelected] = useState(value);
+
+  const mostFrequentOutLang = useMostFrequentOutLang(recentHistory);
 
   function handleSelectChange(langName) {
     setSelected(langName);
@@ -29,7 +33,8 @@ export default function SelectLang({
 
   useEffect(() => {
     if (value) setSelected(value);
-  }, [value]);
+    else setSelected(mostFrequentOutLang);
+  }, [value, mostFrequentOutLang]);
 
   return (
     <Tooltip title="Select target language">

@@ -1,16 +1,15 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
+import { revalidatePath } from "next/cache";
 import {
   addHistory,
+  clearUserHistory,
   createUser,
-  deleteHistoryRows,
   deleteTranslation,
-  getHistory,
-  getUserById,
 } from "./data-services";
 import { detectAndTranslate } from "./translation/data-services";
-import { extractLanguageName } from "./utils";
+import { extractLanguageName, getErrorMessage } from "./utils";
 
 // Creates a new user in the database
 export async function createUserAction(newUser) {
@@ -19,13 +18,8 @@ export async function createUserAction(newUser) {
 
 // Translates the input text to the specified output language and detects the input language if needed
 export async function translate({ inputText, outputLang }) {
-  if (!inputText || !outputLang) {
-    throw new Error("Please provide both the text and the target language.");
-  }
-
   try {
-    // Detect input language and translate
-    const { detectedLanguage, translation } = await detectAndTranslate(
+    const { translation, detectedLanguage } = await detectAndTranslate(
       inputText,
       outputLang,
     );
@@ -33,76 +27,65 @@ export async function translate({ inputText, outputLang }) {
     const { userId } = await auth();
 
     if (userId) {
+      const historyRecord = {
+        user_id: userId,
+        input_language: extractLanguageName(detectedLanguage),
+        output_language: outputLang,
+        input_text: inputText,
+        output_text: translation,
+      };
+
       try {
-        // to ensure existence of the user
-        const user = await getUserById(userId);
+        await addHistory(historyRecord);
 
-        if (!user) {
-          console.warn(
-            `User with auth ID ${userId} not found in our database. Skipping history save.`,
-          );
-
-          // Save translation history
-        } else {
-          const historyRecord = {
-            user_id: userId,
-            input_language: extractLanguageName(detectedLanguage),
-            output_language: outputLang,
-            input_text: inputText,
-            output_text: translation,
-          };
-
-          await addHistory(historyRecord);
-        }
+        revalidatePath("/");
       } catch (historyError) {
-        console.error("Failed to save translation history", historyError);
-        // Do not throw – translation already succeeded
+        console.error("Non-critical: Failed to save history.", historyError);
       }
     }
 
+    // This for users who doesnt logged in
     return { translation, detectedLanguage };
-  } catch (err) {
-    console.error("Core translation error:", err.message, err.stack);
-    throw new Error("Translation failed. Please try again.");
+  } catch (error) {
+    console.error("Critical Translation Action Error:", error);
+    return { error: "Translation failed. Please try again." };
   }
 }
 
 // Delete a specific translation
 export async function deleteTranslationAction(translationId) {
-  // 1) Authentican
-  const { userId } = await auth();
+  try {
+    // 1) Authentican
+    const { userId } = await auth();
 
-  // 2) Authorization // NOTE it can be done by a RPC fn
-  const userHistory = await getHistory(userId);
-  const userHistoryIds = userHistory.map((item) => item.translation_id);
+    if (!userId) throw new Error("Authentication failed.");
 
-  if (!userHistoryIds.includes(translationId))
-    throw new Error("You are not allowed to delete this translation");
+    // 2) Delete record from DB
+    await deleteTranslation(translationId, userId);
 
-  // 3) Delete record from DB
-  await deleteTranslation(translationId);
+    // 3) Revalidate the cache for next request
+    revalidatePath("/");
+  } catch (error) {
+    console.error(error);
+    return { error: getErrorMessage(error) };
+  }
 }
 
 // Delete all translations of the user
-export async function deleteAllTranslationsAction() {
-  // 1) Authentication
-  const { userId } = await auth();
+export async function clearUserHistoryAction() {
+  try {
+    // 1) Authentication
+    const { userId } = await auth();
 
-  // 2) Authorization
-  const userHistory = await getHistory(userId);
-  const userHistoryIds = userHistory.map((item) => item.translation_id);
+    if (!userId) throw new Error("Authentication failed.");
 
-  const allHistoriesBelongToUser = userHistory.every(
-    (h) => h.user_id === userId,
-  );
+    // 2) Delete records from DB
+    await clearUserHistory(userId);
 
-  if (!allHistoriesBelongToUser)
-    throw new Error(
-      "You are not allowed to delete one or more of these translations",
-    );
-
-  // 3) Delete records from DB
-  const result = await deleteHistoryRows(userHistoryIds);
-
-  return result;
+    // 3) Revalidate the cache for next request
+    revalidatePath("/");
+  } catch (error) {
+    console.error(error);
+    return { error: getErrorMessage(error) };
+  }
 }

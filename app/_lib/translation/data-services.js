@@ -1,7 +1,18 @@
 import { CONFIG } from "../configs";
 import { openai } from "../deepseek";
 
+import { z } from "zod";
+
+const TranslationResponseSchema = z.object({
+  detectedLanguage: z.string().min(2),
+  translation: z.string().min(1),
+});
+
 export async function detectAndTranslate(text, targetLang) {
+  if (!text || !targetLang) {
+    throw new Error("Input text and target language are required.");
+  }
+
   try {
     const response = await openai.chat.completions.create({
       messages: [
@@ -12,8 +23,8 @@ export async function detectAndTranslate(text, targetLang) {
         {
           role: "user",
           content: `
-          Target language:[${targetLang}],
-          Text to analyze: [${text}]
+            Target language:[${targetLang}],
+            Text to analyze: [${text}]
           `.trim(),
         },
       ],
@@ -23,21 +34,17 @@ export async function detectAndTranslate(text, targetLang) {
     });
 
     let raw = response.choices[0]?.message?.content?.trim();
+    if (!raw) throw new Error("No content received from AI.");
 
-    if (!raw) throw new Error("No response received.");
-
-    // Clean up potential markdown fences like ```json ... ```
     raw = raw.replace(/^```json\s*|```$/g, "").trim();
 
-    const result = JSON.parse(raw);
+    const rawJson = JSON.parse(raw);
 
-    if (!result.detectedLanguage || !result.translation) {
-      throw new Error("Incomplete data returned.");
-    }
+    const validatedResult = TranslationResponseSchema.parse(rawJson);
 
-    return result;
+    return validatedResult;
   } catch (err) {
-    console.error("Detection & Translation failed:", err.message || err);
-    throw new Error("Combined operation failed. Please try again later.");
+    console.error("Detection & Translation failed:", err);
+    throw err;
   }
 }

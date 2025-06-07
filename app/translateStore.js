@@ -25,6 +25,7 @@ const useTranslateStore = create(
           showHistory: false,
           isMobileHistoryView: false,
           isMainSectionVertical: false,
+          mostFrequentOutLang: "",
 
           ...initialFormState,
 
@@ -82,6 +83,11 @@ const useTranslateStore = create(
           setIsDataFromHistory: (bool) =>
             immerSet((s) => {
               s.isDataFromHistory = bool;
+            }),
+
+          setMostFrequentOutLang: (lang) =>
+            immerSet((s) => {
+              s.mostFrequentOutLang = lang;
             }),
 
           // Set form with translation from history

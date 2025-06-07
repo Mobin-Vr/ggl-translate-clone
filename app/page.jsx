@@ -1,8 +1,17 @@
+import { auth } from "@clerk/nextjs/server";
 import TranslationForm from "./_components/TranslationForm";
-import { getLanguages } from "./_lib/data-services";
+import { getLanguages, getRecentHistory } from "./_lib/data-services";
 
 export default async function page() {
-  const supportedLangs = await getLanguages();
+  const { userId } = await auth();
 
-  return <TranslationForm supportedLangs={supportedLangs} />;
+  const supportedLangs = await getLanguages();
+  const recentHistory = await getRecentHistory(userId);
+
+  return (
+    <TranslationForm
+      supportedLangs={supportedLangs}
+      recentHistory={recentHistory}
+    />
+  );
 }

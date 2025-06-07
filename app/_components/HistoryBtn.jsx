@@ -2,7 +2,7 @@ import { RiHistoryLine } from "react-icons/ri";
 
 export default function HistoryBtn({ onClick, ref, showHistory }) {
   return (
-    <div ref={ref} className="mt-12 flex justify-center">
+    <div ref={ref} className="mt-12 mb-16 flex justify-center">
       <button
         onClick={onClick}
         className={`flex w-fit cursor-pointer flex-col items-center gap-2 transition duration-300 ${showHistory ? "text-blue-600" : "text-gray-500"}`}

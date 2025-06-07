@@ -12,7 +12,7 @@ async function Header() {
   return (
     <header
       id="main-header" // to control header visibility
-      className="flex h-16.5 items-center justify-between border-b border-b-gray-300 px-3 pr-6"
+      className="fixed top-0 flex h-16.5 w-full items-center justify-between border-b border-b-gray-300 px-3 pr-6"
     >
       <div className="flex items-center gap-1 text-center text-gray-600">
         <MenuBtn />
