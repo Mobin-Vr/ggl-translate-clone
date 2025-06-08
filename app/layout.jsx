@@ -54,6 +54,9 @@ export default async function RootLayout({ children, history }) {
             userId={userId}
           />
 
+          {/* This is a portal for the modal */}
+          <div id="portal-root"></div>
+
           <Toaster />
         </body>
       </html>

@@ -148,7 +148,7 @@ export default function TranslationForm({ supportedLangs, recentHistory }) {
           {...translationProps}
         />
 
-        {/* Border bottom for input - it wii be invisible in some conditions */}
+        {/* Border bottom for input - it will be invisible in some conditions */}
         {isMainSectionVertical && (!inputText || !outputLang) && (
           <div className="w-full border-t border-t-gray-300"></div>
         )}
