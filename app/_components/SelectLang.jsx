@@ -10,18 +10,25 @@ import {
   SelectValue,
 } from "@/app/_components/ui/select";
 import { useEffect, useState } from "react";
-import Tooltip from "./ui/Tooltip";
+import { useShallow } from "zustand/react/shallow";
 import useMostFrequentOutLang from "../_lib/hooks/useMostFrequentOutLang";
+import useTranslateStore from "../translateStore";
+import Tooltip from "./ui/Tooltip";
 
 export default function SelectLang({
   languages,
-  onSelect,
-  value,
   recentHistory,
   className,
   className2,
-  isMainSectionVertical,
 }) {
+  const { isMainSectionVertical, onSelect, value } = useTranslateStore(
+    useShallow((state) => ({
+      isMainSectionVertical: state.isMainSectionVertical,
+      onSelect: state.setOutputLang,
+      value: state.outputLang,
+    })),
+  );
+
   const [selected, setSelected] = useState(value);
 
   const mostFrequentOutLang = useMostFrequentOutLang(recentHistory);

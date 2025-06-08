@@ -1,9 +1,9 @@
 // useTextareaSyncHeight.js
-import { useEffect } from "react";
 import autosize from "autosize";
+import { useLayoutEffect } from "react";
 
 export function useTextareaSyncHeight(ref1, ref2, deps = []) {
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!ref1.current || !ref2.current) return;
 
     autosize(ref1.current);

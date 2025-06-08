@@ -2,7 +2,13 @@ import { useShallow } from "zustand/react/shallow";
 import useTranslateStore from "../translateStore";
 import Tooltip from "./ui/Tooltip";
 
-function DetectedLang({ detectedLanguage, className }) {
+function DetectedLang({ className }) {
+  const { detectedLanguage } = useTranslateStore(
+    useShallow((state) => ({
+      detectedLanguage: state.inputLang,
+    })),
+  );
+
   const cleanLang = detectedLanguage?.trim().toLowerCase();
 
   const { getIsDataFromHistory } = useTranslateStore(

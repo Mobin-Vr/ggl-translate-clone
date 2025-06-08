@@ -1,12 +1,19 @@
 import { XIcon } from "@/public/icons";
 import Tooltip from "./ui/Tooltip";
+import useTranslateStore from "../translateStore";
+import { useShallow } from "zustand/react/shallow";
 
-export default function ClearInputBtn({
-  setInputLang,
-  setInputText,
-  setOutputText,
-  inputText,
-}) {
+export default function ClearInputBtn({}) {
+  const { inputText, setInputLang, setInputText, setOutputText } =
+    useTranslateStore(
+      useShallow((state) => ({
+        inputText: state.inputText,
+        setInputLang: state.setInputLang,
+        setInputText: state.setInputText,
+        setOutputText: state.setOutputText,
+      })),
+    );
+
   if (!inputText.trim()) return;
 
   function handleClear() {

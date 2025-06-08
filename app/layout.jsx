@@ -41,10 +41,6 @@ export default async function RootLayout({ children, history }) {
         <body
           className={`flex h-full flex-col ${roboto.className} ${iranSansRegular.className} `}
         >
-          <SignedIn>
-            <UserSignupHandler />
-          </SignedIn>
-
           <Header />
 
           {/* It is a wrapper component to handle the responsive design but the pages (main page: children & history page) are server components */}
@@ -54,8 +50,12 @@ export default async function RootLayout({ children, history }) {
             userId={userId}
           />
 
-          {/* This is a portal for the modal */}
-          <div id="portal-root"></div>
+          <SignedIn>
+            <UserSignupHandler />
+          </SignedIn>
+
+          {/* Portal for the modal */}
+          <div id="portal-root" />
 
           <Toaster />
         </body>

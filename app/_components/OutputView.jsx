@@ -1,3 +1,5 @@
+import { useShallow } from "zustand/react/shallow";
+import useTranslateStore from "../translateStore";
 import CopyToClipboard from "./CopyToClipboard";
 import GoogleSearchBtn from "./GoogleSearchBtn";
 import Speaker from "./Speaker";
@@ -6,16 +8,19 @@ import { TextareaBox } from "./TextareaBox";
 export default function OutputView({
   isPending,
   outputElementRef,
-
-  outputLang,
-  outputText,
-  inputText,
-
   audioStatus,
   setAudioStatus,
-
-  isMainSectionVertical,
 }) {
+  const { isMainSectionVertical, inputText, outputText, outputLang } =
+    useTranslateStore(
+      useShallow((state) => ({
+        isMainSectionVertical: state.isMainSectionVertical,
+        inputText: state.inputText,
+        outputText: state.outputText,
+        outputLang: state.outputLang,
+      })),
+    );
+
   return (
     <TextareaBox
       isOutput={true}

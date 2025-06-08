@@ -1,4 +1,6 @@
-import { CONFIG } from "../_lib/configs";
+import { useShallow } from "zustand/react/shallow";
+import useTranslateStore from "../translateStore";
+import CharCounter from "./CharCounter";
 import ClearInputBtn from "./ClearInputBtn";
 import Recorder from "./Recorder";
 import Speaker from "./Speaker";
@@ -6,18 +8,17 @@ import { TextareaBox } from "./TextareaBox";
 
 export default function InputView({
   inputElementRef,
-  isMainSectionVertical,
-
   audioStatus,
   setAudioStatus,
-
-  handleAudioUpload,
-
-  inputText,
-  setInputLang,
-  setInputText,
-  setOutputText,
 }) {
+  const { isMainSectionVertical, inputText, setInputText } = useTranslateStore(
+    useShallow((state) => ({
+      isMainSectionVertical: state.isMainSectionVertical,
+      inputText: state.inputText,
+      setInputText: state.setInputText,
+    })),
+  );
+
   return (
     <TextareaBox
       isOutput={false}
@@ -29,7 +30,7 @@ export default function InputView({
     >
       <Recorder
         className="mb-4 ml-1"
-        onAudioTranscriped={handleAudioUpload}
+        onAudioTranscriped={(transcribedText) => setInputText(transcribedText)}
         onDisableSpeaker={(bool) =>
           setAudioStatus({ ...audioStatus, isMicRecording: bool })
         }
@@ -45,17 +46,8 @@ export default function InputView({
         isRecordingInProgress={audioStatus.isMicRecording} // Prevents audio playback while the microphone is actively recording
       />
 
-      <ClearInputBtn
-        setInputLang={setInputLang}
-        setInputText={setInputText}
-        setOutputText={setOutputText}
-        inputText={inputText}
-      />
-
-      <p className="mt-1.5 mr-2 mb-4 ml-auto flex items-center justify-center p-0 text-center align-middle text-xs leading-none text-gray-600 select-none">
-        {inputText.length.toLocaleString("en-US")} /{" "}
-        {CONFIG.ui.inputMaxLength.toLocaleString("en-US")}
-      </p>
+      <ClearInputBtn />
+      <CharCounter currentLength={inputText.length} />
     </TextareaBox>
   );
 }

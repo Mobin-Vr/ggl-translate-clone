@@ -2,26 +2,38 @@
 
 import { IoMdSwap } from "react-icons/io";
 import Tooltip from "./ui/Tooltip";
-import { useEffect } from "react";
+import useTranslateStore from "../translateStore";
+import { useShallow } from "zustand/react/shallow";
 
-export default function SwapBtn({
-  inputText,
-  outputText,
-  inputLang,
-  outputLang,
-  setInputText,
-  setOutputText,
-  setInputLang,
-  setOutputLang,
-  setIsSwaping,
+export default function SwapBtn({ className, setIsSwaping }) {
+  const {
+    inputText,
+    outputText,
+    inputLang,
+    outputLang,
 
-  latestInText,
-  latestOutLang,
-  setLatestInText,
-  setLatestOutLang,
+    setInputText,
+    setOutputText,
+    setInputLang,
+    setOutputLang,
+    setLatestInText,
+    setLatestOutLang,
+  } = useTranslateStore(
+    useShallow((state) => ({
+      inputText: state.inputText,
+      outputText: state.outputText,
+      inputLang: state.inputLang,
+      outputLang: state.outputLang,
 
-  className,
-}) {
+      setInputText: state.setInputText,
+      setOutputText: state.setOutputText,
+      setInputLang: state.setInputLang,
+      setOutputLang: state.setOutputLang,
+      setLatestInText: state.setLatestInText,
+      setLatestOutLang: state.setLatestOutLang,
+    })),
+  );
+
   function handleSwap() {
     const curInLang = inputLang;
     const curOutLang = outputLang;

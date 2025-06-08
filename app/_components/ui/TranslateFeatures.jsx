@@ -2,10 +2,18 @@ import { DocIcon, ImageIcon, LanguageIcon, WebsiteIcon } from "@/public/icons";
 import { useRef, useState } from "react";
 import ScrollableFade from "../ScrollableFade";
 import TranslateFeaturesView from "./TranslateFeaturesView";
+import useTranslateStore from "@/app/translateStore";
+import { useShallow } from "zustand/react/shallow";
 
-function TranslateFeatures({ className, isMainSectionVertical }) {
-  const [active, setActive] = useState("Text"); // CHANGE later
+function TranslateFeatures({ className }) {
+  const [active, setActive] = useState("Text"); // CHANGE LATER
   const containerRef = useRef(null);
+
+  const { isMainSectionVertical } = useTranslateStore(
+    useShallow((state) => ({
+      isMainSectionVertical: state.isMainSectionVertical,
+    })),
+  );
 
   return (
     <div

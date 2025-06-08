@@ -12,7 +12,7 @@ export default function Portal({ children }) {
     return () => setMounted(false);
   }, []);
 
-  // Avoid rendering on the server to prevent hydration mismatch
+  // Avoid rendering on the server (to prevent hydration mismatch)
   return mounted
     ? createPortal(children, document.getElementById("portal-root"))
     : null;
