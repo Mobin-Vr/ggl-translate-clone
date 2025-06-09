@@ -3,8 +3,9 @@
 import { useRef, useState } from "react";
 
 import { useShallow } from "zustand/react/shallow";
-import { useTextareaSyncHeight } from "../_lib/hooks/useTextareaSyncHeight";
-import { useTranslationHandler } from "../_lib/hooks/useTranslationHandler";
+import useSetMostFrequentOutLang from "../_hooks/useSetMostFrequentOutLang";
+import { useTextareaSyncHeight } from "../_hooks/useTextareaSyncHeight";
+import { useTranslationHandler } from "../_hooks/useTranslationHandler";
 import useTranslateStore from "../translateStore";
 import InputView from "./InputView";
 import LanguageBar from "./LanguageBar";
@@ -17,49 +18,18 @@ export default function TranslationForm({ supportedLangs, recentHistory }) {
   const inputElementRef = useRef(null);
   const outputElementRef = useRef(null);
 
-  const {
-    isMainSectionVertical,
-    showHistory,
-    getIsDataFromHistory,
-    setIsDataFromHistory,
-    inputText,
-    outputText,
-    inputLang,
-    outputLang,
-    getLatestInText,
-    getLatestOutLang,
-    setOutputText,
-    setInputLang,
-    setLatestInText,
-    setLatestOutLang,
-  } = useTranslateStore(
-    useShallow((state) => ({
-      isMainSectionVertical: state.isMainSectionVertical,
-      showHistory: state.showHistory,
+  const { isMainSectionVertical, showHistory, inputText, outputText } =
+    useTranslateStore(
+      useShallow((state) => ({
+        isMainSectionVertical: state.isMainSectionVertical,
+        showHistory: state.showHistory,
+        inputText: state.inputText,
+        outputText: state.outputText,
+      })),
+    );
 
-      getIsDataFromHistory: state.getIsDataFromHistory,
-      setIsDataFromHistory: state.setIsDataFromHistory,
-
-      inputText: state.inputText,
-      outputText: state.outputText,
-      inputLang: state.inputLang,
-      outputLang: state.outputLang,
-      getLatestInText: state.getLatestInText,
-      getLatestOutLang: state.getLatestOutLang,
-
-      setOutputText: state.setOutputText,
-      setInputLang: state.setInputLang,
-
-      setLatestInText: state.setLatestInText,
-      setLatestOutLang: state.setLatestOutLang,
-    })),
-  );
-
-  const [audioStatus, setAudioStatus] = useState({
-    isMicRecording: false,
-    isInputSpeaking: false,
-    isOutputSpeaking: false,
-  });
+  // Keeps track of the most used language
+  useSetMostFrequentOutLang(recentHistory);
 
   // Keeps both textareas at the same height by matching them to the taller one
   useTextareaSyncHeight(inputElementRef, outputElementRef, [
@@ -67,24 +37,7 @@ export default function TranslationForm({ supportedLangs, recentHistory }) {
     outputText,
   ]);
 
-  const { isPending } = useTranslationHandler(
-    inputText,
-    outputLang,
-    inputLang,
-    setOutputText,
-    setInputLang,
-
-    isSwaping,
-    setIsSwaping,
-
-    getLatestInText,
-    getLatestOutLang,
-    setLatestInText,
-    setLatestOutLang,
-
-    getIsDataFromHistory,
-    setIsDataFromHistory,
-  );
+  const { isPending } = useTranslationHandler(isSwaping, setIsSwaping);
 
   return (
     <div
@@ -94,24 +47,13 @@ export default function TranslationForm({ supportedLangs, recentHistory }) {
 
       <LanguageBar
         languages={supportedLangs}
-        recentHistory={recentHistory}
         setIsSwaping={setIsSwaping}
         className={isMainSectionVertical ? "justify-around" : ""} // TODO LATER check this later
       />
 
       <TranslationContentLayout>
-        <InputView
-          audioStatus={audioStatus}
-          setAudioStatus={setAudioStatus}
-          inputElementRef={inputElementRef}
-        />
-
-        <OutputView
-          isPending={isPending}
-          outputElementRef={outputElementRef}
-          audioStatus={audioStatus}
-          setAudioStatus={setAudioStatus}
-        />
+        <InputView inputElementRef={inputElementRef} />
+        <OutputView isPending={isPending} outputElementRef={outputElementRef} />
       </TranslationContentLayout>
     </div>
   );

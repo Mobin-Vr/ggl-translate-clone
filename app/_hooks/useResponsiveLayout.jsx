@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { CONFIG } from "../configs";
+import { CONFIG } from "../_lib/configs";
 
 /**
  * Hook for handling responsive layout behavior.

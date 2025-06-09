@@ -1,16 +1,13 @@
 import { useShallow } from "zustand/react/shallow";
+import { useAudioStatus } from "../_hooks/useAudioStatus";
 import useTranslateStore from "../translateStore";
 import CopyToClipboard from "./CopyToClipboard";
 import GoogleSearchBtn from "./GoogleSearchBtn";
 import Speaker from "./Speaker";
 import { TextareaBox } from "./TextareaBox";
 
-export default function OutputView({
-  isPending,
-  outputElementRef,
-  audioStatus,
-  setAudioStatus,
-}) {
+export default function OutputView({ isPending, outputElementRef }) {
+  const { audioStatus, setAudioStatus } = useAudioStatus();
   const { isMainSectionVertical, inputText, outputText, outputLang } =
     useTranslateStore(
       useShallow((state) => ({
@@ -23,22 +20,20 @@ export default function OutputView({
 
   return (
     <TextareaBox
+      className="relative w-full flex-1"
+      ref={outputElementRef}
       isOutput={true}
       isPending={isPending}
-      ref={outputElementRef}
       value={outputText}
-      className="relative w-full flex-1"
       isMainSectionVertical={isMainSectionVertical}
       inputValue={inputText}
       outputLang={outputLang}
     >
       <Speaker
+        className="mb-4 ml-1"
         value={outputText}
         speaking={audioStatus.isOutputSpeaking}
-        setSpeaking={(bool) =>
-          setAudioStatus({ ...audioStatus, isOutputSpeaking: bool })
-        }
-        className="mb-4 ml-1"
+        setSpeaking={(bool) => setAudioStatus({ isOutputSpeaking: bool })}
       />
 
       <div className="mr-1 mb-4 ml-auto flex space-x-1">

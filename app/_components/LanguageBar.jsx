@@ -4,13 +4,7 @@ import DetectedLang from "./DetectedLang";
 import SelectLang from "./SelectLang";
 import SwapBtn from "./SwapBtn";
 
-export default function LanguageBar({
-  setIsSwaping,
-
-  languages,
-  recentHistory,
-  className,
-}) {
+export default function LanguageBar({ setIsSwaping, languages, className }) {
   const { isMainSectionVertical } = useTranslateStore(
     useShallow((state) => ({
       isMainSectionVertical: state.isMainSectionVertical,
@@ -30,7 +24,6 @@ export default function LanguageBar({
 
       <SelectLang
         languages={languages}
-        recentHistory={recentHistory}
         className={`font-sans text-sm font-[500] ${isMainSectionVertical ? "" : "absolute left-1/2 -translate-x-[calc(50%-7.5rem)]"}`}
       />
     </div>

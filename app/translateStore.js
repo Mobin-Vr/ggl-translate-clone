@@ -1,8 +1,7 @@
-import { create } from "zustand";
 import { produce } from "immer";
+import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
 
-// Reusable form state
 const initialFormState = {
   inputText: "",
   outputText: "",
@@ -13,6 +12,24 @@ const initialFormState = {
   isDataFromHistory: false,
 };
 
+const initialAudioStatus = {
+  isMicRecording: false,
+  isInputSpeaking: false,
+  isOutputSpeaking: false,
+};
+
+const initialState = {
+  userState: null,
+
+  showHistory: false,
+  isMobileHistoryView: false,
+  isMainSectionVertical: false,
+
+  audioStatus: initialAudioStatus,
+
+  ...initialFormState,
+};
+
 const useTranslateStore = create(
   devtools(
     persist(
@@ -20,14 +37,7 @@ const useTranslateStore = create(
         const immerSet = (fn) => set(produce(fn));
 
         return {
-          userState: null,
-
-          showHistory: false,
-          isMobileHistoryView: false,
-          isMainSectionVertical: false,
-          mostFrequentOutLang: "",
-
-          ...initialFormState,
+          ...initialState,
 
           // Setters
           setUserState: (userState) =>
@@ -85,9 +95,15 @@ const useTranslateStore = create(
               s.isDataFromHistory = bool;
             }),
 
-          setMostFrequentOutLang: (lang) =>
+          setAudioStatus: (newStatus) =>
             immerSet((s) => {
-              s.mostFrequentOutLang = lang;
+              s.audioStatus = { ...s.audioStatus, ...newStatus };
+            }),
+
+          // Reset form to initial state
+          resetForm: () =>
+            immerSet((state) => {
+              Object.assign(state, initialFormState);
             }),
 
           // Set form with translation from history
@@ -102,12 +118,6 @@ const useTranslateStore = create(
               isDataFromHistory: true,
             }));
           },
-
-          // Reset form to initial state
-          resetForm: () =>
-            immerSet((state) => {
-              Object.assign(state, initialFormState);
-            }),
 
           // Getters
           getUserState: () => get().userState,

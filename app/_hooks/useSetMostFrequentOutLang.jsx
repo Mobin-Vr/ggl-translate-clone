@@ -23,11 +23,10 @@ function getMostFrequent(arr) {
   return mostFrequent;
 }
 
-export default function useMostFrequentOutLang(recentHistory) {
-  const { mostFrequentOutLang, setMostFrequentOutLang } = useTranslateStore(
+export default function useSetMostFrequentOutLang(recentHistory) {
+  const { setOutLang } = useTranslateStore(
     useShallow((state) => ({
-      mostFrequentOutLang: state.mostFrequentOutLang,
-      setMostFrequentOutLang: state.setMostFrequentOutLang,
+      setOutLang: state.setOutputLang,
     })),
   );
 
@@ -37,8 +36,6 @@ export default function useMostFrequentOutLang(recentHistory) {
     const langs = recentHistory.map((item) => item.output_language);
     const mostUsed = getMostFrequent(langs);
 
-    if (mostUsed) setMostFrequentOutLang(mostUsed);
-  }, [recentHistory, setMostFrequentOutLang]);
-
-  return mostFrequentOutLang;
+    if (mostUsed) setOutLang(mostUsed);
+  }, [recentHistory, setOutLang]);
 }

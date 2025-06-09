@@ -1,6 +1,6 @@
 "use client";
 import { UserButton, useUser } from "@clerk/nextjs";
-import useProfileModal from "../_lib/hooks/useProfileModal";
+import useProfileModal from "../_hooks/useProfileModal";
 import ProfileModal from "./ProfileModal";
 import Portal from "./Portal";
 

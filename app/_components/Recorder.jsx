@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 import { MicSensitivityIcon, SquareIcon } from "@/public/icons";
-import useSpeechRecognition from "../_lib/hooks/useSpeechRecog";
+import useSpeechRecognition from "../_hooks/useSpeechRecog";
 import Tooltip from "./ui/Tooltip";
 
 export default function Recorder({

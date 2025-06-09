@@ -1,32 +1,43 @@
 import { enqueueTranslation } from "@/app/_lib/translation/queu";
 import { useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
-import { CONFIG } from "../configs";
+import { useShallow } from "zustand/react/shallow";
+import { CONFIG } from "../_lib/configs";
+import useTranslateStore from "../translateStore";
 
-export function useTranslationHandler(
-  inputText,
-  outputLang,
-  inputLang,
-  setOutputText,
-  setInputLang,
-  isSwaping,
-  setIsSwaping,
+export function useTranslationHandler(isSwaping, setIsSwaping) {
+  const {
+    getIsDataFromHistory,
+    setIsDataFromHistory,
+    inputText,
+    outputLang,
+    getLatestInText,
+    getLatestOutLang,
+    setOutputText,
+    setInputLang,
+    setLatestInText,
+    setLatestOutLang,
+  } = useTranslateStore(
+    useShallow((state) => ({
+      getIsDataFromHistory: state.getIsDataFromHistory,
+      setIsDataFromHistory: state.setIsDataFromHistory,
+      inputText: state.inputText,
+      outputLang: state.outputLang,
+      getLatestInText: state.getLatestInText,
+      getLatestOutLang: state.getLatestOutLang,
+      setOutputText: state.setOutputText,
+      setInputLang: state.setInputLang,
+      setLatestInText: state.setLatestInText,
+      setLatestOutLang: state.setLatestOutLang,
+    })),
+  );
 
-  getLatestInText,
-  getLatestOutLang,
-  setLatestInText,
-  setLatestOutLang,
-
-  getIsDataFromHistory,
-  setIsDataFromHistory,
-) {
   const [isPending, setIsPending] = useState(false);
   const [debouncedInputText] = useDebounce(inputText, CONFIG.debounceDelay);
 
   async function handleTranslate(trimmedText) {
     const translationPayload = {
       inputText: trimmedText,
-      inputLang,
       outputLang,
     };
 
@@ -86,7 +97,7 @@ export function useTranslationHandler(
 
     handleTranslate(debouncedInputText.trim());
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [debouncedInputText, outputLang]);
 
   return { isPending };
