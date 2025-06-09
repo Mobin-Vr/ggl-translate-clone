@@ -32,8 +32,6 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children, history }) {
-  const { userId } = await auth();
-
   return (
     <ClerkProvider dynamic>
       <html lang="en" className="h-full">
@@ -43,11 +41,7 @@ export default async function RootLayout({ children, history }) {
           <Header />
 
           {/* It is a wrapper component to handle the responsive design but the pages (main page: children & history page) are server components */}
-          <ResponsiveWrapper
-            mainApp={children}
-            theHistory={history}
-            userId={userId}
-          />
+          <ResponsiveWrapper mainApp={children} theHistory={history} />
 
           <SignedIn>
             <UserSignupHandler />

@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { CONFIG } from "../_lib/configs";
+import useTranslateStore from "../translateStore";
+import { useShallow } from "zustand/react/shallow";
 
 /**
  * Hook for handling responsive layout behavior.
@@ -7,12 +9,16 @@ import { CONFIG } from "../_lib/configs";
  * - Shows or hides the form section and header based on screen size and history visibility.
  */
 
-export function useResponsiveLayout(
-  containerRef,
-  setIsVerticalLayout, // setter to indicate vertical layout (true/false)
-  setIsMobileHistoryView, // setter to toggle form section visibility
-  showHistory, // boolean: whether the history panel is visible
-) {
+export function useResponsiveLayout(containerRef) {
+  const { showHistory, setIsMobileHistoryView, setIsVerticalLayout } =
+    useTranslateStore(
+      useShallow((state) => ({
+        showHistory: state.showHistory,
+        setIsMobileHistoryView: state.setIsMobileHistoryView,
+        setIsVerticalLayout: state.setIsVerticalLayout,
+      })),
+    );
+
   // Detects vertical layout by observing container's
   useEffect(() => {
     const container = containerRef.current;
@@ -51,6 +57,4 @@ export function useResponsiveLayout(
 
     return () => window.removeEventListener("resize", handleResize);
   }, [showHistory, setIsMobileHistoryView]);
-
-  return { containerRef };
 }

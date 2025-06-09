@@ -12,6 +12,7 @@ export default async function page() {
     <TranslationForm
       supportedLangs={supportedLangs}
       recentHistory={recentHistory}
+      userId={userId}
     />
   );
 }

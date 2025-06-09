@@ -1,57 +1,25 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { startTransition, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
-import { useHistoryModal } from "../_hooks/useHistoryModal";
 import { useResponsiveLayout } from "../_hooks/useResponsiveLayout";
 import useTranslateStore from "../translateStore";
-import HistoryAccessModal from "./HistoryAccessModal";
-import HistoryBtn from "./HistoryBtn";
 
-export default function ResponsiveWrapper({ mainApp, theHistory, userId }) {
+export default function ResponsiveWrapper({ mainApp, theHistory }) {
   const containerRef = useRef(null);
-  const router = useRouter();
 
-  const {
-    showHistory,
-    isMobileHistoryView,
-    setIsMobileHistoryView,
-    setShowHistory,
-    setIsMainSectionVertical,
-    resetForm,
-  } = useTranslateStore(
+  const { showHistory, isMobileHistoryView, resetForm } = useTranslateStore(
     useShallow((state) => ({
       showHistory: state.showHistory,
       isMobileHistoryView: state.isMobileHistoryView,
-      setIsMobileHistoryView: state.setIsMobileHistoryView,
-      setShowHistory: state.setShowHistory,
-      setIsMainSectionVertical: state.setIsMainSectionVertical,
       resetForm: state.resetForm,
     })),
   );
 
-  const { isModalOpen, openModal, closeModal, modalRef } = useHistoryModal();
+  useResponsiveLayout(containerRef);
 
-  useResponsiveLayout(
-    containerRef,
-    setIsMainSectionVertical,
-    setIsMobileHistoryView,
-    showHistory,
-  );
-
-  // eslint-disable-next-line
-  useEffect(() => resetForm(), []);
-
-  function handleHistoryBtnClick() {
-    if (!userId) {
-      openModal();
-      return;
-    }
-    if (!showHistory) startTransition(() => router.refresh());
-    setShowHistory(!showHistory);
-  }
+  useEffect(() => resetForm(), [resetForm]);
 
   const sidebarVariants = {
     hidden: { x: "100%", opacity: 0 },
@@ -69,10 +37,6 @@ export default function ResponsiveWrapper({ mainApp, theHistory, userId }) {
           }`}
         >
           {mainApp}
-          <HistoryBtn
-            showHistory={showHistory}
-            onClick={handleHistoryBtnClick}
-          />
         </section>
       )}
 
@@ -94,10 +58,6 @@ export default function ResponsiveWrapper({ mainApp, theHistory, userId }) {
           </motion.aside>
         )}
       </AnimatePresence>
-
-      {isModalOpen && (
-        <HistoryAccessModal ref={modalRef} onClose={closeModal} />
-      )}
     </main>
   );
 }
