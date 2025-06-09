@@ -25,8 +25,8 @@ export default function InputView({
       ref={inputElementRef}
       value={inputText}
       onChange={(e) => setInputText(e.target.value)}
-      className="relative w-full flex-1"
       isMainSectionVertical={isMainSectionVertical}
+      className="relative w-full flex-1"
     >
       <Recorder
         className="mb-4 ml-1"
@@ -40,10 +40,10 @@ export default function InputView({
         className="mb-4 ml-1"
         value={inputText}
         speaking={audioStatus.isInputSpeaking}
+        isRecordingInProgress={audioStatus.isMicRecording} // Prevents audio playback while the microphone is actively recording
         setSpeaking={(bool) =>
           setAudioStatus({ ...audioStatus, isInputSpeaking: bool })
         }
-        isRecordingInProgress={audioStatus.isMicRecording} // Prevents audio playback while the microphone is actively recording
       />
 
       <ClearInputBtn />
