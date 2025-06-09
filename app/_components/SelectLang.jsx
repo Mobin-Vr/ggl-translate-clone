@@ -8,7 +8,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/app/_components/ui/Select";
+} from "@/app/_components/ui/select";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useTranslateStore from "../translateStore";
