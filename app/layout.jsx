@@ -5,7 +5,6 @@ import { auth } from "@clerk/nextjs/server";
 import { Roboto } from "next/font/google";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
-import "tippy.js/dist/tippy.css"; // optional
 import ResponsiveWrapper from "./_components/ResponsiveWrapper";
 import UserSignupHandler from "./_components/UserSignupHandler";
 import Header from "./_components/Header";

@@ -1,15 +1,15 @@
 "use client";
 import { UserButton, useUser } from "@clerk/nextjs";
 import useProfileModal from "../_hooks/useProfileModal";
-import ProfileModal from "./ProfileModal";
 import Portal from "./Portal";
+import ProfileModal from "./ProfileModal";
 
 function Profile() {
   const { user, isLoaded } = useUser();
   const { isOpen, toggle, close, ref } = useProfileModal();
 
   return (
-    <div ref={ref}>
+    <div>
       <div
         onClick={toggle}
         className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-gray-200"
@@ -19,7 +19,12 @@ function Profile() {
 
       {isOpen && (
         <Portal>
-          <ProfileModal user={user} isLoaded={isLoaded} onClose={close} />
+          <ProfileModal
+            user={user}
+            ref={ref}
+            isLoaded={isLoaded}
+            onClose={close}
+          />
         </Portal>
       )}
     </div>

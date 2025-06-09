@@ -8,7 +8,7 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/app/_components/ui/select";
+} from "@/app/_components/ui/Select";
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useTranslateStore from "../translateStore";
@@ -24,6 +24,7 @@ export default function SelectLang({ languages, className, className2 }) {
   );
 
   const [selected, setSelected] = useState(value);
+  const [isOpen, setIsOpen] = useState(false);
 
   function handleSelectChange(langName) {
     setSelected(langName);
@@ -35,11 +36,15 @@ export default function SelectLang({ languages, className, className2 }) {
   }, [value]);
 
   return (
-    <Tooltip title="Select target language">
+    <Tooltip title="Select target language" disabled={isOpen}>
       <div
         className={` ${className} ${isMainSectionVertical ? "w-fit" : "w-44"}`}
       >
-        <Select onValueChange={handleSelectChange} value={selected}>
+        <Select
+          onValueChange={handleSelectChange}
+          value={selected}
+          onOpenChange={setIsOpen} // To disable tooltip when the select is open, Radix handles open/close internally and passes the state (true/false) here.
+        >
           <SelectTrigger
             className={`no-shadow gap-1 border-none text-sm font-semibold text-blue-600 ${isMainSectionVertical ? "w-fit" : "w-full"} ${className2}`}
           >
