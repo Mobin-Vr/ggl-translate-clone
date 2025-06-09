@@ -1,4 +1,4 @@
-import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 
 export default function TooltipWrapper({ children, title, side = "bottom" }) {
   return (
