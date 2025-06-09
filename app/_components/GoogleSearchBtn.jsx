@@ -1,5 +1,5 @@
 import { PiSpeakerSimpleHigh } from "react-icons/pi";
-import Tooltip from "./ui/Tooltip";
+import Tooltip from "./ui/TooltipWrapper";
 import { GoogleGIcon, SpeakerIcon } from "@/public/icons";
 
 export default function GoogleSearchBtn({ value, className }) {

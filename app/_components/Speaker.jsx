@@ -1,5 +1,5 @@
 import { PiSpeakerSimpleHigh } from "react-icons/pi";
-import Tooltip from "./ui/Tooltip";
+import Tooltip from "./ui/TooltipWrapper";
 import { SpeakerIcon, SquareIcon } from "@/public/icons";
 import { isSpeaking, playAudio, stopAudio } from "../_lib/utils";
 import { useEffect, useState } from "react";

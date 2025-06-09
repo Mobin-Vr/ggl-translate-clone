@@ -12,7 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useTranslateStore from "../translateStore";
-import Tooltip from "./ui/Tooltip";
+import Tooltip from "./ui/TooltipWrapper";
 
 export default function SelectLang({ languages, className, className2 }) {
   const { isMainSectionVertical, onSelect, value } = useTranslateStore(

@@ -1,7 +1,7 @@
 "use client";
 
 import { SettingsGearIcon } from "@/public/icons";
-import Tooltip from "./Tooltip";
+import Tooltip from "./TooltipWrapper";
 
 export default function SettingBtn({ size = 24 }) {
   return (

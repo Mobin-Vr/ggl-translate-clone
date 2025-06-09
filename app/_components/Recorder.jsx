@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import { MicSensitivityIcon, SquareIcon } from "@/public/icons";
 import useSpeechRecognition from "../_hooks/useSpeechRecog";
-import Tooltip from "./ui/Tooltip";
+import Tooltip from "./ui/TooltipWrapper";
 
 export default function Recorder({
   onAudioTranscriped,

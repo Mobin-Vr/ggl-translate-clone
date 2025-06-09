@@ -1,6 +1,6 @@
 import { useShallow } from "zustand/react/shallow";
 import useTranslateStore from "../translateStore";
-import Tooltip from "./ui/Tooltip";
+import Tooltip from "./ui/TooltipWrapper";
 
 function DetectedLang({ className }) {
   const { detectedLanguage } = useTranslateStore(

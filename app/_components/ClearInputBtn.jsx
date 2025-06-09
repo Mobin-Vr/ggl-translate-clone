@@ -1,5 +1,5 @@
 import { XIcon } from "@/public/icons";
-import Tooltip from "./ui/Tooltip";
+import Tooltip from "./ui/TooltipWrapper";
 import useTranslateStore from "../translateStore";
 import { useShallow } from "zustand/react/shallow";
 

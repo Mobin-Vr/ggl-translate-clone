@@ -1,5 +1,5 @@
 import { CopyIcon } from "@/public/icons";
-import Tooltip from "./ui/Tooltip";
+import Tooltip from "./ui/TooltipWrapper";
 
 export default function CopyToClipboard({ value, className }) {
   if (!value) return;

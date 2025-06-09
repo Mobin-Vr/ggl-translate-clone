@@ -1,7 +1,7 @@
 "use client";
 
 import { MenuIcon } from "@/public/icons";
-import Tooltip from "./Tooltip";
+import Tooltip from "./TooltipWrapper";
 
 export default function MenuBtn() {
   return (
