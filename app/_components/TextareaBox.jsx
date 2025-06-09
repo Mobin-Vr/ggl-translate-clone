@@ -18,6 +18,8 @@ export function TextareaBox({
 
   if (hideEmptyOutputVertical) return null;
 
+  console.log("is pending", isPending);
+
   const shouldShowLoader = isPending && isOutput;
   const valueCond = isOutput && value === "" ? "" : value;
 

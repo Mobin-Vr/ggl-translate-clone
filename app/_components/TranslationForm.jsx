@@ -37,7 +37,7 @@ export default function TranslationForm({ supportedLangs, recentHistory }) {
     outputText,
   ]);
 
-  const { isPending } = useTranslationHandler(isSwaping, setIsSwaping);
+  const isPending = useTranslationHandler(isSwaping, setIsSwaping);
 
   return (
     <div
