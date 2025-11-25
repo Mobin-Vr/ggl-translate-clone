@@ -7,7 +7,7 @@
 
 <br>
 
-An AI-powered **Google Translate clone** with real-time translation, voice input, and dynamic multilingual support. Built with cutting-edge technologies like **Next.js 15**, **Supabase**, and **Server Actions**, this app replicates Google Translate’s interface and UX with attention to every pixel.
+An AI-powered ** Google Translate clone** with real-time translation, voice input, and dynamic multilingual support. Built with cutting-edge technologies like **Next.js 15**, **Supabase**, and **Server Actions**, this app replicates Google Translate’s interface and UX with attention to every pixel.
 
 <br>
 
