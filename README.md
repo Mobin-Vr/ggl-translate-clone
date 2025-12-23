@@ -75,9 +75,12 @@ Password:  11223344.Rr
 
 ## ⚡ Performance Comparison (Lighthouse)
 
-To evaluate real-world performance, this app was compared **directly with the official Google Translate web app** using Lighthouse under identical conditions.
+**This App**
+![Lighthouse – This App](./public/lighthouse-clone.png)
 
-### 🔍 Results Summary
+**Google Translate**
+![Lighthouse – Google Translate](./public/lighthouse-google.png)
+
 
 | App                   | Performance | FCP  | LCP  |
 |----------------------|-------------|------|------|
@@ -103,6 +106,7 @@ This project intentionally focuses on **speed, UX clarity, and architectural eff
 > **Note:** This comparison is not intended to claim superiority over Google Translate as a product,  
 but to demonstrate how a focused, modern architecture can achieve excellent performance when unnecessary overhead is removed.
 
+<br>
 
 ## 🛠️ Tech Stack
 
