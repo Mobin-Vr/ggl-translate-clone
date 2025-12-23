@@ -23,16 +23,6 @@ Password:  11223344.Rr
 
 <br>
 
-## 📷 Preview
-
-<div style="display: flex; align-items: center; justify-content: center;">
-<img src="https://github.com/your-username/translate-clone/blob/main/public/screenshots/preview.gif" width="260" alt="App Preview">
-</div>
-
-💡 **Designed to mirror the real Google Translate experience with performance and clarity in mind.**
-
-<br>
-
 ## 🚀 Features
 
 - **AI Translation Engine**: Uses **DeepSeek AI** to generate accurate translations in over 20 major languages.
@@ -80,7 +70,6 @@ Password:  11223344.Rr
     </tr>
   </table>
 </div>
-
 
 | App                  | Performance | FCP  | LCP  |
 | -------------------- | ----------- | ---- | ---- |
