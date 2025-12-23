@@ -28,6 +28,7 @@ async function processQueue() {
       const result = await translate(payload);
 
       resolve(result);
+      console.log("1>>>", result);
     } catch (err) {
       console.error("Translation failed:", err);
       resolve("Translation failed");

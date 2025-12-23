@@ -18,6 +18,7 @@ export async function createUserAction(newUser) {
 
 // Translates the input text to the specified output language and detects the input language if needed
 export async function translate({ inputText, outputLang }) {
+  console.log("2>>>");
   try {
     const { translation, detectedLanguage } = await detectAndTranslate(
       inputText,

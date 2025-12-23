@@ -10,12 +10,12 @@ import { useShallow } from "zustand/react/shallow";
  */
 
 export function useResponsiveLayout(containerRef) {
-  const { showHistory, setIsMobileHistoryView, setIsVerticalLayout } =
+  const { showHistory, setIsMobileHistoryView, setIsMainSectionVertical } =
     useTranslateStore(
       useShallow((state) => ({
         showHistory: state.showHistory,
         setIsMobileHistoryView: state.setIsMobileHistoryView,
-        setIsVerticalLayout: state.setIsVerticalLayout,
+        setIsMainSectionVertical: state.setIsMainSectionVertical,
       })),
     );
 
@@ -26,7 +26,9 @@ export function useResponsiveLayout(containerRef) {
     if (!container) return;
 
     const observer = new ResizeObserver(() => {
-      setIsVerticalLayout(container.offsetWidth <= CONFIG.ui.mainBreakpoint);
+      setIsMainSectionVertical(
+        container.offsetWidth <= CONFIG.ui.mainBreakpoint,
+      );
     });
 
     observer.observe(container);

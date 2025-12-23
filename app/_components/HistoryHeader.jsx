@@ -3,7 +3,7 @@ import { ArrowBackIcon, XIcon } from "@/public/icons";
 export default function HistoryHeader({ setShowHistory, isMobileHistoryView }) {
   return (
     <div
-      className={`flex items-center border-b border-b-gray-300 text-gray-600 ${
+      className={`z-10 flex items-center border-b border-b-gray-300 text-gray-600 ${
         isMobileHistoryView ? "px-1 py-1" : "px-6 py-5"
       }`}
     >

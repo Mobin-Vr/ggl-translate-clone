@@ -100,7 +100,5 @@ export function useTranslationHandler(isSwaping, setIsSwaping) {
     // eslint-disable-next-line
   }, [debouncedInputText, outputLang]);
 
-  console.log(isPending);
-
   return isPending;
 }
