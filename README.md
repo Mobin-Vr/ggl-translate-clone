@@ -37,30 +37,16 @@ Password:  11223344.Rr
 
 - **AI Translation Engine**: Uses **DeepSeek AI** to generate accurate translations in over 20 major languages.
 - **Auto Language Detection**: Source language is auto-detected using AI.
-- **Live Voice Input**:
-  - Users can speak in **English**, and the app converts speech to text using the **Web Speech API**.
-
-- **Text-to-Speech Output**:
-  - Speaker buttons allow reading of both source and translated texts (English only).
-
+- **Live Voice Input**: Users can speak in **English**, and the app converts speech to text using the **Web Speech API**.
+- **Text-to-Speech Output**: Speaker buttons allow reading of both source and translated texts (English only).
+- **Server-Side Rendering (SSR)**: All pages are server-rendered using **Next.js App Router**.
+- **Smart Caching & ISR**: Some data is served with **Incremental Static Regeneration** for optimized performance.
+- **Request Queue with Debounce**: Ensures that only the **latest translation request** is processed and returned (DeepSeek doesn’t support abort).
+- **Authentication**: Login via **Clerk** with full route protection and session handling.
+- **Responsive & Accurate UI**: Fully responsive, pixel-perfect replication of Google Translate’s interface.
 - **Translation History**:
   - Stores history in Supabase per user session.
   - Supports deleting individual records or clearing all.
-
-- **Server-Side Rendering (SSR)**:
-  - All pages are server-rendered using **Next.js App Router**.
-
-- **Smart Caching & ISR**:
-  - Some data is served with **Incremental Static Regeneration** for optimized performance.
-
-- **Request Queue with Debounce**:
-  - Ensures that only the **latest translation request** is processed and returned (DeepSeek doesn’t support abort).
-
-- **Authentication**:
-  - Login via **Clerk** with full route protection and session handling.
-
-- **Responsive & Accurate UI**:
-  - Fully responsive, pixel-perfect replication of Google Translate’s interface.
 
 <br>
 
