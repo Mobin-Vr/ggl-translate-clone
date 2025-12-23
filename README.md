@@ -66,15 +66,35 @@ Password:  11223344.Rr
 
 ## ⚡ Performance Comparison (Lighthouse)
 
-<div style="display: flex; align-items: center; gap: 20px; justify-content: center;" >
-
-**This App**
-![Lighthouse – This App](./public/lighthouse-clone.png)
-
-**Google Translate**
-![Lighthouse – Google Translate](./public/lighthouse-google.png)
-
+<div align="center">
+  <table>
+    <tr>
+      <th>This App</th>
+      <th>Google Translate</th>
+    </tr>
+    <tr>
+      <td>
+        <img
+          src="./public/lighthouse-clone.png"
+          alt="Lighthouse – This App"
+          width="400"
+          height="250"
+          style="object-fit: cover; border-radius: 8px;"
+        />
+      </td>
+      <td>
+        <img
+          src="./public/lighthouse-google.png"
+          alt="Lighthouse – Google Translate"
+          width="400"
+          height="250"
+          style="object-fit: cover; border-radius: 8px;"
+        />
+      </td>
+    </tr>
+  </table>
 </div>
+
 
 | App                  | Performance | FCP  | LCP  |
 | -------------------- | ----------- | ---- | ---- |
