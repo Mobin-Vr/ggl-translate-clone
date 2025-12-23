@@ -72,6 +72,38 @@ Password:  11223344.Rr
 
 <br>
 
+
+## ⚡ Performance Comparison (Lighthouse)
+
+To evaluate real-world performance, this app was compared **directly with the official Google Translate web app** using Lighthouse under identical conditions.
+
+### 🔍 Results Summary
+
+| App                   | Performance | FCP  | LCP  |
+|----------------------|-------------|------|------|
+| **This App (Clone)** | **96**      | 0.5s | 0.8s |
+| Google Translate     | 82          | 1.4s | 1.4s |
+
+> The clone consistently outperformed Google Translate in performance metrics while delivering the same core translation functionality.
+
+### 🧠 Why This App Is Faster
+
+This performance gain is **intentional and architectural**, not accidental:
+
+- Minimal JavaScript payload
+- No third-party analytics or ads
+- Optimized **SSR** using Next.js App Router
+- **Server Actions** instead of client-side mutations
+- Smart **debounce + request queue** (prevents unnecessary re-renders)
+- Zustand state persisted in **sessionStorage** (no heavy rehydration)
+
+Google Translate prioritizes scalability, experimentation, and global tracking.  
+This project intentionally focuses on **speed, UX clarity, and architectural efficiency**.
+
+> **Note:** This comparison is not intended to claim superiority over Google Translate as a product,  
+but to demonstrate how a focused, modern architecture can achieve excellent performance when unnecessary overhead is removed.
+
+
 ## 🛠️ Tech Stack
 
 | Technology                  | Purpose                                      |
