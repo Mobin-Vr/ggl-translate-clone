@@ -9,7 +9,6 @@ import {
 import HistoryCard from "./HistoryCard";
 
 function TranslationList({ history, moveHistoryDataToForm }) {
-  // eslint-disable-next-line no-unused-vars
   const [isPending, startTransition] = useTransition();
   const [optimisticHistory, deleteOptimistic] = useOptimistic(
     history,
@@ -22,8 +21,12 @@ function TranslationList({ history, moveHistoryDataToForm }) {
 
   // Delete a specific translation
   function handleDelete(id) {
-    deleteOptimistic({ type: "single", id });
+    // ✅ optimistic update inside startTransition
+    startTransition(() => {
+      deleteOptimistic({ type: "single", id });
+    });
 
+    // ✅ server action
     startTransition(async () => {
       const res = await deleteTranslationAction(id);
       if (res?.error) toast.error(res.error);
@@ -32,8 +35,12 @@ function TranslationList({ history, moveHistoryDataToForm }) {
 
   // Delete all translations
   function handleDeleteAll() {
-    deleteOptimistic({ type: "all" });
+    // ✅ optimistic update inside startTransition
+    startTransition(() => {
+      deleteOptimistic({ type: "all" });
+    });
 
+    // ✅ server action
     startTransition(async () => {
       const res = await clearUserHistoryAction();
       if (res?.error) toast.error(res.error);
@@ -59,9 +66,10 @@ function TranslationList({ history, moveHistoryDataToForm }) {
         <div className="flex w-full shrink-0 justify-end bg-gray-100">
           <button
             onClick={handleDeleteAll}
-            className="my-2.5 mr-4 rounded-sm px-2 py-1 pt-1.5 text-[0.9rem] text-blue-600 hover:bg-gray-300"
+            disabled={isPending}
+            className="my-2.5 mr-4 rounded-sm px-2 py-1 pt-1.5 text-[0.9rem] text-blue-600 hover:bg-gray-300 disabled:opacity-50"
           >
-            clear all history
+            {isPending ? "Deleting..." : "clear all history"}
           </button>
         </div>
       )}
