@@ -1,5 +1,3 @@
-// data-services.js
-
 import { unstable_cache } from "next/cache";
 import { CONFIG } from "./configs";
 import { supabase } from "./supabase";
