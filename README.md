@@ -1,19 +1,34 @@
-  <img src="public/trIcon.png" alt="logo" style="width: 35px; height: 35px; border-radius: 3px; margin-right: 10px;" />
+<img src="public/trIcon.png" alt="logo" width="35" height="35" align="left" style="border-radius: 4px; margin-right: 10px;" />
 
-# Google Translate Clone
+# Google Translate (clone)
 
-A translation application that uses an LLM (DeepSeek) for both language detection and translation instead of a traditional translation API.
+A translation application that uses an LLM (DeepSeek) for both language detection and translation instead of a traditional translation API. Built with Next.js 15 App Router, Supabase, and Clerk, the project explores the challenges of integrating LLMs into responsive, production-oriented web applications.
 
-Built with Next.js 15 App Router, Supabase, and Clerk, the project explores the challenges of integrating LLMs into responsive, production-oriented web applications.
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
+![Clerk](https://img.shields.io/badge/Clerk-6C47FF?style=flat&logo=clerk&logoColor=white)
+![Zustand](https://img.shields.io/badge/Zustand-433E38?style=flat)
+![Zod](https://img.shields.io/badge/Zod-3E67B1?style=flat&logo=zod&logoColor=white)
 
-## 🌐 Live Demo - [**Click to Try Now**](https://ggl-translate-clone.vercel.app/)
+**[Live Demo →](https://ggl-translate-clone.vercel.app/)**
 
-**Google** login or use this demo account:
+Google login, or use this demo account:
 
 ```makefile
 Username:  test1
 Password:  11223344.Rr
 ```
+
+---
+
+## Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Engineering Highlights](#engineering-highlights)
+- [Tech Stack](#tech-stack)
+- [Performance](#performance)
+- [Future Improvements](#future-improvements)
 
 ---
 
@@ -27,7 +42,7 @@ One of the primary architectural challenges is request ordering. Since DeepSeek 
 
 ---
 
-## Architecture Overview
+## Architecture
 
 ```text
                            User
@@ -64,96 +79,51 @@ The application follows a server-first architecture where rendering, data mutati
 
 ---
 
-## Engineering Goals
-
-This project explores practical approaches to:
-
-- Reliable asynchronous workflows
-- Predictable state management
-- Server-first application architecture
-- Production-oriented LLM integration
-- Responsive user experience under real-world conditions
-
----
-
 ## Engineering Highlights
 
-### Reliable asynchronous request handling
+**Reliable asynchronous request handling.** Translation requests pass through a latest-wins request pipeline that prevents stale responses from reaching the UI. Instead of attempting to cancel in-flight requests — which DeepSeek doesn't support — the application tags each request and guarantees that only the most recent one is ever rendered.
 
-Translation requests pass through a latest-wins request pipeline that prevents stale responses from reaching the UI. Instead of attempting to cancel in-flight requests, the application guarantees that only the most recent user input is rendered.
+**LLM response validation.** LLM output is treated as untrusted input. Responses are required to follow a structured Zod schema and are validated before entering the application, preventing malformed model output from propagating through the UI.
 
-### LLM response validation
+**LLM instead of a dedicated translation API.** DeepSeek performs both language detection and translation through a single model call, rather than chaining a detection API with a separate translation API. This simplifies the integration surface, but introduces higher latency and non-deterministic responses compared to a traditional translation service — which is precisely why every response is schema-validated before use.
 
-LLM output is treated as untrusted input. Responses are required to follow a structured schema and are validated before entering the application, preventing malformed model output from propagating through the UI.
+**Server-driven mutations.** Persistent operations are executed through Server Actions, keeping authentication, authorization, and history persistence on the server while simplifying the client.
 
-### Server-driven mutations
+**Independent UI boundaries.** Translation and history are separated into independent rendering boundaries using Next.js parallel routes, giving each its own loading state, caching strategy, and error handling — and letting the two features evolve independently without touching each other's code.
 
-Persistent operations are executed through Server Actions, keeping authentication, authorization, and history persistence on the server while simplifying the client.
+**Session-scoped state.** Client state is intentionally scoped to the browser session using Session Storage rather than Local Storage: in-progress work survives a page refresh, but stale translations don't carry over into a new session. This trades persistence for predictability.
 
-### Independent UI boundaries
-
-Translation and history are separated into independent rendering boundaries using Next.js parallel routes, allowing independent loading states, caching strategies, and error handling.
-
-### State management
-
-Client state is intentionally scoped to the browser session, balancing persistence with predictable behavior while avoiding stale state across browser sessions.
-
-### User-scoped authorization
-
-History data is isolated per authenticated user, with authorization enforced server-side for every protected operation.
-
----
-
-## Design Decisions & Trade-offs
-
-### LLM instead of a translation API
-
-DeepSeek performs both language detection and translation through a single interaction with the model.
-
-This simplifies the integration but introduces higher latency and non-deterministic responses compared to traditional translation services, requiring response validation and careful request coordination.
-
-### Server-first architecture
-
-Rendering, mutations, and data fetching are delegated to the server wherever practical, reducing client-side complexity while taking advantage of the App Router architecture.
-
-### Session-scoped client state
-
-Session Storage was chosen over Local Storage so active work survives page refreshes without carrying stale translations across browser sessions.
-
-### Independent rendering boundaries
-
-Separating translation and history into independent rendering boundaries improves maintainability while allowing each feature to evolve independently.
+**User-scoped authorization.** History data is isolated per authenticated user, with authorization enforced server-side for every protected operation.
 
 ---
 
 ## Tech Stack
 
-| Technology              | Responsibility                                    |
-| ----------------------- | ------------------------------------------------- |
-| Next.js 15 (App Router) | Server Components, Server Actions, App Router     |
-| DeepSeek (OpenAI SDK)   | Translation & language detection                  |
-| Supabase                | User data, translation history, language metadata |
-| Clerk                   | Authentication & authorization                    |
-| Zustand + Immer         | Client-side state management                      |
-| Zod                     | Runtime validation                                |
-| Web Speech API          | Speech recognition & text-to-speech               |
-| Tailwind CSS + DaisyUI  | UI                                                |
-| Framer Motion           | Animations                                        |
+| Technology               | Responsibility                                    |
+| ------------------------ | -------------------------------------------------- |
+| Next.js 15 (App Router)  | Server Components, Server Actions, App Router      |
+| DeepSeek (OpenAI SDK)    | Translation & language detection                   |
+| Supabase                 | User data, translation history, language metadata  |
+| Clerk                    | Authentication & authorization                     |
+| Zustand + Immer          | Client-side state management                       |
+| Zod                      | Runtime validation                                 |
+| Web Speech API           | Speech recognition & text-to-speech                |
+| Tailwind CSS + DaisyUI   | UI                                                 |
+| Framer Motion            | Animations                                         |
 
 ---
 
 ## Performance
 
-Desktop Lighthouse measurements:
+The measured Lighthouse scores are a consequence of the architectural choices above — server-first rendering, minimal client-side JavaScript, and a request pipeline that avoids unnecessary work:
 
-| Application      | Performance |   FCP |   LCP |
-| ---------------- | ----------: | ----: | ----: |
-| This Project     |      **96** | 0.5 s | 0.8 s |
-| Google Translate |          82 | 1.4 s | 1.4 s |
+| Metric      | Score |
+| ----------- | ----: |
+| Performance |    96 |
+| FCP         | 0.5 s |
+| LCP         | 0.8 s |
 
-The measured performance is primarily a consequence of architectural decisions: server-first rendering, reduced client-side JavaScript, Server Actions, and a request pipeline that minimizes unnecessary work.
-
-The comparison illustrates the characteristics of this implementation rather than claiming superiority over Google Translate, which operates under significantly different product constraints.
+For reference, Google Translate's production site scores 82 / 1.4 s / 1.4 s on the same desktop Lighthouse run — but it also ships full internationalization, ads infrastructure, and dozens of features this clone doesn't attempt, so the numbers aren't a like-for-like comparison. They're included to show the effect of the architectural decisions, not as a claim of beating Google Translate.
 
 ---
 
