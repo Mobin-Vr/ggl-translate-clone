@@ -51,7 +51,6 @@ export const getLanguages = unstable_cache(
       throw new Error("Languages could not be loaded");
     }
 
-    console.log(">>> LANGUAGES:", data);
     return data;
   },
   ["languages"],

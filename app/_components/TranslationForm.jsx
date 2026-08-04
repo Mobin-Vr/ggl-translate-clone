@@ -67,7 +67,7 @@ export default function TranslationForm({
     <div
       className={`relative ${showHistory && isMainSectionVertical ? "px-0" : "px-3"}`}
     >
-      <TranslateFeatures className={`h-[3.5rem] px-3`} />
+      <TranslateFeatures className={`h-14 px-3`} />
 
       <LanguageBar
         languages={supportedLangs}

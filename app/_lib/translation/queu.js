@@ -1,13 +1,11 @@
 import { translate } from "../actions";
 
 let isTranslating = false;
-let latestPayload = null;
-let latestResolver = null;
+let latestJob = null;
 
 export async function enqueueTranslation(payload) {
   return new Promise((resolve) => {
-    latestPayload = payload;
-    latestResolver = resolve;
+    latestJob = { payload, resolve };
 
     if (!isTranslating) processQueue();
   });
@@ -16,22 +14,18 @@ export async function enqueueTranslation(payload) {
 async function processQueue() {
   isTranslating = true;
 
-  while (latestPayload) {
-    const payload = latestPayload;
-    const resolve = latestResolver;
+  while (latestJob) {
+    const job = latestJob;
 
     // Reset before processing
-    latestPayload = null;
-    latestResolver = null;
+    latestJob = null;
 
     try {
-      const result = await translate(payload);
-
-      resolve(result);
-      console.log("1>>>", result);
+      const result = await translate(job.payload);
+      job.resolve(result);
     } catch (err) {
       console.error("Translation failed:", err);
-      resolve("Translation failed");
+      job.resolve("Translation failed");
     }
   }
 

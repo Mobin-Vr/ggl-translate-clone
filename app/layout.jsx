@@ -1,13 +1,12 @@
 import "@/app/_styles/globals.css";
 
 import { ClerkProvider, SignedIn } from "@clerk/nextjs";
-import { auth } from "@clerk/nextjs/server";
 import { Roboto } from "next/font/google";
 import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
+import Header from "./_components/Header";
 import ResponsiveWrapper from "./_components/ResponsiveWrapper";
 import UserSignupHandler from "./_components/UserSignupHandler";
-import Header from "./_components/Header";
 
 const roboto = Roboto({
   weight: ["400", "700"],

@@ -1,155 +1,167 @@
-<div style="display: flex; align-items: center; justify-content: center;">
-  <h1 style="margin: 0; display: flex; align-items: center;">
-    <img src="public/trIcon.png" alt="logo" style="width: 35px; height: 35px; border-radius: 3px; margin-right: 10px;" />
-    Google Translate&nbsp;<small style="font-size: 0.7em;">(clone)</small>
-  </h1>
-</div>
+  <img src="public/trIcon.png" alt="logo" style="width: 35px; height: 35px; border-radius: 3px; margin-right: 10px;" />
 
-<br>
+# Google Translate Clone
 
-An AI-powered **Google Translate clone** with real-time translation, voice input, and dynamic multilingual support. Built with cutting-edge technologies like **Next.js 15**, **Supabase**, and **Server Actions**, this app replicates Google Translate’s interface and UX with attention to every pixel.
+A translation application that uses an LLM (DeepSeek) for both language detection and translation instead of a traditional translation API.
 
-<br>
+Built with Next.js 15 App Router, Supabase, and Clerk, the project explores the challenges of integrating LLMs into responsive, production-oriented web applications.
 
 ## 🌐 Live Demo - [**Click to Try Now**](https://ggl-translate-clone.vercel.app/)
 
-> ⚠️ **Google** login in Clerk may require a **VPN** (due to sanctions).
-> If login fails, use this test account:
+**Google** login or use this demo account:
 
 ```makefile
 Username:  test1
 Password:  11223344.Rr
 ```
 
-<br>
+---
 
-## 🚀 Features
+## Overview
 
-- **AI Translation Engine**: Uses **DeepSeek AI** to generate accurate translations in over 20 major languages.
-- **Auto Language Detection**: Source language is auto-detected using AI.
-- **Live Voice Input**: Users can speak in **English**, and the app converts speech to text using the **Web Speech API**.
-- **Text-to-Speech Output**: Speaker buttons allow reading of both source and translated texts (English only).
-- **Server-Side Rendering (SSR)**: All pages are server-rendered using **Next.js App Router**.
-- **Smart Caching & ISR**: Some data is served with **Incremental Static Regeneration** for optimized performance.
-- **Request Queue with Debounce**: Ensures that only the **latest translation request** is processed and returned (DeepSeek doesn’t support abort).
-- **Authentication**: Login via **Clerk** with full route protection and session handling.
-- **Responsive & Accurate UI**: Fully responsive, pixel-perfect replication of Google Translate’s interface.
-- **Translation History**:
-  - Stores history in Supabase per user session.
-  - Supports deleting individual records or clearing all.
+The application provides text translation with automatic language detection, speech input and output through the Web Speech API, language swapping, and authenticated translation history.
 
-<br>
+Rather than focusing solely on replicating Google Translate's interface, the project explores engineering challenges around asynchronous workflows, LLM integration, server-driven architecture, caching, and reliable user interactions.
 
-## ⚡ Performance Comparison (Lighthouse)
+One of the primary architectural challenges is request ordering. Since DeepSeek does not support request cancellation, rapid user input can produce out-of-order responses. The application addresses this through a latest-wins request pipeline that guarantees only the newest translation reaches the UI.
 
-<div align="center">
-  <table>
-    <tr>
-      <th>This App</th>
-      <th>Google Translate</th>
-    </tr>
-    <tr>
-      <td>
-        <img
-          src="./public/lighthouse-clone.png"
-          alt="Lighthouse – This App"
-          width="400"
-          height="250"
-          style="object-fit: cover; border-radius: 8px;"
-        />
-      </td>
-      <td>
-        <img
-          src="./public/lighthouse-google.png"
-          alt="Lighthouse – Google Translate"
-          width="400"
-          height="250"
-          style="object-fit: cover; border-radius: 8px;"
-        />
-      </td>
-    </tr>
-  </table>
-</div>
+---
 
-| App                  | Performance | FCP  | LCP  |
-| -------------------- | ----------- | ---- | ---- |
-| **This App (Clone)** | **96**      | 0.5s | 0.8s |
-| Google Translate     | 82          | 1.4s | 1.4s |
+## Architecture Overview
 
-> The clone consistently outperformed Google Translate in performance metrics while delivering the same core translation functionality.
+```text
+                           User
+                            │
+                            ▼
+                   Next.js App Router
+                            │
+          ┌─────────────────┴─────────────────┐
+          │                                   │
+          ▼                                   ▼
+   Server Components                 Client Components
+          │                                   │
+          │                                   ▼
+          │                           Zustand Store
+          │                                   │
+          ▼                                   ▼
+     Server Actions                 Speech Recognition
+          │                          Text-to-Speech
+          │
+          ▼
+      DeepSeek LLM
+          │
+          ▼
+ Response Validation (Zod)
+          │
+          ▼
+   Supabase Database
+   ├── Users
+   ├── History
+   └── Languages
+```
 
-### 🧠 Why This App Is Faster
+The application follows a server-first architecture where rendering, data mutations, and external API interactions remain on the server whenever practical. Client-side state is intentionally limited to user interaction and session-specific UI state, while persistence, authorization, and business logic are handled server-side.
 
-This performance gain is **intentional and architectural**, not accidental:
+---
 
-- Minimal JavaScript payload
-- No third-party analytics or ads
-- Optimized **SSR** using Next.js App Router
-- **Server Actions** instead of client-side mutations
-- Smart **debounce + request queue** (prevents unnecessary re-renders)
-- Zustand state persisted in **sessionStorage** (no heavy rehydration)
+## Engineering Goals
 
-Google Translate prioritizes scalability, experimentation, and global tracking.  
-This project intentionally focuses on **speed, UX clarity, and architectural efficiency**.
+This project explores practical approaches to:
 
-> **Note:** This comparison is not intended to claim superiority over Google Translate as a product,  
-> but to demonstrate how a focused, modern architecture can achieve excellent performance when unnecessary overhead is removed.
+- Reliable asynchronous workflows
+- Predictable state management
+- Server-first application architecture
+- Production-oriented LLM integration
+- Responsive user experience under real-world conditions
 
-<br>
+---
 
-## 🛠️ Tech Stack
+## Engineering Highlights
 
-| Technology                  | Purpose                                      |
-| --------------------------- | -------------------------------------------- |
-| **Next.js 15 (App Router)** | Main framework                               |
-| **Supabase**                | Database, History Storage (RLS)              |
-| **Clerk**                   | Authentication & User Management             |
-| **Server Actions**          | Secure database mutations                    |
-| **Zustand**                 | State Management (stored in Session Storage) |
-| **Framer Motion**           | Smooth animations for transitions            |
-| **Tailwind CSS**            | Styling                                      |
-| **Web Speech API**          | Live speech input & audio playback           |
+### Reliable asynchronous request handling
 
-<br>
+Translation requests pass through a latest-wins request pipeline that prevents stale responses from reaching the UI. Instead of attempting to cancel in-flight requests, the application guarantees that only the most recent user input is rendered.
 
-## 🏆 Technical Challenges & Solutions
+### LLM response validation
 
-### **1️⃣ Real-Time Translation & Aborted Requests**
+LLM output is treated as untrusted input. Responses are required to follow a structured schema and are validated before entering the application, preventing malformed model output from propagating through the UI.
 
-- **Challenge**: DeepSeek AI does not support request abortion (AbortController).
-- **Solution**: Built a **custom request queue system** with debounce to ensure only the **latest input** is translated and displayed.
+### Server-driven mutations
 
-### **2️⃣ Server Rendering & Caching**
+Persistent operations are executed through Server Actions, keeping authentication, authorization, and history persistence on the server while simplifying the client.
 
-- **Challenge**: Ensuring fast, SEO-friendly page loads while maintaining real-time interaction.
-- **Solution**: Used **Next.js SSR + ISR** smartly to pre-render pages and cache specific results.
+### Independent UI boundaries
 
-### **3️⃣ Audio Input & Output**
+Translation and history are separated into independent rendering boundaries using Next.js parallel routes, allowing independent loading states, caching strategies, and error handling.
 
-- **Challenge**: Providing voice input/output using only browser-native APIs.
-- **Solution**: Used **Web Speech API** for speech recognition and TTS, limited to English for reliability.
+### State management
 
-<br>
+Client state is intentionally scoped to the browser session, balancing persistence with predictable behavior while avoiding stale state across browser sessions.
 
-## 🌟 Key Architectural Decisions
+### User-scoped authorization
 
-- **Next.js 15**: Chosen for its support of **parallel routes**, **SSR**, and **Server Actions** for clean client-server separation.
-- **Server Actions**: All mutations go through server actions to improve security and maintain control.
-- **Supabase**: Used for storing and managing user history with secure data access.
-- **Debounce + Custom Queue**: Ensures no race conditions during fast, repeated input from users.
-- **Authentication**: Secured routes with Clerk, ensuring only authorized access to history features.
-- **UI Design**: Fully responsive and pixel-perfect to match Google Translate with custom styling and behavior.
+History data is isolated per authenticated user, with authorization enforced server-side for every protected operation.
 
-<br>
+---
 
-## 📌 Lessons Learned
+## Design Decisions & Trade-offs
 
-This project helped deepen my understanding of:
+### LLM instead of a translation API
 
-- **Next.js Server Architecture (SSR, ISR, Server Actions)**
-- **Having two pages side by side with parallel routes**
-- **Integrating AI APIs in real-time UI**
-- **Custom async request management with queues**
-- **Browser speech APIs**
+DeepSeek performs both language detection and translation through a single interaction with the model.
 
-<br>
+This simplifies the integration but introduces higher latency and non-deterministic responses compared to traditional translation services, requiring response validation and careful request coordination.
+
+### Server-first architecture
+
+Rendering, mutations, and data fetching are delegated to the server wherever practical, reducing client-side complexity while taking advantage of the App Router architecture.
+
+### Session-scoped client state
+
+Session Storage was chosen over Local Storage so active work survives page refreshes without carrying stale translations across browser sessions.
+
+### Independent rendering boundaries
+
+Separating translation and history into independent rendering boundaries improves maintainability while allowing each feature to evolve independently.
+
+---
+
+## Tech Stack
+
+| Technology              | Responsibility                                    |
+| ----------------------- | ------------------------------------------------- |
+| Next.js 15 (App Router) | Server Components, Server Actions, App Router     |
+| DeepSeek (OpenAI SDK)   | Translation & language detection                  |
+| Supabase                | User data, translation history, language metadata |
+| Clerk                   | Authentication & authorization                    |
+| Zustand + Immer         | Client-side state management                      |
+| Zod                     | Runtime validation                                |
+| Web Speech API          | Speech recognition & text-to-speech               |
+| Tailwind CSS + DaisyUI  | UI                                                |
+| Framer Motion           | Animations                                        |
+
+---
+
+## Performance
+
+Desktop Lighthouse measurements:
+
+| Application      | Performance |   FCP |   LCP |
+| ---------------- | ----------: | ----: | ----: |
+| This Project     |      **96** | 0.5 s | 0.8 s |
+| Google Translate |          82 | 1.4 s | 1.4 s |
+
+The measured performance is primarily a consequence of architectural decisions: server-first rendering, reduced client-side JavaScript, Server Actions, and a request pipeline that minimizes unnecessary work.
+
+The comparison illustrates the characteristics of this implementation rather than claiming superiority over Google Translate, which operates under significantly different product constraints.
+
+---
+
+## Future Improvements
+
+- Streaming translation responses
+- Multi-provider LLM fallback
+- Rate limiting
+- Automated tests for critical workflows
+- Adaptive request scheduling based on typing behavior
+- Dark mode
