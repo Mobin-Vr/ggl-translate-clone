@@ -6,15 +6,11 @@ on:
   pull_request:
     branches: [main]
 
-# Cancel superseded runs on the same ref
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  # ──────────────────────────────────────────────
-  # Job 1 — Lint + Vitest unit tests (no secrets)
-  # ──────────────────────────────────────────────
   test-unit:
     name: Lint & Unit Tests
     runs-on: ubuntu-latest
@@ -24,7 +20,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - run: npm ci
@@ -35,15 +31,10 @@ jobs:
       - name: Unit tests (Vitest)
         run: npm run test
 
-  # ──────────────────────────────────────────────
-  # Job 2 — Playwright E2E tests (needs app env vars)
-  # ──────────────────────────────────────────────
   test-e2e:
     name: E2E Tests (Playwright)
     runs-on: ubuntu-latest
     env:
-      # App secrets — required for the dev server to start and the
-      # E2E test to perform a real translation via DeepSeek.
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       DEEPSEEK_URL: ${{ secrets.DEEPSEEK_URL }}
@@ -56,19 +47,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - run: npm ci
 
-      # playwright.config.mjs uses channel: "chrome"
       - name: Install Playwright browser (Chrome)
         run: npx playwright install --with-deps chrome
 
       - name: Run E2E tests
         run: npm run test:e2e
 
-      # Upload the HTML report whether tests pass or fail
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
@@ -77,9 +66,6 @@ jobs:
           path: playwright-report/
           retention-days: 14
 
-  # ──────────────────────────────────────────────
-  # Job 3 — Deploy to Vercel production (push to main only)
-  # ──────────────────────────────────────────────
   deploy-production:
     name: Deploy to Vercel (Production)
     needs: [test-unit, test-e2e]
@@ -91,7 +77,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - run: npm ci
@@ -102,11 +88,8 @@ jobs:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          vercel-args: '--prod'
+          vercel-args: "--prod"
 
-  # ──────────────────────────────────────────────
-  # Job 4 — Deploy a Vercel preview (PRs only) + comment URL
-  # ──────────────────────────────────────────────
   deploy-preview:
     name: Deploy to Vercel (Preview)
     needs: [test-unit, test-e2e]
@@ -118,7 +101,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - run: npm ci
