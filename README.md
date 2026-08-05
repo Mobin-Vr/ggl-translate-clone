@@ -4,6 +4,7 @@
 
 A translation application that uses an LLM (DeepSeek) for both language detection and translation instead of a traditional translation API. Built with Next.js 15 App Router, Supabase, and Clerk, the project explores the challenges of integrating LLMs into responsive, production-oriented web applications.
 
+![CI/CD](https://github.com/Mobin-Vr/ggl-translate-clone/actions/workflows/ci.yml/badge.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
 ![Clerk](https://img.shields.io/badge/Clerk-6C47FF?style=flat&logo=clerk&logoColor=white)
@@ -27,6 +28,8 @@ Password:  11223344.Rr
 - [Architecture](#architecture)
 - [Engineering Highlights](#engineering-highlights)
 - [Tech Stack](#tech-stack)
+- [Skills](#skills)
+- [CI/CD](#cicd)
 - [Performance](#performance)
 - [Future Improvements](#future-improvements)
 
@@ -113,6 +116,57 @@ The application follows a server-first architecture where rendering, data mutati
 
 ---
 
+## Skills
+
+Testing: Vitest, React Testing Library, Playwright
+
+### Running the tests
+
+```bash
+# Run unit tests once
+npm run test
+
+# Run unit tests in watch mode
+npm run test:watch
+
+# Run the Playwright E2E test (starts the dev server automatically)
+npm run test:e2e
+```
+
+The unit tests mock the translation API and external services, so they run without network access. The E2E test runs against the real app and requires a valid `.env.local` (Supabase, Clerk, and DeepSeek keys).
+
+---
+
+## CI/CD
+
+A GitHub Actions workflow (`.github/workflows/ci.yml`) runs automatically on every push to `main` and on every pull request targeting `main`.
+
+**What runs automatically:**
+
+1. **Lint & unit tests** — `npm run lint` + `npm run test` (Vitest). No secrets required.
+2. **E2E tests** — `npm run test:e2e` (Playwright) against a real dev server. Requires the app's environment variables (Supabase, Clerk, DeepSeek) to be set as GitHub secrets. The Playwright HTML report is uploaded as a workflow artifact (retained for 14 days) whether the tests pass or fail.
+3. **Deploy to Vercel** — only after both test jobs pass:
+   - On **push to `main`**: deploys to **Vercel production** (`https://ggl-translate-clone.vercel.app/`).
+   - On **pull requests**: deploys a **Vercel preview** and comments the preview URL on the PR.
+
+**Required GitHub repository secrets** (Settings → Secrets and variables → Actions):
+
+| Secret | Purpose |
+| --- | --- |
+| `VERCEL_TOKEN` | Vercel deploy authentication |
+| `VERCEL_ORG_ID` | Vercel org/team ID |
+| `VERCEL_PROJECT_ID` | Vercel project ID |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL (E2E) |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase anon key (E2E) |
+| `DEEPSEEK_URL` | DeepSeek base URL (E2E) |
+| `DEEPSEEK_API_KEY` | DeepSeek API key (E2E) |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk publishable key (E2E) |
+| `CLERK_SECRET_KEY` | Clerk secret key (E2E) |
+
+The three `VERCEL_*` secrets are needed for deployment; the remaining six are needed for the E2E tests to pass in CI. See the workflow file for details.
+
+---
+
 ## Performance
 
 The measured Lighthouse scores are a consequence of the architectural choices above — server-first rendering, minimal client-side JavaScript, and a request pipeline that avoids unnecessary work:
@@ -132,6 +186,6 @@ For reference, Google Translate's production site scores 82 / 1.4 s / 1.4 s on t
 - Streaming translation responses
 - Multi-provider LLM fallback
 - Rate limiting
-- Automated tests for critical workflows
+- ~~Automated tests for critical workflows~~ ✅ Done — unit tests (Vitest + React Testing Library) and an E2E test (Playwright) now cover the critical translation flow
 - Adaptive request scheduling based on typing behavior
 - Dark mode
