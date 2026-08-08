@@ -118,7 +118,7 @@ The application follows a server-first architecture where rendering, data mutati
 
 ## Skills
 
-Testing: Vitest, React Testing Library, Playwright
+Testing: Vitest, React Testing Library
 
 ### Running the tests
 
@@ -186,6 +186,6 @@ For reference, Google Translate's production site scores 82 / 1.4 s / 1.4 s on t
 - Streaming translation responses
 - Multi-provider LLM fallback
 - Rate limiting
-- ~~Automated tests for critical workflows~~ ✅ Done — unit tests (Vitest + React Testing Library) and an E2E test (Playwright) now cover the critical translation flow
+- ~~Automated tests for critical workflows~~ ✅ Done — unit tests (Vitest + React Testing Library)
 - Adaptive request scheduling based on typing behavior
 - Dark mode
